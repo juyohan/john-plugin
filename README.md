@@ -78,6 +78,13 @@ cp -R /Users/juyohan/John/ai/john-plugin/rules/* ~/.claude/rules/john/
 | `database-reviewer` | JPA/DB | SQL 최적화, N+1 문제, 인덱스 설계 검토 |
 | `typescript-reviewer` | TS/JS | 타입 안정성 및 프론트엔드 최적화 리뷰 |
 
+## 💡 풀버전 ECC vs `john-plugin`의 차이점
+
+이 플러그인은 원본 `everything-claude-code`의 무거운 기능들을 모두 가져오는 대신, **철저히 선별된(Curated) 정예 요원만 담아낸 가벼운 배포판**입니다.
+
+- **명령어의 최소화**: 원본 ECC의 70여 개가 넘는 슬래시(`/`) 명령어를 빼고, CE의 핵심 기획 명령어(`/ce-brainstorm`, `/ce-plan` 등) 4개와 실행을 위한 `/plan` 만을 노출합니다. 에이전트가 불필요한 명령어에 혼동하는 것을 막습니다.
+- **백그라운드 지원**: 슬래시 명령어가 없다고 기능이 없는 것이 아닙니다. `@java-reviewer` 처럼 채팅창에 에이전트를 직접 부르거나, "Spring Boot 보안을 적용해 줘"라고 하면 뒤에 숨겨진 `springboot-security` 스킬과 자동화 훅(Hooks)들이 **동일한 수준의 기술력으로 조용히 서포트**합니다.
+
 ---
 
 ## 💡 팁: 똑똑하게 질문하기
