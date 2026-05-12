@@ -1,3 +1,7 @@
+---
+description: "요구사항을 바탕으로 상위 설계 및 작업 트리를 생성하는 계획 수립 명령어입니다."
+---
+
 # `ce-plan`
 
 > Establish the guardrails an implementation needs — decisions, units, files, tests, scope, risks — without prescribing the actual code or step-by-step choreography. Plans capture the **WHAT**; the implementing agent figures out the **HOW**.

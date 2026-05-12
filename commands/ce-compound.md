@@ -1,3 +1,7 @@
+---
+description: "해결한 문제나 지식을 기록하여 복리 지식(Compound Knowledge)으로 저장합니다."
+---
+
 # `ce-compound`
 
 > Document a recently solved problem so the next encounter takes minutes instead of hours. Knowledge compounds.

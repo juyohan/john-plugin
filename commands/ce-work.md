@@ -1,3 +1,7 @@
+---
+description: "생성된 계획을 바탕으로 실제 코드 구현을 실행하고 테스트합니다."
+---
+
 # `ce-work`
 
 > Execute against the plan's guardrails — figure out the HOW with code in front of you, ship complete features, hand off to a clean PR.
