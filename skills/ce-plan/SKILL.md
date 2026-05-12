@@ -339,6 +339,8 @@ Step 1.2에서 외부 조사가 유용하다고 판단되면 다음 에이전트
 
 ### Phase 3: 플랜 구조화
 
+**중요: 플랜 문서를 작성하기 전에 반드시 `mkdir -p docs/plans` 명령어를 실행하여 디렉토리가 존재하는지 확인하십시오.**
+
 #### 3.1 제목 및 파일 네이밍
 
 - `feat: Add user authentication` 또는 `fix: Prevent checkout double-submit`과 같은 컨벤셔널 형식을 사용하여 명확하고 검색 가능한 제목 초안을 작성합니다.
