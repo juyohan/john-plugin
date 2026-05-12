@@ -1,0 +1,30 @@
+{
+  "name": "john",
+  "owner": {
+    "name": "John"
+  },
+  "metadata": {
+    "description": "John's Unified Engineering OS Marketplace"
+  },
+  "plugins": [
+    {
+      "name": "john",
+      "source": "./",
+      "description": "Custom Engineering OS: Compound Engineering Workflow + Everything Claude Code Tools",
+      "version": "1.0.0",
+      "author": {
+        "name": "John"
+      },
+      "repository": "https://github.com/juyohan/john-plugin",
+      "category": "workflow",
+      "tags": [
+        "agents",
+        "skills",
+        "tdd",
+        "compound-engineering",
+        "workflow"
+      ],
+      "strict": false
+    }
+  ]
+}
