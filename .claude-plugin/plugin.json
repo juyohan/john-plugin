@@ -2,49 +2,13 @@
   "name": "john-plugin",
   "version": "1.0.0",
   "description": "Custom Engineering OS: Compound Engineering Workflow + Everything Claude Code Tools",
-  "author": "John",
+  "author": {
+    "name": "John"
+  },
   "commands": [
-    {
-      "name": "ce-brainstorm",
-      "path": "../compound-engineering-plugin/docs/skills/ce-brainstorm.md",
-      "description": "전략적 요구사항 분석 및 브레인스토밍"
-    },
-    {
-      "name": "ce-plan",
-      "path": "../compound-engineering-plugin/docs/skills/ce-plan.md",
-      "description": "상위 설계 및 작업 트리 생성"
-    },
-    {
-      "name": "ce-work",
-      "path": "../compound-engineering-plugin/docs/skills/ce-work.md",
-      "description": "계획에 따른 작업 실행"
-    },
-    {
-      "name": "ce-compound",
-      "path": "../compound-engineering-plugin/docs/skills/ce-compound.md",
-      "description": "지식 복리화 및 레슨 런 정리"
-    },
-    {
-      "name": "plan",
-      "path": "../everything-claude-code/commands/plan.md",
-      "description": "ECC 기반 구체적 구현 계획 수립"
-    }
+    "./commands/"
   ],
   "skills": [
-    "../everything-claude-code/.agents/skills/tdd-workflow/",
-    "../everything-claude-code/.agents/skills/security-review/",
-    "../everything-claude-code/.agents/skills/frontend-patterns/",
-    "../everything-claude-code/.agents/skills/backend-patterns/",
-    "../everything-claude-code/skills/springboot-patterns/",
-    "../everything-claude-code/skills/springboot-security/",
-    "../everything-claude-code/skills/springboot-tdd/",
-    "../everything-claude-code/skills/jpa-patterns/",
-    "../everything-claude-code/skills/postgres-patterns/",
-    "../everything-claude-code/skills/mysql-patterns/",
-    "../everything-claude-code/skills/redis-patterns/",
-    "../everything-claude-code/skills/database-migrations/",
-    "../everything-claude-code/skills/nuxt4-patterns/",
-    "../everything-claude-code/skills/ui-to-vue/",
-    "../everything-claude-code/skills/coding-standards/"
+    "./skills/"
   ]
 }

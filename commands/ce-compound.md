@@ -1,0 +1,1 @@
+../../compound-engineering-plugin/docs/skills/ce-compound.md
