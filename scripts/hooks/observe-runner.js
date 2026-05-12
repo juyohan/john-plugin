@@ -6,10 +6,13 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const OBSERVE_RELATIVE_PATH = path.join('skills', 'continuous-learning-v2', 'hooks', 'observe.sh');
+const _eccRoot = path.join(require('os').homedir(), '.claude');
 const OBSERVE_CANDIDATE_PATHS = [
   OBSERVE_RELATIVE_PATH,
   path.join('skills', 'ecc', 'continuous-learning-v2', 'hooks', 'observe.sh'),
   path.join('skills', 'john-plugin', 'continuous-learning-v2', 'hooks', 'observe.sh'),
+  path.join(_eccRoot, 'skills', 'continuous-learning-v2', 'hooks', 'observe.sh'),
+  path.join(_eccRoot, 'skills', 'ecc', 'continuous-learning-v2', 'hooks', 'observe.sh'),
 ];
 const DEFAULT_TIMEOUT_MS = 9000;
 
@@ -104,14 +107,12 @@ function run(raw, options = {}) {
   const pluginRoot = getPluginRoot(options);
   let observePath;
   for (const candidate of OBSERVE_CANDIDATE_PATHS) {
-    try {
-      const resolved = resolveTarget(pluginRoot, candidate);
-      if (fs.existsSync(resolved)) {
-        observePath = resolved;
-        break;
-      }
-    } catch (_error) {
-      // path traversal rejected — skip
+    const resolved = path.isAbsolute(candidate)
+      ? candidate
+      : (() => { try { return resolveTarget(pluginRoot, candidate); } catch (_e) { return null; } })();
+    if (resolved && fs.existsSync(resolved)) {
+      observePath = resolved;
+      break;
     }
   }
 
