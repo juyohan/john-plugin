@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "john",
+      "name": "john-plugin",
       "source": "./",
       "description": "Custom Engineering OS: Compound Engineering Workflow + Everything Claude Code Tools",
       "version": "1.0.0",
