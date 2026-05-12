@@ -6,6 +6,11 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const OBSERVE_RELATIVE_PATH = path.join('skills', 'continuous-learning-v2', 'hooks', 'observe.sh');
+const OBSERVE_CANDIDATE_PATHS = [
+  OBSERVE_RELATIVE_PATH,
+  path.join('skills', 'ecc', 'continuous-learning-v2', 'hooks', 'observe.sh'),
+  path.join('skills', 'john-plugin', 'continuous-learning-v2', 'hooks', 'observe.sh'),
+];
 const DEFAULT_TIMEOUT_MS = 9000;
 
 function getPluginRoot(options = {}) {
@@ -98,18 +103,21 @@ function run(raw, options = {}) {
 
   const pluginRoot = getPluginRoot(options);
   let observePath;
-  try {
-    observePath = resolveTarget(pluginRoot, OBSERVE_RELATIVE_PATH);
-  } catch (error) {
-    return {
-      stderr: `[Hook] observe runner path resolution failed: ${error.message}`,
-      exitCode: 0
-    };
+  for (const candidate of OBSERVE_CANDIDATE_PATHS) {
+    try {
+      const resolved = resolveTarget(pluginRoot, candidate);
+      if (fs.existsSync(resolved)) {
+        observePath = resolved;
+        break;
+      }
+    } catch (_error) {
+      // path traversal rejected — skip
+    }
   }
 
-  if (!fs.existsSync(observePath)) {
+  if (!observePath) {
     return {
-      stderr: `[Hook] observe script not found: ${observePath}`,
+      stderr: `[Hook] observe script not found in any candidate path under: ${pluginRoot}`,
       exitCode: 0
     };
   }
