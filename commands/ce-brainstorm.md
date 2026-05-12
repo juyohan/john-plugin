@@ -1,5 +1,5 @@
 ---
-description: "전략적 요구사항 분석 및 브레인스토밍을 통해 문서(Requirements doc)를 작성합니다."
+description: Collaborative brainstorming and requirements definition.
 ---
 
 # `ce-brainstorm`

@@ -1,5 +1,5 @@
 ---
-description: "생성된 계획을 바탕으로 실제 코드 구현을 실행하고 테스트합니다."
+description: Execute code implementation against a plan using test-driven workflows.
 ---
 
 # `ce-work`

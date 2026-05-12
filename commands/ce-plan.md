@@ -1,5 +1,5 @@
 ---
-description: "요구사항을 바탕으로 상위 설계 및 작업 트리를 생성하는 계획 수립 명령어입니다."
+description: Create architectural blueprints, milestones, and work trees based on requirements.
 ---
 
 # `ce-plan`
