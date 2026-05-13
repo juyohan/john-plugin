@@ -24,7 +24,8 @@
       "Bash(mkdir -p /tmp/test-go)",
       "Bash(touch /tmp/test-go/go.mod)",
       "Bash(xargs -I{} basename {} .md)",
-      "Bash(xargs -I{} basename {})"
+      "Bash(xargs -I{} basename {})",
+      "Bash(git *)"
     ]
   }
 }
