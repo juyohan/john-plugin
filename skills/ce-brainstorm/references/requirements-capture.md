@@ -54,7 +54,7 @@
 
 ```markdown
 ---
-date: YYYY-MM-DD
+date: YYYY-MM-DD  <!-- 반드시 시스템 컨텍스트의 currentDate로 대체하십시오 (예: 2026-05-13) -->
 topic: <kebab-case-topic>
 ---
 
@@ -228,7 +228,11 @@ topic: <kebab-case-topic>
 
 기획 단계에서 제품 동작, 범위 경계 또는 성공 기준을 임의로 결정해야 한다면 브레인스토밍은 아직 완료된 것이 아닙니다.
 
-문서를 작성하기 전에 `docs/brainstorms/` 디렉토리가 존재하는지 확인하십시오.
+문서를 작성하기 전에 저장소 문서 관례에 따라 올바른 경로를 사용하십시오:
+
+`docs/brainstorms/YYYY/MM/DD-<제목>.md` (예: `docs/brainstorms/2026/05/13-unified-plugin.md`)
+
+디렉토리가 없으면 `mkdir -p`로 생성하십시오.
 
 ## 미해결 질문 가이드 (Outstanding questions guidance)
 

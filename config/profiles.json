@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Hook profile definitions. Active profile is set via ECC_HOOK_PROFILE env var (default: standard). Each profile lists the hook IDs that are active. Hook runtime logic lives in scripts/lib/hook-flags.js.",
+  "profiles": {
+    "minimal": {
+      "description": "GateGuard only — maximum autonomy with fact-forcing on writes and destructive commands",
+      "active_hooks": [
+        "pre:bash:dispatcher",
+        "pre:edit-write:gateguard-fact-force"
+      ]
+    },
+    "standard": {
+      "description": "Balanced profile — GateGuard + observability + doc warnings + compact suggestions (default)",
+      "active_hooks": [
+        "pre:bash:dispatcher",
+        "pre:edit-write:gateguard-fact-force",
+        "pre:write:doc-file-warning",
+        "pre:edit-write:suggest-compact",
+        "pre:observe:continuous-learning",
+        "pre:governance-capture",
+        "pre:config-protection",
+        "pre:mcp-health-check"
+      ]
+    },
+    "strict": {
+      "description": "All hooks active — maximum guardrails for production work",
+      "active_hooks": [
+        "pre:bash:dispatcher",
+        "pre:edit-write:gateguard-fact-force",
+        "pre:write:doc-file-warning",
+        "pre:edit-write:suggest-compact",
+        "pre:observe:continuous-learning",
+        "pre:governance-capture",
+        "pre:config-protection",
+        "pre:mcp-health-check",
+        "post:observe:evaluate-session"
+      ]
+    }
+  },
+  "usage": {
+    "set_profile": "export ECC_HOOK_PROFILE=strict",
+    "disable_specific": "export ECC_DISABLED_HOOKS=pre:write:doc-file-warning,pre:edit-write:suggest-compact",
+    "bypass_gateguard": "ECC_GATEGUARD=off <command>"
+  }
+}
