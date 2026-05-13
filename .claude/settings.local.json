@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/juyohan/.claude/hooks/**)",
+      "Read(//Users/juyohan/.claude/**)",
+      "Bash(python3 *)",
+      "Bash(node *)",
+      "Bash(ln *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(echo \"EXIT: $?\")",
+      "Read(//tmp/**)",
+      "Bash(echo '{\"tool_name\":\"Bash\",\"tool_input\":{\"command\":\"ls\"}}')",
+      "Read(//Users/juyohan/John/ai/compound-engineering-plugin/**)",
+      "Bash([ -d \"$CE/skills/$skill\" ])",
+      "Bash(cp -r /Users/juyohan/John/ai/compound-engineering-plugin/plugins/compound-engineering/skills/__TRACKED_VAR__ /Users/juyohan/John/ai/john-plugin/skills/__TRACKED_VAR__)",
+      "Bash([ -f \"$CE/agents/$agent.agent.md\" ])",
+      "Bash(cp /Users/juyohan/John/ai/compound-engineering-plugin/plugins/compound-engineering/agents/__TRACKED_VAR__.agent.md /Users/juyohan/John/ai/john-plugin/agents/__TRACKED_VAR__.md)",
+      "Bash(chmod +x /Users/juyohan/John/ai/john-plugin/install.sh)",
+      "Read(//private/tmp/**)",
+      "Bash(mkdir -p test-ts)",
+      "Bash(touch test-ts/package.json test-ts/tsconfig.json)",
+      "Bash(mkdir -p /tmp/test-go)",
+      "Bash(touch /tmp/test-go/go.mod)",
+      "Bash(xargs -I{} basename {} .md)",
+      "Bash(xargs -I{} basename {})"
+    ]
+  }
+}

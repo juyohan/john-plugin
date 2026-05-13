@@ -3,6 +3,8 @@ name: springboot-security
 description: Java Spring Boot 서비스에서 인증/인가, 유효성 검사, CSRF, 비밀 정보, 헤더, 처리량 제한 및 의존성 보안을 위한 Spring Security 베스트 프랙티스.
 origin: ECC
 ---
+> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+
 
 # Spring Boot 보안 검토
 

@@ -10,6 +10,7 @@ const _eccRoot = path.join(require('os').homedir(), '.claude');
 const OBSERVE_CANDIDATE_PATHS = [
   OBSERVE_RELATIVE_PATH,
   path.join('skills', 'ecc', 'continuous-learning-v2', 'hooks', 'observe.sh'),
+  path.join('skills', 'genie', 'continuous-learning-v2', 'hooks', 'observe.sh'),
   path.join('skills', 'john-plugin', 'continuous-learning-v2', 'hooks', 'observe.sh'),
   path.join(_eccRoot, 'skills', 'continuous-learning-v2', 'hooks', 'observe.sh'),
   path.join(_eccRoot, 'skills', 'ecc', 'continuous-learning-v2', 'hooks', 'observe.sh'),

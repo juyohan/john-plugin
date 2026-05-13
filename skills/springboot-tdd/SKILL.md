@@ -3,6 +3,8 @@ name: springboot-tdd
 description: JUnit 5, Mockito, MockMvc, Testcontainers 및 JaCoCo를 사용한 Spring Boot 테스트 주도 개발(TDD). 기능을 추가하거나, 버그를 수정하거나, 리팩토링할 때 사용합니다.
 origin: ECC
 ---
+> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+
 
 # Spring Boot TDD 워크플로우
 
