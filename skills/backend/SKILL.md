@@ -1,27 +1,27 @@
 ---
 name: backend
-description: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.
+description: 확장 가능한 서버 사이드 애플리케이션을 위한 백엔드 아키텍처 패턴, API 설계, 데이터베이스 최적화 및 Node.js, Express, Next.js API 라우트 모범 사례.
 ---
-> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+> **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
 
-# Backend Development Patterns
+# 백엔드 개발 패턴
 
-Backend architecture patterns and best practices for scalable server-side applications.
+확장 가능한 서버 사이드 애플리케이션을 위한 백엔드 아키텍처 패턴 및 모범 사례.
 
-## When to Activate
+## 활성화 시점
 
-- Designing REST or GraphQL API endpoints
-- Implementing repository, service, or controller layers
-- Optimizing database queries (N+1, indexing, connection pooling)
-- Adding caching (Redis, in-memory, HTTP cache headers)
-- Setting up background jobs or async processing
-- Structuring error handling and validation for APIs
-- Building middleware (auth, logging, rate limiting)
+- REST 또는 GraphQL API 엔드포인트 설계 시
+- 리포지토리(repository), 서비스(service), 또는 컨트롤러(controller) 계층 구현 시
+- 데이터베이스 쿼리 최적화 시 (N+1, 인덱싱, 커넥션 풀링)
+- 캐싱 추가 시 (Redis, 인메모리, HTTP 캐시 헤더)
+- 백그라운드 작업 또는 비동기 처리 설정 시
+- API를 위한 에러 처리 및 유효성 검사 구조화 시
+- 미들웨어(middleware) 구축 시 (인증, 로깅, 처리량 제한)
 
-## API Design Patterns
+## API 설계 패턴
 
-### RESTful API Structure
+### RESTful API 구조
 
 ```typescript
 // PASS: Resource-based URLs
@@ -36,7 +36,7 @@ DELETE /api/markets/:id             # Delete resource
 GET /api/markets?status=active&sort=volume&limit=20&offset=0
 ```
 
-### Repository Pattern
+### 리포지토리(Repository) 패턴
 
 ```typescript
 // Abstract data access logic
@@ -70,7 +70,7 @@ class SupabaseMarketRepository implements MarketRepository {
 }
 ```
 
-### Service Layer Pattern
+### 서비스(Service) 계층 패턴
 
 ```typescript
 // Business logic separated from data access
@@ -99,7 +99,7 @@ class MarketService {
 }
 ```
 
-### Middleware Pattern
+### 미들웨어(Middleware) 패턴
 
 ```typescript
 // Request/response processing pipeline
@@ -127,9 +127,9 @@ export default withAuth(async (req, res) => {
 })
 ```
 
-## Database Patterns
+## 데이터베이스 패턴
 
-### Query Optimization
+### 쿼리 최적화
 
 ```typescript
 // PASS: GOOD: Select only needed columns
@@ -146,7 +146,7 @@ const { data } = await supabase
   .select('*')
 ```
 
-### N+1 Query Prevention
+### N+1 쿼리 방지
 
 ```typescript
 // FAIL: BAD: N+1 query problem
@@ -166,7 +166,7 @@ markets.forEach(market => {
 })
 ```
 
-### Transaction Pattern
+### 트랜잭션(Transaction) 패턴
 
 ```typescript
 async function createMarketWithPosition(
@@ -204,9 +204,9 @@ END;
 $$;
 ```
 
-## Caching Strategies
+## 캐싱 전략
 
-### Redis Caching Layer
+### Redis 캐싱 계층
 
 ```typescript
 class CachedMarketRepository implements MarketRepository {
@@ -240,7 +240,7 @@ class CachedMarketRepository implements MarketRepository {
 }
 ```
 
-### Cache-Aside Pattern
+### 캐시-어사이드(Cache-Aside) 패턴
 
 ```typescript
 async function getMarketWithCache(id: string): Promise<Market> {
@@ -262,9 +262,9 @@ async function getMarketWithCache(id: string): Promise<Market> {
 }
 ```
 
-## Error Handling Patterns
+## 에러 처리 패턴
 
-### Centralized Error Handler
+### 중앙화된 에러 핸들러
 
 ```typescript
 class ApiError extends Error {
@@ -314,7 +314,7 @@ export async function GET(request: Request) {
 }
 ```
 
-### Retry with Exponential Backoff
+### 지수 백오프(Exponential Backoff)를 이용한 재시도
 
 ```typescript
 async function fetchWithRetry<T>(
@@ -344,9 +344,9 @@ async function fetchWithRetry<T>(
 const data = await fetchWithRetry(() => fetchFromAPI())
 ```
 
-## Authentication & Authorization
+## 인증(Authentication) & 인가(Authorization)
 
-### JWT Token Validation
+### JWT 토큰 검증
 
 ```typescript
 import jwt from 'jsonwebtoken'
@@ -386,7 +386,7 @@ export async function GET(request: Request) {
 }
 ```
 
-### Role-Based Access Control
+### 역할 기반 접근 제어(Role-Based Access Control, RBAC)
 
 ```typescript
 type Permission = 'read' | 'write' | 'delete' | 'admin'
@@ -429,9 +429,9 @@ export const DELETE = requirePermission('delete')(
 )
 ```
 
-## Rate Limiting
+## 처리량 제한(Rate Limiting)
 
-### Simple In-Memory Rate Limiter
+### 간단한 인메모리 처리량 제한기
 
 ```typescript
 class RateLimiter {
@@ -477,9 +477,9 @@ export async function GET(request: Request) {
 }
 ```
 
-## Background Jobs & Queues
+## 백그라운드 작업 & 큐(Queue)
 
-### Simple Queue Pattern
+### 간단한 큐 패턴
 
 ```typescript
 class JobQueue<T> {
@@ -532,9 +532,9 @@ export async function POST(request: Request) {
 }
 ```
 
-## Logging & Monitoring
+## 로깅(Logging) & 모니터링
 
-### Structured Logging
+### 구조화된 로깅(Structured Logging)
 
 ```typescript
 interface LogContext {
@@ -596,4 +596,4 @@ export async function GET(request: Request) {
 }
 ```
 
-**Remember**: Backend patterns enable scalable, maintainable server-side applications. Choose patterns that fit your complexity level.
+**기억하기**: 백엔드 패턴은 확장 가능하고 유지보수 가능한 서버 사이드 애플리케이션을 가능하게 합니다. 복잡도 수준에 맞는 패턴을 선택하십시오.

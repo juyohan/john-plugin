@@ -1,33 +1,33 @@
 ---
 name: frontend
-description: Frontend development patterns for React, Next.js, state management, performance optimization, and UI best practices.
+description: React, Next.js, 상태 관리, 성능 최적화 및 UI 모범 사례를 위한 프론트엔드 개발 패턴.
 ---
-> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+> **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
 
-# Frontend Development Patterns
+# 프론트엔드 개발 패턴
 
-Modern frontend patterns for React, Next.js, and performant user interfaces.
+React, Next.js 및 고성능 사용자 인터페이스를 위한 현대적인 프론트엔드 패턴.
 
-## When to Activate
+## 활성화 시점
 
-- Building React components (composition, props, rendering)
-- Managing state (useState, useReducer, Zustand, Context)
-- Implementing data fetching (SWR, React Query, server components)
-- Optimizing performance (memoization, virtualization, code splitting)
-- Working with forms (validation, controlled inputs, Zod schemas)
-- Handling client-side routing and navigation
-- Building accessible, responsive UI patterns
+- React 컴포넌트(컴포지션, 프롭스, 렌더링) 구축 시
+- 상태(state) 관리 시 (useState, useReducer, Zustand, Context)
+- 데이터 페칭(data fetching) 구현 시 (SWR, React Query, 서버 컴포넌트)
+- 성능 최적화 시 (메모이제이션(memoization), 가상화(virtualization), 코드 스플리팅(code splitting))
+- 폼(form) 처리 시 (유효성 검사, 제어 입력, Zod 스키마)
+- 클라이언트 사이드 라우팅 및 네비게이션 처리 시
+- 접근성 있고 반응형인 UI 패턴 구축 시
 
-## Privacy and Data Boundaries
+## 프라이버시 및 데이터 경계
 
-Frontend examples should use synthetic or domain-generic data. Do not collect, log, persist, or display credentials, access tokens, SSNs, health data, payment details, private emails, phone numbers, or other sensitive personal data unless the user explicitly requests a scoped implementation with appropriate validation, redaction, and access controls.
+프론트엔드 예제는 합성 데이터 또는 도메인 일반 데이터를 사용해야 합니다. 사용자가 적절한 유효성 검사, 리덱션(redaction), 접근 제어가 포함된 범위 구현을 명시적으로 요청하지 않는 한, 자격 증명, 액세스 토큰, 주민등록번호, 건강 데이터, 결제 정보, 개인 이메일, 전화번호 또는 기타 민감한 개인 데이터를 수집, 기록, 저장 또는 표시하지 마십시오.
 
-Avoid adding analytics, tracking pixels, third-party scripts, or external data sinks without explicit approval. When handling user data, prefer least-privilege APIs, client-side redaction before logging, and server-side validation for every boundary.
+명시적인 승인 없이 분석 도구, 추적 픽셀, 서드파티 스크립트 또는 외부 데이터 싱크를 추가하지 마십시오. 사용자 데이터를 처리할 때는 최소 권한 API, 로깅 전 클라이언트 사이드 리덱션, 모든 경계에 대한 서버 사이드 유효성 검사를 선호하십시오.
 
-## Component Patterns
+## 컴포넌트 패턴
 
-### Composition Over Inheritance
+### 상속보다 컴포지션(Composition)
 
 ```typescript
 // PASS: GOOD: Component composition
@@ -55,7 +55,7 @@ export function CardBody({ children }: { children: React.ReactNode }) {
 </Card>
 ```
 
-### Compound Components
+### 복합 컴포넌트(Compound Components)
 
 ```typescript
 interface TabsContextValue {
@@ -105,7 +105,7 @@ export function Tab({ id, children }: { id: string, children: React.ReactNode })
 </Tabs>
 ```
 
-### Render Props Pattern
+### 렌더 프롭스(Render Props) 패턴
 
 ```typescript
 interface DataLoaderProps<T> {
@@ -139,9 +139,9 @@ export function DataLoader<T>({ url, children }: DataLoaderProps<T>) {
 </DataLoader>
 ```
 
-## Custom Hooks Patterns
+## 커스텀 훅 패턴
 
-### State Management Hook
+### 상태 관리 훅
 
 ```typescript
 export function useToggle(initialValue = false): [boolean, () => void] {
@@ -158,7 +158,7 @@ export function useToggle(initialValue = false): [boolean, () => void] {
 const [isOpen, toggleOpen] = useToggle()
 ```
 
-### Async Data Fetching Hook
+### 비동기 데이터 페칭 훅
 
 ```typescript
 interface UseQueryOptions<T> {
@@ -213,7 +213,7 @@ const { data: markets, loading, error, refetch } = useQuery(
 )
 ```
 
-### Debounce Hook
+### 디바운스(Debounce) 훅
 
 ```typescript
 export function useDebounce<T>(value: T, delay: number): T {
@@ -241,9 +241,9 @@ useEffect(() => {
 }, [debouncedQuery])
 ```
 
-## State Management Patterns
+## 상태 관리 패턴
 
-### Context + Reducer Pattern
+### Context + Reducer 패턴
 
 ```typescript
 interface State {
@@ -296,9 +296,9 @@ export function useMarkets() {
 }
 ```
 
-## Performance Optimization
+## 성능 최적화
 
-### Memoization
+### 메모이제이션(Memoization)
 
 ```typescript
 // PASS: useMemo for expensive computations
@@ -322,7 +322,7 @@ export const MarketCard = React.memo<MarketCardProps>(({ market }) => {
 })
 ```
 
-### Code Splitting & Lazy Loading
+### 코드 스플리팅(Code Splitting) & 지연 로딩(Lazy Loading)
 
 ```typescript
 import { lazy, Suspense } from 'react'
@@ -346,7 +346,7 @@ export function Dashboard() {
 }
 ```
 
-### Virtualization for Long Lists
+### 긴 목록 가상화(Virtualization)
 
 ```typescript
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -390,9 +390,9 @@ export function VirtualMarketList({ markets }: { markets: Market[] }) {
 }
 ```
 
-## Form Handling Patterns
+## 폼 처리 패턴
 
-### Controlled Form with Validation
+### 유효성 검사가 포함된 제어 폼(Controlled Form)
 
 ```typescript
 interface FormData {
@@ -467,7 +467,7 @@ export function CreateMarketForm() {
 }
 ```
 
-## Error Boundary Pattern
+## 에러 바운더리(Error Boundary) 패턴
 
 ```typescript
 interface ErrorBoundaryState {
@@ -515,9 +515,9 @@ export class ErrorBoundary extends React.Component<
 </ErrorBoundary>
 ```
 
-## Animation Patterns
+## 애니메이션 패턴
 
-### Framer Motion Animations
+### Framer Motion 애니메이션
 
 ```typescript
 import { motion, AnimatePresence } from 'framer-motion'
@@ -569,9 +569,9 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 }
 ```
 
-## Accessibility Patterns
+## 접근성 패턴
 
-### Keyboard Navigation
+### 키보드 내비게이션(Keyboard Navigation)
 
 ```typescript
 export function Dropdown({ options, onSelect }: DropdownProps) {
@@ -612,7 +612,7 @@ export function Dropdown({ options, onSelect }: DropdownProps) {
 }
 ```
 
-### Focus Management
+### 포커스 관리(Focus Management)
 
 ```typescript
 export function Modal({ isOpen, onClose, children }: ModalProps) {
@@ -646,4 +646,4 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 }
 ```
 
-**Remember**: Modern frontend patterns enable maintainable, performant user interfaces. Choose patterns that fit your project complexity.
+**기억하기**: 현대적인 프론트엔드 패턴은 유지보수 가능하고 고성능의 사용자 인터페이스를 가능하게 합니다. 프로젝트 복잡도에 맞는 패턴을 선택하세요.

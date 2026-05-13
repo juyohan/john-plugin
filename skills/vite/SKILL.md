@@ -1,39 +1,39 @@
 ---
 name: vite
-description: Vite build tool patterns including config, plugins, HMR, env variables, proxy setup, SSR, library mode, dependency pre-bundling, and build optimization. Activate when working with vite.config.ts, Vite plugins, or Vite-based projects.
+description: Vite 빌드 도구 패턴 — 설정, 플러그인, HMR, 환경 변수, 프록시 설정, SSR, 라이브러리 모드, 의존성 사전 번들링, 빌드 최적화. vite.config.ts, Vite 플러그인, 또는 Vite 기반 프로젝트 작업 시 활성화.
 origin: ECC
 ---
-> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+> **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
 
-# Vite Patterns
+# Vite 패턴
 
-Build tool and dev server patterns for Vite 8+ projects. Covers configuration, environment variables, proxy setup, library mode, dependency pre-bundling, and common production pitfalls.
+Vite 8+ 프로젝트를 위한 빌드 도구 및 개발 서버 패턴. 설정, 환경 변수, 프록시 설정, 라이브러리 모드, 의존성 사전 번들링, 일반적인 프로덕션 함정을 다룹니다.
 
-## When to Use
+## 사용 시점
 
-- Configuring `vite.config.ts` or `vite.config.js`
-- Setting up environment variables or `.env` files
-- Configuring dev server proxy for API backends
-- Optimizing build output (chunks, minification, assets)
-- Publishing libraries with `build.lib`
-- Troubleshooting dependency pre-bundling or CJS/ESM interop
-- Debugging HMR, dev server, or build errors
-- Choosing or ordering Vite plugins
+- `vite.config.ts` 또는 `vite.config.js` 설정 시
+- 환경 변수 또는 `.env` 파일 설정 시
+- API 백엔드를 위한 개발 서버 프록시 설정 시
+- 빌드 출력 최적화 시 (청크, 축소화, 에셋)
+- `build.lib`으로 라이브러리 배포 시
+- 의존성 사전 번들링 또는 CJS/ESM 상호 운용 문제 해결 시
+- HMR, 개발 서버, 빌드 에러 디버깅 시
+- Vite 플러그인 선택 또는 순서 결정 시
 
-## How It Works
+## 작동 방식
 
-- **Dev mode** serves source files as native ESM — no bundling. Transforms happen on-demand per module request, which is why cold starts are fast and HMR is precise.
-- **Build mode** uses Rolldown (v7+) or Rollup (v5–v6) to bundle the app for production with tree-shaking, code-splitting, and Oxc-based minification.
-- **Dependency pre-bundling** converts CJS/UMD deps to ESM once via esbuild and caches the result under `node_modules/.vite`, so subsequent starts skip the work.
-- **Plugins** share a unified interface across dev and build — the same plugin object works for both the dev server's on-demand transforms and the production pipeline.
-- **Environment variables** are statically inlined at build time. `VITE_`-prefixed vars become public constants in the bundle; everything unprefixed is invisible to client code.
+- **개발 모드(Dev mode)**는 소스 파일을 네이티브 ESM으로 제공합니다 — 번들링 없음. 변환은 모듈 요청별로 온디맨드로 발생하므로 콜드 스타트가 빠르고 HMR이 정확합니다.
+- **빌드 모드(Build mode)**는 Rolldown(v7+) 또는 Rollup(v5–v6)을 사용하여 트리 쉐이킹(tree-shaking), 코드 분할(code-splitting), Oxc 기반 축소화로 프로덕션용 앱을 번들링합니다.
+- **의존성 사전 번들링(Dependency pre-bundling)**은 esbuild를 통해 CJS/UMD 의존성을 ESM으로 한 번 변환하고 `node_modules/.vite`에 결과를 캐시하므로 이후 시작 시 작업을 건너뜁니다.
+- **플러그인(Plugins)**은 개발과 빌드 모두에서 통합 인터페이스를 공유합니다 — 동일한 플러그인 객체가 개발 서버의 온디맨드 변환과 프로덕션 파이프라인 모두에서 작동합니다.
+- **환경 변수(Environment variables)**는 빌드 시 정적으로 인라인됩니다. `VITE_` 접두사가 붙은 변수는 번들의 공개 상수가 되고, 접두사가 없는 변수는 클라이언트 코드에서 보이지 않습니다.
 
-## Examples
+## 예시
 
-### Config Structure
+### 설정 구조
 
-#### Basic Config
+#### 기본 설정
 
 ```typescript
 // vite.config.ts
@@ -48,7 +48,7 @@ export default defineConfig({
 })
 ```
 
-#### Conditional Config
+#### 조건부 설정
 
 ```typescript
 // vite.config.ts
@@ -68,40 +68,40 @@ export default defineConfig(({ command, mode }) => {
 })
 ```
 
-#### Key Config Options
+#### 주요 설정 옵션
 
-| Key | Default | Description |
+| 키 | 기본값 | 설명 |
 |-----|---------|-------------|
-| `root` | `'.'` | Project root (where `index.html` lives) |
-| `base` | `'/'` | Public base path for deployed assets |
-| `envPrefix` | `'VITE_'` | Prefix for client-exposed env vars |
-| `build.outDir` | `'dist'` | Output directory |
-| `build.minify` | `'oxc'` | Minifier (`'oxc'`, `'terser'`, or `false`) |
-| `build.sourcemap` | `false` | `true`, `'inline'`, or `'hidden'` |
+| `root` | `'.'` | 프로젝트 루트 (`index.html`이 있는 위치) |
+| `base` | `'/'` | 배포된 에셋의 공개 기본 경로 |
+| `envPrefix` | `'VITE_'` | 클라이언트에 노출되는 환경 변수 접두사 |
+| `build.outDir` | `'dist'` | 출력 디렉토리 |
+| `build.minify` | `'oxc'` | 축소기 (`'oxc'`, `'terser'`, 또는 `false`) |
+| `build.sourcemap` | `false` | `true`, `'inline'`, 또는 `'hidden'` |
 
-### Plugins
+### 플러그인
 
-#### Essential Plugins
+#### 필수 플러그인
 
-Most plugin needs are covered by a handful of well-maintained packages. Reach for these before writing your own.
+대부분의 플러그인 필요는 잘 관리된 몇 가지 패키지로 해결됩니다. 직접 작성하기 전에 이것들을 먼저 사용하십시오.
 
-| Plugin | Purpose | When to use |
+| 플러그인 | 목적 | 사용 시점 |
 |--------|---------|-------------|
-| `@vitejs/plugin-react-swc` | React HMR + Fast Refresh via SWC | Default for React apps (faster than Babel variant) |
-| `@vitejs/plugin-react` | React HMR + Fast Refresh via Babel | Only if you need Babel plugins (emotion, MobX decorators) |
-| `@vitejs/plugin-vue` | Vue 3 SFC support | Vue apps |
-| `vite-plugin-checker` | Runs `tsc` + ESLint in worker thread with HMR overlay | **Any TypeScript app** — Vite does NOT type-check during `vite build` |
-| `vite-tsconfig-paths` | Honors `tsconfig.json` `paths` aliases | Any time you already have aliases in `tsconfig.json` |
-| `vite-plugin-dts` | Emits `.d.ts` files in library mode | Publishing TypeScript libraries |
-| `vite-plugin-svgr` | Imports SVGs as React components | React apps using SVGs as components |
-| `rollup-plugin-visualizer` | Bundle treemap/sunburst report | Periodic bundle size audits (use `enforce: 'post'`) |
-| `vite-plugin-pwa` | Zero-config PWA + Workbox | Offline-capable apps |
+| `@vitejs/plugin-react-swc` | SWC를 통한 React HMR + Fast Refresh | React 앱의 기본값 (Babel 버전보다 빠름) |
+| `@vitejs/plugin-react` | Babel을 통한 React HMR + Fast Refresh | Babel 플러그인이 필요한 경우만 (emotion, MobX 데코레이터) |
+| `@vitejs/plugin-vue` | Vue 3 SFC 지원 | Vue 앱 |
+| `vite-plugin-checker` | 워커 스레드에서 `tsc` + ESLint를 HMR 오버레이와 함께 실행 | **모든 TypeScript 앱** — Vite는 `vite build` 중 타입 체크를 하지 않음 |
+| `vite-tsconfig-paths` | `tsconfig.json` `paths` 별칭 적용 | `tsconfig.json`에 이미 별칭이 있는 경우 |
+| `vite-plugin-dts` | 라이브러리 모드에서 `.d.ts` 파일 생성 | TypeScript 라이브러리 배포 시 |
+| `vite-plugin-svgr` | SVG를 React 컴포넌트로 임포트 | SVG를 컴포넌트로 사용하는 React 앱 |
+| `rollup-plugin-visualizer` | 번들 트리맵/선버스트 리포트 | 주기적인 번들 크기 감사 (`enforce: 'post'` 사용) |
+| `vite-plugin-pwa` | 제로 설정 PWA + Workbox | 오프라인 지원 앱 |
 
-**Critical callout:** `vite build` transpiles but does NOT type-check. Type errors silently ship to production unless you add `vite-plugin-checker` or run `tsc --noEmit` in CI.
+**중요 주의사항:** `vite build`는 트랜스파일하지만 타입 체크를 하지 않습니다. `vite-plugin-checker`를 추가하거나 CI에서 `tsc --noEmit`을 실행하지 않으면 타입 에러가 프로덕션에 그대로 배포됩니다.
 
-#### Authoring Custom Plugins
+#### 커스텀 플러그인 작성
 
-Authoring is rare — most needs are covered by existing plugins. When you do need one, start inline in `vite.config.ts` and only extract if reused.
+작성이 필요한 경우는 드뭅니다 — 대부분의 필요는 기존 플러그인으로 해결됩니다. 필요할 때는 `vite.config.ts`에 인라인으로 시작하고 재사용될 때만 추출하십시오.
 
 ```typescript
 // vite.config.ts — minimal inline plugin
@@ -118,15 +118,15 @@ function myPlugin(): Plugin {
 }
 ```
 
-**Key hooks:** `transform` (modify source), `resolveId` + `load` (virtual modules), `transformIndexHtml` (inject into HTML), `configureServer` (add dev middleware), `hotUpdate` (custom HMR — replaces deprecated `handleHotUpdate` in v7+).
+**주요 훅:** `transform`(소스 수정), `resolveId` + `load`(가상 모듈), `transformIndexHtml`(HTML에 주입), `configureServer`(개발 미들웨어 추가), `hotUpdate`(커스텀 HMR — v7+에서 더 이상 사용되지 않는 `handleHotUpdate` 대체).
 
-**Virtual modules** use the `\0` prefix convention — `resolveId` returns `'\0virtual:my-id'` so other plugins skip it. User code imports `'virtual:my-id'`.
+**가상 모듈(Virtual modules)**은 `\0` 접두사 규칙을 사용합니다 — `resolveId`가 `'\0virtual:my-id'`를 반환하여 다른 플러그인이 건너뜁니다. 사용자 코드는 `'virtual:my-id'`를 임포트합니다.
 
-For full plugin API, see [vite.dev/guide/api-plugin](https://vite.dev/guide/api-plugin). Use `vite-plugin-inspect` during development to debug the transform pipeline.
+전체 플러그인 API는 [vite.dev/guide/api-plugin](https://vite.dev/guide/api-plugin)을 참조하십시오. 개발 중 변환 파이프라인 디버깅에는 `vite-plugin-inspect`를 사용하십시오.
 
 ### HMR API
 
-Framework plugins (`@vitejs/plugin-react`, `@vitejs/plugin-vue`, etc.) handle HMR automatically. Reach for `import.meta.hot` directly only when building custom state stores, dev tools, or framework-agnostic utilities that need to persist state across updates.
+프레임워크 플러그인(`@vitejs/plugin-react`, `@vitejs/plugin-vue` 등)이 HMR을 자동으로 처리합니다. `import.meta.hot`을 직접 사용하는 경우는 업데이트 간 상태를 유지해야 하는 커스텀 상태 스토어, 개발 도구, 또는 프레임워크 무관 유틸리티를 구축할 때만입니다.
 
 ```typescript
 // src/store.ts — manual HMR for a vanilla module
@@ -142,15 +142,15 @@ if (import.meta.hot) {
 }
 ```
 
-All `import.meta.hot` code is tree-shaken out of production builds — no guard removal needed.
+모든 `import.meta.hot` 코드는 프로덕션 빌드에서 트리 쉐이킹됩니다 — 가드 제거가 필요 없습니다.
 
-### Environment Variables
+### 환경 변수
 
-Vite loads `.env`, `.env.local`, `.env.[mode]`, and `.env.[mode].local` in that order (later overrides earlier); `*.local` files are gitignored and meant for local secrets.
+Vite는 `.env`, `.env.local`, `.env.[mode]`, `.env.[mode].local`을 순서대로 로드합니다(나중 것이 앞 것을 오버라이드); `*.local` 파일은 gitignore되며 로컬 시크릿(secret)용입니다.
 
-#### Client-Side Access
+#### 클라이언트 사이드 접근
 
-Only `VITE_`-prefixed vars are exposed to client code:
+`VITE_` 접두사가 붙은 변수만 클라이언트 코드에 노출됩니다:
 
 ```typescript
 import.meta.env.VITE_API_URL   // string
@@ -161,7 +161,7 @@ import.meta.env.PROD            // boolean
 import.meta.env.SSR             // boolean
 ```
 
-#### Using Env in Config
+#### 설정에서 환경 변수 사용
 
 ```typescript
 // vite.config.ts
@@ -177,15 +177,15 @@ export default defineConfig(({ mode }) => {
 })
 ```
 
-### Security
+### 보안
 
-#### `VITE_` Prefix is NOT a Security Boundary
+#### `VITE_` 접두사는 보안 경계가 아닙니다
 
-Any variable prefixed with `VITE_` is **statically inlined into the client bundle at build time**. Minification, base64 encoding, and disabling source maps do NOT hide it. A determined attacker can extract any `VITE_` var from the shipped JavaScript.
+`VITE_` 접두사가 붙은 변수는 **빌드 시 클라이언트 번들에 정적으로 인라인됩니다**. 축소화, base64 인코딩, 소스 맵 비활성화로는 숨길 수 없습니다. 공격자는 배포된 JavaScript에서 어떤 `VITE_` 변수든 추출할 수 있습니다.
 
-**Rule:** Only public values (API URLs, feature flags, public keys) go in `VITE_` vars. Secrets (API tokens, database URLs, private keys) MUST live server-side behind an API or serverless function.
+**규칙:** 공개 값(API URL, 기능 플래그, 공개 키)만 `VITE_` 변수에 넣으십시오. 시크릿(API 토큰, 데이터베이스 URL, 개인 키)은 반드시 API 또는 서버리스 함수 뒤에서 서버 사이드에서 처리해야 합니다.
 
-#### The `loadEnv('')` Trap
+#### `loadEnv('')` 함정
 
 ```typescript
 // BAD: passing '' as the third arg loads ALL env vars — including server secrets —
@@ -196,9 +196,9 @@ const env = loadEnv(mode, process.cwd(), '')
 const env = loadEnv(mode, process.cwd(), ['VITE_', 'APP_'])
 ```
 
-#### Source Maps in Production
+#### 프로덕션 소스 맵
 
-Production source maps leak your original source code. Disable them unless you upload to an error tracker (Sentry, Bugsnag) and delete locally afterward:
+프로덕션 소스 맵은 원본 소스 코드를 노출합니다. 에러 트래커(Sentry, Bugsnag)에 업로드하고 이후 로컬에서 삭제하는 경우가 아니면 비활성화하십시오:
 
 ```typescript
 build: {
@@ -206,13 +206,13 @@ build: {
 }
 ```
 
-#### `.gitignore` Checklist
+#### `.gitignore` 체크리스트
 
-- `.env.local`, `.env.*.local` — local secret overrides
-- `dist/` — build output
-- `node_modules/.vite` — pre-bundle cache (stale entries cause phantom errors)
+- `.env.local`, `.env.*.local` — 로컬 시크릿 오버라이드
+- `dist/` — 빌드 출력
+- `node_modules/.vite` — 사전 번들 캐시 (오래된 항목이 유령 에러를 유발함)
 
-### Server Proxy
+### 서버 프록시
 
 ```typescript
 // vite.config.ts — server.proxy
@@ -229,11 +229,11 @@ server: {
 }
 ```
 
-For WebSocket proxying, add `ws: true` to the route config.
+WebSocket 프록시 설정에는 라우트 설정에 `ws: true`를 추가하십시오.
 
-### Build Optimization
+### 빌드 최적화
 
-#### Manual Chunks
+#### 수동 청크(Manual Chunks)
 
 ```typescript
 // vite.config.ts — build.rolldownOptions
@@ -258,11 +258,11 @@ manualChunks(id) {
 }
 ```
 
-### Performance
+### 성능
 
-#### Avoid Barrel Files
+#### 배럴 파일(Barrel Files) 피하기
 
-Barrel files (`index.ts` re-exporting everything from a directory) force Vite to load every re-exported file even when you import a single symbol. This is the #1 dev-server slowdown flagged by the official docs.
+배럴 파일(`index.ts`가 디렉토리의 모든 것을 다시 내보내는 방식)은 단일 심볼을 임포트할 때도 Vite가 다시 내보낸 모든 파일을 로드하도록 강제합니다. 이것이 공식 문서에서 지적한 개발 서버 속도 저하의 1위 원인입니다.
 
 ```typescript
 // BAD — importing one util forces Vite to load the whole barrel
@@ -272,9 +272,9 @@ import { slash } from '@/utils'
 import { slash } from '@/utils/slash'
 ```
 
-#### Be Explicit with Import Extensions
+#### 임포트 확장자 명시하기
 
-Each implicit extension forces up to 6 filesystem checks via `resolve.extensions`. In large codebases, this adds up.
+암묵적 확장자는 `resolve.extensions`를 통해 최대 6번의 파일시스템 검사를 강제합니다. 대규모 코드베이스에서는 이것이 누적됩니다.
 
 ```typescript
 // BAD
@@ -284,11 +284,11 @@ import Component from './Component'
 import Component from './Component.tsx'
 ```
 
-Narrow `tsconfig.json` `allowImportingTsExtensions` + `resolve.extensions` to only the extensions you actually use.
+`tsconfig.json` `allowImportingTsExtensions` + `resolve.extensions`를 실제로 사용하는 확장자만으로 좁히십시오.
 
-#### Warm-Up Hot-Path Routes
+#### 핫 경로 라우트 워밍업
 
-`server.warmup.clientFiles` pre-transforms known hot entries before the browser requests them — eliminating the cold-load request waterfall on large apps.
+`server.warmup.clientFiles`는 브라우저가 요청하기 전에 알려진 핫 엔트리를 사전 변환합니다 — 대규모 앱에서 콜드 로드 요청 워터폴을 제거합니다.
 
 ```typescript
 // vite.config.ts
@@ -299,16 +299,16 @@ server: {
 }
 ```
 
-#### Profiling Slow Dev Servers
+#### 느린 개발 서버 프로파일링
 
-When `vite dev` feels slow, start with `vite --profile`, interact with the app, then press `p+enter` to save a `.cpuprofile`. Load it in [Speedscope](https://www.speedscope.app) to find which plugins are eating time — usually `buildStart`, `config`, or `configResolved` hooks in community plugins.
+`vite dev`가 느리다고 느껴지면 `vite --profile`로 시작하고, 앱과 상호작용한 다음 `p+enter`를 눌러 `.cpuprofile`을 저장하십시오. [Speedscope](https://www.speedscope.app)에서 로드하면 어떤 플러그인이 시간을 잡아먹는지 — 보통 커뮤니티 플러그인의 `buildStart`, `config`, 또는 `configResolved` 훅 — 찾을 수 있습니다.
 
-### Library Mode
+### 라이브러리 모드
 
-When publishing an npm package, use `build.lib`. Two footguns matter more than config detail:
+npm 패키지를 배포할 때는 `build.lib`을 사용하십시오. 설정 세부사항보다 중요한 두 가지 함정:
 
-1. **Types are not emitted** — add `vite-plugin-dts` or run `tsc --emitDeclarationOnly` separately.
-2. **Peer dependencies MUST be externalized** — unlisted peers get bundled into your library, causing duplicate-runtime errors in consumers.
+1. **타입이 생성되지 않음** — `vite-plugin-dts`를 추가하거나 `tsc --emitDeclarationOnly`를 별도로 실행하십시오.
+2. **피어 의존성은 반드시 외부화해야 함** — 목록에 없는 피어는 라이브러리에 번들되어 소비자에게 중복 런타임 에러를 유발합니다.
 
 ```typescript
 // vite.config.ts
@@ -324,9 +324,9 @@ build: {
 }
 ```
 
-### SSR Externals
+### SSR 외부화(Externals)
 
-Bare `createServer({ middlewareMode: true })` setups are framework-author territory. Most apps should use Nuxt, Remix, SvelteKit, Astro, or TanStack Start instead. What you *will* tweak as a framework user is the externals config when deps break in SSR:
+베어(bare) `createServer({ middlewareMode: true })` 설정은 프레임워크 작성자 영역입니다. 대부분의 앱은 Nuxt, Remix, SvelteKit, Astro, 또는 TanStack Start를 사용해야 합니다. 프레임워크 사용자로서 *실제로* 조정하게 되는 것은 의존성이 SSR에서 문제를 일으킬 때의 외부화 설정입니다:
 
 ```typescript
 // vite.config.ts — ssr options
@@ -337,9 +337,9 @@ ssr: {
 }
 ```
 
-### Dependency Pre-Bundling
+### 의존성 사전 번들링
 
-Vite pre-bundles dependencies to convert CJS/UMD to ESM and reduce request count.
+Vite는 CJS/UMD를 ESM으로 변환하고 요청 수를 줄이기 위해 의존성을 사전 번들링합니다.
 
 ```typescript
 // vite.config.ts — optimizeDeps
@@ -354,22 +354,22 @@ optimizeDeps: {
 }
 ```
 
-### Common Pitfalls
+### 일반적인 함정
 
-#### Dev Does Not Match Build
+#### 개발과 빌드가 일치하지 않음
 
-Dev uses esbuild/Rolldown for transforms; build uses Rolldown for bundling. CJS libraries can behave differently between the two. Always verify with `vite build && vite preview` before deploying.
+개발 모드는 변환에 esbuild/Rolldown을 사용하고, 빌드 모드는 번들링에 Rolldown을 사용합니다. CJS 라이브러리가 둘 사이에서 다르게 동작할 수 있습니다. 배포 전에 반드시 `vite build && vite preview`로 확인하십시오.
 
-#### Stale Chunks After Deployment
+#### 배포 후 오래된 청크
 
-New builds produce new chunk hashes. Users with active sessions request old filenames that no longer exist. Vite has no built-in solution. Mitigations:
+새 빌드는 새 청크 해시를 생성합니다. 활성 세션이 있는 사용자는 더 이상 존재하지 않는 이전 파일명을 요청합니다. Vite에는 내장 솔루션이 없습니다. 완화 방법:
 
-- Keep old `dist/assets/` files live for a deployment window
-- Catch dynamic import errors in your router and force a page reload
+- 배포 윈도우 동안 이전 `dist/assets/` 파일을 활성 상태로 유지하기
+- 라우터에서 동적 임포트 에러를 잡아 페이지 강제 새로고침하기
 
-#### Docker and Containers
+#### Docker와 컨테이너
 
-Vite binds to `localhost` by default, which is unreachable from outside a container:
+Vite는 기본적으로 `localhost`에 바인딩되므로 컨테이너 외부에서 접근할 수 없습니다:
 
 ```typescript
 // vite.config.ts — Docker/container setup
@@ -379,9 +379,9 @@ server: {
 }
 ```
 
-#### Monorepo File Access
+#### 모노레포 파일 접근
 
-Vite restricts file serving to the project root. Packages outside root are blocked:
+Vite는 파일 제공을 프로젝트 루트로 제한합니다. 루트 외부의 패키지는 차단됩니다:
 
 ```typescript
 // vite.config.ts — monorepo file access
@@ -392,7 +392,7 @@ server: {
 }
 ```
 
-### Anti-Patterns
+### 안티 패턴
 
 ```typescript
 // BAD: Setting envPrefix to '' exposes ALL env vars (including secrets) to the client
@@ -419,33 +419,33 @@ import.meta.hot.data = { count: 0 }           // WRONG: must mutate properties, 
 import.meta.hot.data.count = 0                 // CORRECT
 ```
 
-**Process anti-patterns:**
+**프로세스 안티 패턴:**
 
-- **`vite preview` is NOT a production server** — it is a smoke test for the built bundle. Deploy `dist/` to a real static host (NGINX, Cloudflare Pages, Vercel static) or use a multi-stage Dockerfile.
-- **Expecting `vite build` to type-check** — it only transpiles. Type errors silently ship to production. Add `vite-plugin-checker` or run `tsc --noEmit` in CI.
-- **Shipping `@vitejs/plugin-legacy` by default** — it bloats bundles ~40%, breaks source-map bundle analyzers, and is unnecessary for the 95%+ of users on modern browsers. Gate it on real analytics, not assumption.
-- **Hand-rolling 30+ `resolve.alias` entries that duplicate `tsconfig.json` paths** — use `vite-tsconfig-paths` instead. Observed in Excalidraw and PostHog; avoid in new projects.
-- **Leaving stale `node_modules/.vite` after dep changes** — pre-bundle cache causes phantom errors. Clear it when switching branches or after patching deps.
+- **`vite preview`는 프로덕션 서버가 아님** — 빌드된 번들의 스모크 테스트입니다. `dist/`를 실제 정적 호스트(NGINX, Cloudflare Pages, Vercel static) 또는 멀티 스테이지 Dockerfile에 배포하십시오.
+- **`vite build`가 타입 체크를 한다고 기대하기** — 트랜스파일만 합니다. 타입 에러가 프로덕션에 그대로 배포됩니다. `vite-plugin-checker`를 추가하거나 CI에서 `tsc --noEmit`을 실행하십시오.
+- **기본으로 `@vitejs/plugin-legacy` 배포** — 번들을 ~40% 부풀리고, 소스맵 번들 분석기를 망가뜨리며, 현대 브라우저 사용자 95%+에는 불필요합니다. 가정이 아닌 실제 분석에 따라 적용하십시오.
+- **`tsconfig.json` paths를 중복하는 30개 이상의 `resolve.alias` 수동 작성** — 대신 `vite-tsconfig-paths`를 사용하십시오. Excalidraw와 PostHog에서 발견된 패턴; 새 프로젝트에서는 피하십시오.
+- **의존성 변경 후 오래된 `node_modules/.vite` 방치** — 사전 번들 캐시가 유령 에러를 유발합니다. 브랜치 전환 또는 의존성 패치 후에 제거하십시오.
 
-## Quick Reference
+## 빠른 참조
 
-| Pattern | When to Use |
+| 패턴 | 사용 시점 |
 |---------|-------------|
-| `defineConfig` | Always — provides type inference |
-| `loadEnv(mode, root, ['VITE_'])` | Access env vars in config (explicit prefix) |
-| `vite-plugin-checker` | Any TypeScript app (fills the type-check gap) |
-| `vite-tsconfig-paths` | Instead of hand-rolled `resolve.alias` |
-| `optimizeDeps.include` | CJS deps causing interop issues |
-| `server.proxy` | Route API requests to backend in dev |
-| `server.host: true` | Docker, containers, remote access |
-| `server.warmup.clientFiles` | Pre-transform hot-path routes |
-| `build.lib` + `external` | Publishing npm packages |
-| `manualChunks` (object) | Vendor bundle splitting |
-| `vite --profile` | Debug slow dev server |
-| `vite build && vite preview` | Smoke-test prod bundle locally (NOT a prod server) |
+| `defineConfig` | 항상 — 타입 추론 제공 |
+| `loadEnv(mode, root, ['VITE_'])` | 설정에서 환경 변수 접근 (명시적 접두사) |
+| `vite-plugin-checker` | 모든 TypeScript 앱 (타입 체크 공백 채우기) |
+| `vite-tsconfig-paths` | 수동 `resolve.alias` 대신 |
+| `optimizeDeps.include` | 상호 운용 이슈를 유발하는 CJS 의존성 |
+| `server.proxy` | 개발 중 API 요청을 백엔드로 라우팅 |
+| `server.host: true` | Docker, 컨테이너, 원격 접근 |
+| `server.warmup.clientFiles` | 핫 경로 라우트 사전 변환 |
+| `build.lib` + `external` | npm 패키지 배포 |
+| `manualChunks` (object) | 벤더 번들 분할 |
+| `vite --profile` | 느린 개발 서버 디버깅 |
+| `vite build && vite preview` | 로컬에서 프로덕션 번들 스모크 테스트 (프로덕션 서버 아님) |
 
-## Related Skills
+## 관련 스킬
 
-- `frontend-patterns` — React component patterns
-- `docker-patterns` — containerized dev with Vite
-- `nextjs-turbopack` — alternative bundler for Next.js
+- `frontend-patterns` — React 컴포넌트 패턴
+- `docker-patterns` — Vite가 포함된 컨테이너화된 개발
+- `nextjs-turbopack` — Next.js용 대체 번들러

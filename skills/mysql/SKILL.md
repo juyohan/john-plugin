@@ -1,47 +1,39 @@
 ---
 name: mysql
-description: MySQL and MariaDB schema, query, indexing, transaction, replication, and connection-pool patterns for production backends.
+description: 프로덕션 백엔드를 위한 MySQL 및 MariaDB 스키마, 쿼리, 인덱싱, 트랜잭션, 복제 및 커넥션 풀 패턴.
 origin: ECC
 ---
-> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+> **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
 
-# MySQL Patterns
+# MySQL 패턴
 
-Use this skill when working on MySQL or MariaDB schema design, migrations,
-slow-query investigation, queue-style transactions, connection pools, or
-production database configuration. Prefer exact version checks before applying a
-feature-specific pattern because MySQL and MariaDB have diverged in several SQL
-details.
+MySQL 또는 MariaDB 스키마 설계, 마이그레이션(migration), 느린 쿼리 조사, 큐 방식 트랜잭션(queue-style transaction), 커넥션 풀(connection pool), 또는 프로덕션 데이터베이스 설정 작업 시 이 스킬을 사용합니다. MySQL과 MariaDB는 SQL 세부 사항에서 차이가 있으므로, 특정 기능 패턴을 적용하기 전에 버전을 먼저 확인하세요.
 
-## Activation
+## 활성화 시점
 
-- Designing MySQL or MariaDB tables, indexes, and constraints
-- Reviewing migrations before they run on large production tables
-- Debugging slow queries, lock waits, deadlocks, or connection exhaustion
-- Adding keyset pagination, upserts, full-text search, JSON columns, or queues
-- Configuring application connection pools, read replicas, TLS, or slow logs
+- MySQL 또는 MariaDB 테이블, 인덱스, 제약조건 설계 시
+- 대규모 프로덕션 테이블에 실행 전 마이그레이션 검토 시
+- 느린 쿼리, 락 대기, 데드락(deadlock), 커넥션 고갈 디버깅 시
+- 키셋 페이지네이션(keyset pagination), 업서트(upsert), 전문 검색(full-text search), JSON 컬럼, 큐 추가 시
+- 애플리케이션 커넥션 풀, 읽기 복제본(read replica), TLS, 슬로우 로그 설정 시
 
-## Version Check
+## 버전 확인
 
-Start by identifying the engine and version:
+먼저 엔진과 버전을 확인합니다:
 
 ```sql
 SELECT VERSION();
 SHOW VARIABLES LIKE 'version_comment';
 ```
 
-Keep MySQL and MariaDB guidance separate when syntax differs:
+MySQL과 MariaDB 가이드는 문법이 다를 때 분리해서 처리합니다:
 
-- MySQL documents row aliases as the replacement for `VALUES(col)` in
-  `ON DUPLICATE KEY UPDATE`; `VALUES(col)` is deprecated there.
-- MariaDB documents `VALUES(col)` as the supported way to reference inserted
-  values in `ON DUPLICATE KEY UPDATE`; use it for cross-engine compatibility.
-- `SKIP LOCKED` is appropriate for queue-like work only. It skips locked rows
-  and can return an inconsistent view, so do not use it for general accounting
-  or integrity-sensitive reads.
+- MySQL은 `ON DUPLICATE KEY UPDATE`에서 `VALUES(col)` 대신 행 별칭(row alias)을 권장하며, `VALUES(col)`는 사용 중단(deprecated)되었습니다.
+- MariaDB는 `ON DUPLICATE KEY UPDATE`에서 삽입 값 참조 방식으로 `VALUES(col)`를 지원합니다. 크로스 엔진 호환성을 위해 이 방식을 사용하세요.
+- `SKIP LOCKED`는 큐 방식 작업에만 적합합니다. 잠긴 행을 건너뛰며 일관성 없는 뷰를 반환할 수 있으므로, 일반 회계나 무결성에 민감한 읽기에는 사용하지 마세요.
 
-## Schema Defaults
+## 스키마 기본값
 
 ```sql
 CREATE TABLE orders (
@@ -58,22 +50,21 @@ CREATE TABLE orders (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
-Default choices:
+기본 선택 기준:
 
-| Use Case | Prefer | Avoid |
+| 사용 사례 | 권장 | 피해야 할 것 |
 | --- | --- | --- |
-| Surrogate primary keys | `BIGINT UNSIGNED AUTO_INCREMENT` | `INT` for tables that can grow beyond 2B rows |
-| UUID lookup keys | `BINARY(16)` with conversion helpers | `VARCHAR(36)` primary keys on hot tables |
-| Money and exact quantities | `DECIMAL(p, s)` | `FLOAT` or `DOUBLE` |
-| User-facing text | `utf8mb4` tables and indexes | MySQL `utf8` / `utf8mb3` defaults |
-| Application timestamps | `DATETIME` with UTC managed by the app | Assuming `DATETIME` stores time zone metadata |
-| Soft deletes | `deleted_at DATETIME NULL` plus scoped indexes | Filtering soft-deleted rows without an index |
-| Extensible status values | lookup table or constrained `VARCHAR` | `ENUM` when values change often |
+| 대리 기본 키(surrogate primary key) | `BIGINT UNSIGNED AUTO_INCREMENT` | 20억 행 이상 증가 가능한 테이블에서 `INT` |
+| UUID 조회 키 | 변환 헬퍼와 함께 `BINARY(16)` | 핫 테이블의 `VARCHAR(36)` 기본 키 |
+| 금액 및 정확한 수량 | `DECIMAL(p, s)` | `FLOAT` 또는 `DOUBLE` |
+| 사용자 대면 텍스트 | `utf8mb4` 테이블 및 인덱스 | MySQL `utf8` / `utf8mb3` 기본값 |
+| 애플리케이션 타임스탬프 | 앱에서 UTC로 관리하는 `DATETIME` | `DATETIME`이 타임존 메타데이터를 저장한다고 가정 |
+| 소프트 삭제(soft delete) | `deleted_at DATETIME NULL` + 스코프 인덱스 | 인덱스 없이 소프트 삭제 행 필터링 |
+| 확장 가능한 상태 값 | 조회 테이블 또는 제약된 `VARCHAR` | 값이 자주 변하는 경우 `ENUM` |
 
-## Indexing
+## 인덱싱
 
-Composite index order usually follows equality predicates first, then range or
-sort columns:
+복합 인덱스(composite index) 순서는 일반적으로 동등 조건을 먼저, 범위 또는 정렬 컬럼을 나중에 지정합니다:
 
 ```sql
 CREATE INDEX idx_orders_account_status_created
@@ -88,7 +79,7 @@ ORDER BY created_at DESC
 LIMIT 50;
 ```
 
-Use `EXPLAIN` before adding or changing an index:
+인덱스를 추가하거나 변경하기 전에 `EXPLAIN`을 사용합니다:
 
 ```sql
 EXPLAIN
@@ -99,23 +90,22 @@ ORDER BY created_at DESC
 LIMIT 50;
 ```
 
-Signals to investigate:
+조사가 필요한 신호:
 
-| Field | Risk Signal |
+| 필드 | 위험 신호 |
 | --- | --- |
-| `type` | `ALL` on a large table |
-| `key` | `NULL` when a selective predicate exists |
-| `rows` | Very high row estimate for an interactive path |
-| `Extra` | `Using temporary`, `Using filesort`, or broad `Using where` |
+| `type` | 대용량 테이블에서 `ALL` |
+| `key` | 선택적 조건이 있는데 `NULL` |
+| `rows` | 인터랙티브 경로에서 매우 높은 행 추정치 |
+| `Extra` | `Using temporary`, `Using filesort`, 또는 광범위한 `Using where` |
 
-Avoid adding indexes blindly. Each index increases write cost, migration time,
-backup size, and buffer-pool pressure.
+인덱스를 무분별하게 추가하지 마세요. 인덱스마다 쓰기 비용, 마이그레이션 시간, 백업 크기, 버퍼 풀(buffer pool) 압력이 증가합니다.
 
-## Query Patterns
+## 쿼리 패턴
 
-### Upsert
+### 업서트(Upsert)
 
-Cross-engine-compatible form:
+크로스 엔진 호환 형식:
 
 ```sql
 INSERT INTO user_settings (user_id, setting_key, setting_value)
@@ -125,7 +115,7 @@ ON DUPLICATE KEY UPDATE
     updated_at = CURRENT_TIMESTAMP;
 ```
 
-MySQL row-alias form:
+MySQL 행 별칭(row alias) 형식:
 
 ```sql
 INSERT INTO user_settings (user_id, setting_key, setting_value)
@@ -135,10 +125,9 @@ ON DUPLICATE KEY UPDATE
     updated_at = CURRENT_TIMESTAMP;
 ```
 
-Use the row-alias form only after confirming the target is MySQL. Use
-`VALUES(col)` for MariaDB or mixed MySQL/MariaDB fleets.
+행 별칭 형식은 대상이 MySQL임을 확인한 후에만 사용하세요. MariaDB 또는 MySQL/MariaDB 혼합 환경에는 `VALUES(col)`을 사용하세요.
 
-### Keyset Pagination
+### 키셋 페이지네이션(Keyset Pagination)
 
 ```sql
 SELECT id, name, created_at
@@ -148,19 +137,17 @@ ORDER BY created_at DESC, id DESC
 LIMIT 50;
 ```
 
-Back it with an index that matches the cursor:
+커서에 맞는 인덱스를 생성합니다:
 
 ```sql
 CREATE INDEX idx_products_created_id ON products (created_at, id);
 ```
 
-Do not use deep `OFFSET` pagination on large tables; it makes the server scan
-and discard rows before returning the page.
+대용량 테이블에서 깊은 `OFFSET` 페이지네이션을 사용하지 마세요. 서버가 페이지를 반환하기 전에 행을 스캔하고 버리게 됩니다.
 
-### JSON Fields
+### JSON 필드
 
-Use JSON columns for extension data, not for fields that need heavy relational
-filtering or constraints.
+JSON 컬럼은 관계형 필터링이나 제약조건이 많이 필요하지 않은 확장 데이터에 사용합니다.
 
 ```sql
 CREATE TABLE events (
@@ -172,10 +159,9 @@ CREATE TABLE events (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-For frequently queried JSON paths, expose a generated column and index that
-column. Keep foreign keys, ownership, tenancy, and lifecycle fields relational.
+자주 조회하는 JSON 경로는 생성 컬럼(generated column)으로 노출하고 해당 컬럼에 인덱스를 추가합니다. 외래 키, 소유권, 테넌시(tenancy), 라이프사이클 필드는 관계형으로 유지합니다.
 
-### Full-Text Search
+### 전문 검색(Full-Text Search)
 
 ```sql
 ALTER TABLE articles ADD FULLTEXT KEY ft_articles_title_body (title, body);
@@ -187,12 +173,11 @@ ORDER BY score DESC
 LIMIT 20;
 ```
 
-Use external search when you need typo tolerance, complex ranking, cross-table
-facets, or language-specific analysis beyond built-in full-text behavior.
+오타 허용, 복잡한 랭킹, 크로스 테이블 패싯, 또는 내장 전문 검색 기능을 넘어서는 언어별 분석이 필요할 때는 외부 검색 엔진을 사용하세요.
 
-## Transactions
+## 트랜잭션
 
-Keep transactions short and lock rows in a consistent order:
+트랜잭션을 짧게 유지하고 일관된 순서로 행을 잠급니다:
 
 ```sql
 START TRANSACTION;
@@ -209,17 +194,15 @@ UPDATE accounts SET balance = balance + ? WHERE id = ?;
 COMMIT;
 ```
 
-Deadlock and lock-wait checklist:
+데드락 및 락 대기 체크리스트:
 
-- Lock rows in a deterministic order across code paths.
-- Do external API calls before opening the transaction, not inside it.
-- Add indexes for predicates used in `UPDATE`, `DELETE`, and locking reads.
-- On deadlock, roll back and retry the whole transaction with a bounded retry
-  budget.
-- Capture `SHOW ENGINE INNODB STATUS\G` soon after a deadlock; it is overwritten
-  by later events.
+- 모든 코드 경로에서 결정적 순서로 행을 잠급니다.
+- 외부 API 호출은 트랜잭션 열기 전에 수행합니다.
+- `UPDATE`, `DELETE`, 잠금 읽기에 사용되는 조건에 인덱스를 추가합니다.
+- 데드락 발생 시 전체 트랜잭션을 롤백하고 제한된 재시도 횟수로 재시도합니다.
+- 데드락 직후 `SHOW ENGINE INNODB STATUS\G`를 캡처합니다. 이후 이벤트로 덮어쓰일 수 있습니다.
 
-Queue-style worker claim:
+큐 방식 워커 클레임(worker claim):
 
 ```sql
 START TRANSACTION;
@@ -238,12 +221,11 @@ WHERE id = ?;
 COMMIT;
 ```
 
-Use `SKIP LOCKED` only for queue-like workloads where skipping a locked row is
-acceptable. It is not a replacement for normal transactional consistency.
+`SKIP LOCKED`는 잠긴 행을 건너뛰는 것이 허용되는 큐 방식 워크로드에만 사용하세요. 일반적인 트랜잭션 일관성의 대체재가 아닙니다.
 
-## Connection Pools
+## 커넥션 풀
 
-SQLAlchemy example:
+SQLAlchemy 예시:
 
 ```python
 from sqlalchemy import create_engine
@@ -259,7 +241,7 @@ engine = create_engine(
 )
 ```
 
-Node.js `mysql2` example:
+Node.js `mysql2` 예시:
 
 ```javascript
 import mysql from 'mysql2/promise';
@@ -282,13 +264,11 @@ const [rows] = await pool.execute(
 );
 ```
 
-Keep application pool recycling below the server `wait_timeout`. If the server
-uses `wait_timeout = 300`, a `pool_recycle` around 240 seconds is coherent;
-`pool_pre_ping` still helps recover from network and failover events.
+애플리케이션 풀 재활용을 서버 `wait_timeout` 이하로 유지하세요. 서버가 `wait_timeout = 300`을 사용하는 경우, `pool_recycle`을 240초 정도로 설정하는 것이 적절합니다. `pool_pre_ping`은 네트워크 장애 및 페일오버 이벤트에서 복구하는 데 도움이 됩니다.
 
-## Diagnostics
+## 진단
 
-Useful first-pass commands:
+유용한 1차 진단 명령어:
 
 ```sql
 SHOW FULL PROCESSLIST;
@@ -297,7 +277,7 @@ SHOW VARIABLES LIKE 'slow_query_log';
 SHOW VARIABLES LIKE 'long_query_time';
 ```
 
-Enable the slow log in a controlled environment:
+제어된 환경에서 슬로우 로그 활성화:
 
 ```sql
 SET GLOBAL slow_query_log = 'ON';
@@ -305,28 +285,23 @@ SET GLOBAL long_query_time = 1;
 SET GLOBAL log_queries_not_using_indexes = 'ON';
 ```
 
-Use `EXPLAIN ANALYZE` only when it is safe to execute the query. It runs the
-statement and can be expensive on production-sized data.
+`EXPLAIN ANALYZE`는 쿼리 실행이 안전한 경우에만 사용하세요. 실제로 실행되므로 프로덕션 규모 데이터에서는 비용이 클 수 있습니다.
 
-## Replication
+## 복제(Replication)
 
-Read replicas can lag. Do not route read-your-own-write paths, checkout flows,
-permission checks, or idempotency-key reads to a replica immediately after a
-write.
+읽기 복제본은 지연(lag)이 발생할 수 있습니다. 쓰기 직후 자신이 쓴 내용을 읽는 경로(read-your-own-write), 결제 흐름, 권한 확인, 멱등성 키(idempotency key) 읽기를 복제본으로 즉시 라우팅하지 마세요.
 
 ```sql
--- MySQL legacy terminology, still common in existing fleets
+-- MySQL 레거시 용어, 기존 플릿에서 여전히 일반적
 SHOW SLAVE STATUS\G;
 
--- Newer terminology where supported
+-- 지원되는 경우 새로운 용어
 SHOW REPLICA STATUS\G;
 ```
 
-Check the engine/version before standardizing on one command. Monitor replica
-SQL thread health, IO thread health, and lag, not just whether the TCP
-connection is alive.
+하나의 명령어로 표준화하기 전에 엔진/버전을 확인하세요. TCP 연결 생존 여부뿐만 아니라 복제본 SQL 스레드 상태, IO 스레드 상태, 지연을 모니터링하세요.
 
-## Security
+## 보안
 
 ```sql
 CREATE USER 'app'@'%' IDENTIFIED BY 'use-a-secret-manager';
@@ -342,18 +317,17 @@ DROP USER IF EXISTS ''@'localhost';
 DROP USER IF EXISTS ''@'%';
 ```
 
-Security review points:
+보안 검토 항목:
 
-- Do not grant `ALL PRIVILEGES` or `*.*` to application users.
-- Require TLS for application users when traffic crosses hosts or networks.
-- Store credentials in the platform secret manager, not in examples, scripts, or
-  repository files.
-- Separate migration/admin users from runtime application users.
-- Audit public network exposure and bind addresses before tuning performance.
+- 애플리케이션 사용자에게 `ALL PRIVILEGES` 또는 `*.*`를 부여하지 마세요.
+- 트래픽이 호스트 또는 네트워크를 가로지를 때 애플리케이션 사용자에게 TLS를 요구하세요.
+- 자격증명은 플랫폼 시크릿 매니저에 저장하고, 예시, 스크립트, 저장소 파일에는 포함하지 마세요.
+- 마이그레이션/관리 사용자와 런타임 애플리케이션 사용자를 분리하세요.
+- 성능 튜닝 전에 퍼블릭 네트워크 노출과 바인드 주소를 감사하세요.
 
-## Configuration
+## 설정
 
-Example starting point for a dedicated database host:
+전용 데이터베이스 호스트의 시작점 예시:
 
 ```ini
 [mysqld]
@@ -377,38 +351,35 @@ binlog_format = ROW
 binlog_expire_logs_seconds = 604800
 ```
 
-Treat configuration values as a prompt for review, not a universal preset. Size
-memory, connections, log retention, and durability settings from workload,
-hardware, backup policy, and recovery objectives.
+설정값은 범용 프리셋이 아닌 검토를 위한 출발점으로 다루세요. 워크로드, 하드웨어, 백업 정책, 복구 목표에 맞게 메모리, 커넥션, 로그 보존, 내구성 설정을 조정하세요.
 
-## Anti-Patterns
+## 안티 패턴
 
-| Anti-Pattern | Risk | Better Pattern |
+| 안티 패턴 | 위험 | 더 나은 패턴 |
 | --- | --- | --- |
-| `SELECT *` in hot paths | Over-fetching and brittle clients | Select explicit columns |
-| Deep `OFFSET` pagination | Linear scans and slow pages | Keyset pagination |
-| No index on foreign-key joins | Slow joins and lock-heavy deletes | Index FK columns intentionally |
-| Long transactions | Lock waits and large undo history | Commit small units of work |
-| Direct DML against `mysql.user` | Grant-table corruption risk | Use `CREATE USER`, `ALTER USER`, `DROP USER` |
-| Application user with admin grants | High blast radius | Least-privilege runtime user |
-| Pool recycle above `wait_timeout` | Stale pooled connections | Recycle below timeout and pre-ping |
-| Replica reads after writes | Stale user-facing state | Pin read-after-write flows to primary |
+| 핫 경로에서 `SELECT *` | 과다 조회 및 취약한 클라이언트 | 명시적 컬럼 선택 |
+| 깊은 `OFFSET` 페이지네이션 | 선형 스캔 및 느린 페이지 | 키셋 페이지네이션 |
+| 외래 키 조인에 인덱스 없음 | 느린 조인 및 락 집중 삭제 | FK 컬럼에 의도적으로 인덱스 추가 |
+| 긴 트랜잭션 | 락 대기 및 대용량 undo 기록 | 작은 단위로 커밋 |
+| `mysql.user`에 직접 DML | 그랜트 테이블 손상 위험 | `CREATE USER`, `ALTER USER`, `DROP USER` 사용 |
+| 관리자 권한의 애플리케이션 사용자 | 높은 피해 반경(blast radius) | 최소 권한(least-privilege) 런타임 사용자 |
+| `wait_timeout` 초과 풀 재활용 | 오래된 풀링된 커넥션 | 타임아웃 이하로 재활용 및 pre-ping 설정 |
+| 쓰기 후 복제본 읽기 | 오래된 사용자 대면 상태 | 쓰기 후 읽기 경로를 기본 서버(primary)에 고정 |
 
-## Output Expectations
+## 출력 기대값
 
-When this skill is used for review, return:
+이 스킬을 리뷰에 사용할 때 반환 내용:
 
-1. Engine/version assumptions.
-2. Highest-risk correctness, lock, security, and migration issues.
-3. Exact SQL or code changes for the safe path.
-4. Validation plan: `EXPLAIN`, migration dry run, lock/deadlock check, and
-   rollback criteria.
-5. Any MySQL/MariaDB syntax differences that affect the recommendation.
+1. 엔진/버전 가정 사항.
+2. 가장 위험도 높은 정확성, 락, 보안, 마이그레이션 이슈.
+3. 안전한 경로를 위한 정확한 SQL 또는 코드 변경사항.
+4. 검증 계획: `EXPLAIN`, 마이그레이션 드라이런(dry run), 락/데드락 점검, 롤백 기준.
+5. 권고 사항에 영향을 미치는 MySQL/MariaDB 문법 차이.
 
-## Related
+## 관련 항목
 
-- Skill: `postgres-patterns` - PostgreSQL-specific schema and query patterns
-- Skill: `database-migrations` - migration planning and rollout safety
-- Skill: `backend-patterns` - API and service-layer patterns
-- Skill: `security-review` - secret handling, auth, and least privilege
-- Agent: `database-reviewer` - broader database review workflow
+- 스킬: `postgres-patterns` — PostgreSQL 전용 스키마 및 쿼리 패턴
+- 스킬: `database-migrations` — 마이그레이션 계획 및 롤아웃 안전성
+- 스킬: `backend-patterns` — API 및 서비스 레이어 패턴
+- 스킬: `security-review` — 시크릿 관리, 인증, 최소 권한
+- 에이전트: `database-reviewer` — 광범위한 데이터베이스 리뷰 워크플로우

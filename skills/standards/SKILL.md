@@ -1,72 +1,72 @@
 ---
 name: standards
-description: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.
+description: 네이밍, 가독성, 불변성 및 코드 품질 리뷰를 위한 프로젝트 공통 코딩 컨벤션. 프레임워크별 패턴은 세부 프론트엔드 또는 백엔드 스킬을 사용할 것.
 origin: ECC
 ---
-> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+> **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
 
-# Coding Standards & Best Practices
+# 코딩 표준 & 모범 사례
 
-Baseline coding conventions applicable across projects.
+프로젝트 전반에 적용되는 기본 코딩 컨벤션.
 
-This skill is the shared floor, not the detailed framework playbook.
+이 스킬은 공통 기반(floor)이며, 세부 프레임워크 플레이북이 아닙니다.
 
-- Use `frontend-patterns` for React, state, forms, rendering, and UI architecture.
-- Use `backend-patterns` or `api-design` for repository/service layers, endpoint design, validation, and server-specific concerns.
-- Use `rules/common/coding-style.md` when you need the shortest reusable rule layer instead of a full skill walkthrough.
+- React, 상태 관리, 폼, 렌더링, UI 아키텍처에는 `frontend-patterns`를 사용하십시오.
+- 리포지토리(repository)/서비스(service) 계층, 엔드포인트 설계, 유효성 검사, 서버 관련 사항에는 `backend-patterns` 또는 `api-design`을 사용하십시오.
+- 전체 스킬 안내 대신 간결한 재사용 가능한 규칙 레이어가 필요하다면 `rules/common/coding-style.md`를 사용하십시오.
 
-## When to Activate
+## 활성화 시점
 
-- Starting a new project or module
-- Reviewing code for quality and maintainability
-- Refactoring existing code to follow conventions
-- Enforcing naming, formatting, or structural consistency
-- Setting up linting, formatting, or type-checking rules
-- Onboarding new contributors to coding conventions
+- 새 프로젝트 또는 모듈을 시작할 때
+- 코드의 품질 및 유지보수성을 리뷰할 때
+- 컨벤션을 따르도록 기존 코드를 리팩토링할 때
+- 네이밍, 포매팅, 또는 구조적 일관성을 강제할 때
+- 린팅(linting), 포매팅, 또는 타입 체킹 규칙을 설정할 때
+- 새 기여자에게 코딩 컨벤션을 안내할 때
 
-## Scope Boundaries
+## 범위 경계
 
-Activate this skill for:
-- descriptive naming
-- immutability defaults
-- readability, KISS, DRY, and YAGNI enforcement
-- error-handling expectations and code-smell review
+이 스킬을 다음 목적으로 활성화하십시오:
+- 서술적인 네이밍
+- 불변성(immutability) 기본값
+- 가독성, KISS, DRY, YAGNI 적용
+- 에러 처리 기대치 및 코드 스멜(code smell) 리뷰
 
-Do not use this skill as the primary source for:
-- React composition, hooks, or rendering patterns
-- backend architecture, API design, or database layering
-- domain-specific framework guidance when a narrower ECC skill already exists
+이 스킬을 다음 사항의 주요 출처로 사용하지 마십시오:
+- React 컴포지션, 훅(hooks), 또는 렌더링 패턴
+- 백엔드 아키텍처, API 설계, 또는 데이터베이스 레이어링
+- 더 좁은 범위의 ECC 스킬이 이미 존재하는 도메인별 프레임워크 가이드
 
-## Code Quality Principles
+## 코드 품질 원칙
 
-### 1. Readability First
-- Code is read more than written
-- Clear variable and function names
-- Self-documenting code preferred over comments
-- Consistent formatting
+### 1. 가독성 우선
+- 코드는 작성보다 읽히는 횟수가 많습니다
+- 명확한 변수 및 함수 이름 사용
+- 주석보다 자기 설명적(self-documenting) 코드 선호
+- 일관된 포매팅 유지
 
 ### 2. KISS (Keep It Simple, Stupid)
-- Simplest solution that works
-- Avoid over-engineering
-- No premature optimization
-- Easy to understand > clever code
+- 작동하는 가장 단순한 솔루션 선택
+- 과도한 엔지니어링(over-engineering) 지양
+- 조급한 최적화(premature optimization) 금지
+- 이해하기 쉬운 코드 > 영리한 코드
 
 ### 3. DRY (Don't Repeat Yourself)
-- Extract common logic into functions
-- Create reusable components
-- Share utilities across modules
-- Avoid copy-paste programming
+- 공통 로직을 함수로 추출
+- 재사용 가능한 컴포넌트 생성
+- 모듈 간 유틸리티 공유
+- 복사-붙여넣기 프로그래밍 지양
 
 ### 4. YAGNI (You Aren't Gonna Need It)
-- Don't build features before they're needed
-- Avoid speculative generality
-- Add complexity only when required
-- Start simple, refactor when needed
+- 필요하기 전에는 기능을 만들지 말 것
+- 추측성 범용성(speculative generality) 지양
+- 필요할 때만 복잡성 추가
+- 단순하게 시작하고, 필요시 리팩토링
 
-## TypeScript/JavaScript Standards
+## TypeScript/JavaScript 표준
 
-### Variable Naming
+### 변수 네이밍
 
 ```typescript
 // PASS: GOOD: Descriptive names
@@ -80,7 +80,7 @@ const flag = true
 const x = 1000
 ```
 
-### Function Naming
+### 함수 네이밍
 
 ```typescript
 // PASS: GOOD: Verb-noun pattern
@@ -94,7 +94,7 @@ function similarity(a, b) { }
 function email(e) { }
 ```
 
-### Immutability Pattern (CRITICAL)
+### 불변성(Immutability) 패턴 (치명적 - CRITICAL)
 
 ```typescript
 // PASS: ALWAYS use spread operator
@@ -110,7 +110,7 @@ user.name = 'New Name'  // BAD
 items.push(newItem)     // BAD
 ```
 
-### Error Handling
+### 에러 처리
 
 ```typescript
 // PASS: GOOD: Comprehensive error handling
@@ -136,7 +136,7 @@ async function fetchData(url) {
 }
 ```
 
-### Async/Await Best Practices
+### Async/Await 모범 사례
 
 ```typescript
 // PASS: GOOD: Parallel execution when possible
@@ -152,7 +152,7 @@ const markets = await fetchMarkets()
 const stats = await fetchStats()
 ```
 
-### Type Safety
+### 타입 안전성(Type Safety)
 
 ```typescript
 // PASS: GOOD: Proper types
@@ -173,9 +173,9 @@ function getMarket(id: any): Promise<any> {
 }
 ```
 
-## React Best Practices
+## React 모범 사례
 
-### Component Structure
+### 컴포넌트 구조
 
 ```typescript
 // PASS: GOOD: Functional component with types
@@ -209,7 +209,7 @@ export function Button(props) {
 }
 ```
 
-### Custom Hooks
+### 커스텀 훅(Custom Hooks)
 
 ```typescript
 // PASS: GOOD: Reusable custom hook
@@ -231,7 +231,7 @@ export function useDebounce<T>(value: T, delay: number): T {
 const debouncedQuery = useDebounce(searchQuery, 500)
 ```
 
-### State Management
+### 상태 관리
 
 ```typescript
 // PASS: GOOD: Proper state updates
@@ -244,7 +244,7 @@ setCount(prev => prev + 1)
 setCount(count + 1)  // Can be stale in async scenarios
 ```
 
-### Conditional Rendering
+### 조건부 렌더링
 
 ```typescript
 // PASS: GOOD: Clear conditional rendering
@@ -256,9 +256,9 @@ setCount(count + 1)  // Can be stale in async scenarios
 {isLoading ? <Spinner /> : error ? <ErrorMessage error={error} /> : data ? <DataDisplay data={data} /> : null}
 ```
 
-## API Design Standards
+## API 설계 표준
 
-### REST API Conventions
+### REST API 컨벤션
 
 ```
 GET    /api/markets              # List all markets
@@ -272,7 +272,7 @@ DELETE /api/markets/:id          # Delete market
 GET /api/markets?status=active&limit=10&offset=0
 ```
 
-### Response Format
+### 응답 형식
 
 ```typescript
 // PASS: GOOD: Consistent response structure
@@ -301,7 +301,7 @@ return NextResponse.json({
 }, { status: 400 })
 ```
 
-### Input Validation
+### 입력 유효성 검사
 
 ```typescript
 import { z } from 'zod'
@@ -332,9 +332,9 @@ export async function POST(request: Request) {
 }
 ```
 
-## File Organization
+## 파일 구조
 
-### Project Structure
+### 프로젝트 구조
 
 ```
 src/
@@ -355,7 +355,7 @@ src/
 └── styles/              # Global styles
 ```
 
-### File Naming
+### 파일 네이밍
 
 ```
 components/Button.tsx          # PascalCase for components
@@ -364,9 +364,9 @@ lib/formatDate.ts             # camelCase for utilities
 types/market.types.ts         # camelCase with .types suffix
 ```
 
-## Comments & Documentation
+## 주석(Comments) & 문서화
 
-### When to Comment
+### 주석을 달아야 할 때
 
 ```typescript
 // PASS: GOOD: Explain WHY, not WHAT
@@ -384,7 +384,7 @@ count++
 name = user.name
 ```
 
-### JSDoc for Public APIs
+### 공개 API를 위한 JSDoc
 
 ```typescript
 /**
@@ -409,9 +409,9 @@ export async function searchMarkets(
 }
 ```
 
-## Performance Best Practices
+## 성능 모범 사례
 
-### Memoization
+### 메모이제이션(Memoization)
 
 ```typescript
 import { useMemo, useCallback } from 'react'
@@ -427,7 +427,7 @@ const handleSearch = useCallback((query: string) => {
 }, [])
 ```
 
-### Lazy Loading
+### 지연 로딩(Lazy Loading)
 
 ```typescript
 import { lazy, Suspense } from 'react'
@@ -444,7 +444,7 @@ export function Dashboard() {
 }
 ```
 
-### Database Queries
+### 데이터베이스 쿼리
 
 ```typescript
 // PASS: GOOD: Select only needed columns
@@ -459,9 +459,9 @@ const { data } = await supabase
   .select('*')
 ```
 
-## Testing Standards
+## 테스트 표준
 
-### Test Structure (AAA Pattern)
+### 테스트 구조 (AAA 패턴)
 
 ```typescript
 test('calculates similarity correctly', () => {
@@ -477,7 +477,7 @@ test('calculates similarity correctly', () => {
 })
 ```
 
-### Test Naming
+### 테스트 네이밍
 
 ```typescript
 // PASS: GOOD: Descriptive test names
@@ -490,11 +490,11 @@ test('works', () => { })
 test('test search', () => { })
 ```
 
-## Code Smell Detection
+## 코드 스멜(Code Smell) 탐지
 
-Watch for these anti-patterns:
+다음 안티 패턴(anti-pattern)에 주의하십시오:
 
-### 1. Long Functions
+### 1. 긴 함수
 ```typescript
 // FAIL: BAD: Function > 50 lines
 function processMarketData() {
@@ -509,7 +509,7 @@ function processMarketData() {
 }
 ```
 
-### 2. Deep Nesting
+### 2. 깊은 중첩
 ```typescript
 // FAIL: BAD: 5+ levels of nesting
 if (user) {
@@ -534,7 +534,7 @@ if (!hasPermission) return
 // Do something
 ```
 
-### 3. Magic Numbers
+### 3. 매직 넘버(Magic Numbers)
 ```typescript
 // FAIL: BAD: Unexplained numbers
 if (retryCount > 3) { }
@@ -548,4 +548,4 @@ if (retryCount > MAX_RETRIES) { }
 setTimeout(callback, DEBOUNCE_DELAY_MS)
 ```
 
-**Remember**: Code quality is not negotiable. Clear, maintainable code enables rapid development and confident refactoring.
+**기억하기**: 코드 품질은 선택 사항이 아닙니다. 명확하고 유지보수 가능한 코드는 빠른 개발과 자신 있는 리팩토링을 가능하게 합니다.

@@ -1,109 +1,109 @@
 ---
 name: migrations
-description: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime deployments across PostgreSQL, MySQL, and common ORMs (Prisma, Drizzle, Kysely, Django, TypeORM, golang-migrate).
+description: PostgreSQL, MySQL, 주요 ORM(Prisma, Drizzle, Kysely, Django, TypeORM, golang-migrate)을 위한 스키마 변경, 데이터 마이그레이션, 롤백 및 무중단 배포 데이터베이스 마이그레이션 모범 사례.
 origin: ECC
 ---
-> **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
+> **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
 
-# Database Migration Patterns
+# 데이터베이스 마이그레이션 패턴
 
-Safe, reversible database schema changes for production systems.
+프로덕션 시스템을 위한 안전하고 가역적인 데이터베이스 스키마 변경.
 
-## When to Activate
+## 활성화 시점
 
-- Creating or altering database tables
-- Adding/removing columns or indexes
-- Running data migrations (backfill, transform)
-- Planning zero-downtime schema changes
-- Setting up migration tooling for a new project
+- 데이터베이스 테이블 생성 또는 변경 시
+- 컬럼 또는 인덱스 추가/삭제 시
+- 데이터 마이그레이션 실행 시 (백필(backfill), 변환)
+- 무중단(zero-downtime) 스키마 변경 계획 시
+- 신규 프로젝트를 위한 마이그레이션 도구 설정 시
 
-## Core Principles
+## 핵심 원칙
 
-1. **Every change is a migration** — never alter production databases manually
-2. **Migrations are forward-only in production** — rollbacks use new forward migrations
-3. **Schema and data migrations are separate** — never mix DDL and DML in one migration
-4. **Test migrations against production-sized data** — a migration that works on 100 rows may lock on 10M
-5. **Migrations are immutable once deployed** — never edit a migration that has run in production
+1. **모든 변경은 마이그레이션** — 프로덕션 데이터베이스를 직접 수정하지 마세요
+2. **마이그레이션은 프로덕션에서 전진(forward-only)** — 롤백은 새로운 전진 마이그레이션으로 처리
+3. **스키마 마이그레이션과 데이터 마이그레이션은 분리** — DDL과 DML을 하나의 마이그레이션에 혼합하지 마세요
+4. **프로덕션 크기 데이터로 마이그레이션 테스트** — 100개 행에서 잘 동작하는 마이그레이션이 1,000만 행에서는 테이블을 잠글 수 있습니다
+5. **배포된 마이그레이션은 불변(immutable)** — 프로덕션에서 실행된 마이그레이션은 절대 수정하지 마세요
 
-## Migration Safety Checklist
+## 마이그레이션 안전 체크리스트
 
-Before applying any migration:
+마이그레이션 적용 전:
 
-- [ ] Migration has both UP and DOWN (or is explicitly marked irreversible)
-- [ ] No full table locks on large tables (use concurrent operations)
-- [ ] New columns have defaults or are nullable (never add NOT NULL without default)
-- [ ] Indexes created concurrently (not inline with CREATE TABLE for existing tables)
-- [ ] Data backfill is a separate migration from schema change
-- [ ] Tested against a copy of production data
-- [ ] Rollback plan documented
+- [ ] UP과 DOWN이 모두 있거나 명시적으로 비가역(irreversible)으로 표시됨
+- [ ] 대용량 테이블에서 전체 테이블 락 없음 (동시 작업 사용)
+- [ ] 새 컬럼에 기본값이 있거나 NULL 허용 (기본값 없이 NOT NULL 추가 금지)
+- [ ] 인덱스는 동시(CONCURRENTLY) 생성 (기존 테이블의 CREATE TABLE 인라인 방식 아님)
+- [ ] 데이터 백필은 스키마 변경과 별도 마이그레이션
+- [ ] 프로덕션 데이터 복사본으로 테스트 완료
+- [ ] 롤백 계획 문서화
 
-## PostgreSQL Patterns
+## PostgreSQL 패턴
 
-### Adding a Column Safely
+### 컬럼 안전하게 추가하기
 
 ```sql
--- GOOD: Nullable column, no lock
+-- 좋음: NULL 허용 컬럼, 락 없음
 ALTER TABLE users ADD COLUMN avatar_url TEXT;
 
--- GOOD: Column with default (Postgres 11+ is instant, no rewrite)
+-- 좋음: 기본값이 있는 컬럼 (Postgres 11+에서 즉시 처리, 재작성 없음)
 ALTER TABLE users ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true;
 
--- BAD: NOT NULL without default on existing table (requires full rewrite)
+-- 나쁨: 기존 테이블에 기본값 없이 NOT NULL (전체 재작성 필요)
 ALTER TABLE users ADD COLUMN role TEXT NOT NULL;
--- This locks the table and rewrites every row
+-- 이 쿼리는 테이블을 잠그고 모든 행을 재작성합니다
 ```
 
-### Adding an Index Without Downtime
+### 다운타임 없이 인덱스 추가하기
 
 ```sql
--- BAD: Blocks writes on large tables
+-- 나쁨: 대용량 테이블에서 쓰기 차단
 CREATE INDEX idx_users_email ON users (email);
 
--- GOOD: Non-blocking, allows concurrent writes
+-- 좋음: 비차단(non-blocking), 동시 쓰기 허용
 CREATE INDEX CONCURRENTLY idx_users_email ON users (email);
 
--- Note: CONCURRENTLY cannot run inside a transaction block
--- Most migration tools need special handling for this
+-- 참고: CONCURRENTLY는 트랜잭션 블록 내에서 실행 불가
+-- 대부분의 마이그레이션 도구는 이를 위한 특별 처리가 필요합니다
 ```
 
-### Renaming a Column (Zero-Downtime)
+### 컬럼 이름 변경 (무중단)
 
-Never rename directly in production. Use the expand-contract pattern:
+프로덕션에서 직접 이름을 변경하지 마세요. 확장-계약(expand-contract) 패턴을 사용하세요:
 
 ```sql
--- Step 1: Add new column (migration 001)
+-- 1단계: 새 컬럼 추가 (migration 001)
 ALTER TABLE users ADD COLUMN display_name TEXT;
 
--- Step 2: Backfill data (migration 002, data migration)
+-- 2단계: 데이터 백필 (migration 002, 데이터 마이그레이션)
 UPDATE users SET display_name = username WHERE display_name IS NULL;
 
--- Step 3: Update application code to read/write both columns
--- Deploy application changes
+-- 3단계: 양쪽 컬럼을 읽고 쓰도록 애플리케이션 코드 업데이트
+-- 애플리케이션 변경 사항 배포
 
--- Step 4: Stop writing to old column, drop it (migration 003)
+-- 4단계: 기존 컬럼 쓰기 중단 후 삭제 (migration 003)
 ALTER TABLE users DROP COLUMN username;
 ```
 
-### Removing a Column Safely
+### 컬럼 안전하게 삭제하기
 
 ```sql
--- Step 1: Remove all application references to the column
--- Step 2: Deploy application without the column reference
--- Step 3: Drop column in next migration
+-- 1단계: 컬럼에 대한 모든 애플리케이션 참조 제거
+-- 2단계: 컬럼 참조 없이 애플리케이션 배포
+-- 3단계: 다음 마이그레이션에서 컬럼 삭제
 ALTER TABLE orders DROP COLUMN legacy_status;
 
--- For Django: use SeparateDatabaseAndState to remove from model
--- without generating DROP COLUMN (then drop in next migration)
+-- Django의 경우: SeparateDatabaseAndState를 사용하여 모델에서 제거하되
+-- DROP COLUMN 생성을 막은 다음 (다음 마이그레이션에서 삭제)
 ```
 
-### Large Data Migrations
+### 대규모 데이터 마이그레이션
 
 ```sql
--- BAD: Updates all rows in one transaction (locks table)
+-- 나쁨: 하나의 트랜잭션으로 모든 행 업데이트 (테이블 잠금)
 UPDATE users SET normalized_email = LOWER(email);
 
--- GOOD: Batch update with progress
+-- 좋음: 진행 상황과 함께 배치(batch) 업데이트
 DO $$
 DECLARE
   batch_size INT := 10000;
@@ -128,23 +128,23 @@ END $$;
 
 ## Prisma (TypeScript/Node.js)
 
-### Workflow
+### 워크플로우
 
 ```bash
-# Create migration from schema changes
+# 스키마 변경으로부터 마이그레이션 생성
 npx prisma migrate dev --name add_user_avatar
 
-# Apply pending migrations in production
+# 프로덕션에서 대기 중인 마이그레이션 적용
 npx prisma migrate deploy
 
-# Reset database (dev only)
+# 데이터베이스 초기화 (개발 전용)
 npx prisma migrate reset
 
-# Generate client after schema changes
+# 스키마 변경 후 클라이언트 생성
 npx prisma generate
 ```
 
-### Schema Example
+### 스키마 예시
 
 ```prisma
 model User {
@@ -161,37 +161,37 @@ model User {
 }
 ```
 
-### Custom SQL Migration
+### 커스텀 SQL 마이그레이션
 
-For operations Prisma cannot express (concurrent indexes, data backfills):
+Prisma가 표현할 수 없는 작업 (동시 인덱스, 데이터 백필)의 경우:
 
 ```bash
-# Create empty migration, then edit the SQL manually
+# 빈 마이그레이션 생성 후 SQL 직접 편집
 npx prisma migrate dev --create-only --name add_email_index
 ```
 
 ```sql
 -- migrations/20240115_add_email_index/migration.sql
--- Prisma cannot generate CONCURRENTLY, so we write it manually
+-- Prisma는 CONCURRENTLY를 생성할 수 없으므로 직접 작성
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_users_email ON users (email);
 ```
 
 ## Drizzle (TypeScript/Node.js)
 
-### Workflow
+### 워크플로우
 
 ```bash
-# Generate migration from schema changes
+# 스키마 변경으로부터 마이그레이션 생성
 npx drizzle-kit generate
 
-# Apply migrations
+# 마이그레이션 적용
 npx drizzle-kit migrate
 
-# Push schema directly (dev only, no migration file)
+# 스키마 직접 푸시 (개발 전용, 마이그레이션 파일 없음)
 npx drizzle-kit push
 ```
 
-### Schema Example
+### 스키마 예시
 
 ```typescript
 import { pgTable, text, timestamp, uuid, boolean } from "drizzle-orm/pg-core";
@@ -208,33 +208,33 @@ export const users = pgTable("users", {
 
 ## Kysely (TypeScript/Node.js)
 
-### Workflow (kysely-ctl)
+### 워크플로우 (kysely-ctl)
 
 ```bash
-# Initialize config file (kysely.config.ts)
+# 설정 파일 초기화 (kysely.config.ts)
 kysely init
 
-# Create a new migration file
+# 새 마이그레이션 파일 생성
 kysely migrate make add_user_avatar
 
-# Apply all pending migrations
+# 대기 중인 모든 마이그레이션 적용
 kysely migrate latest
 
-# Rollback last migration
+# 마지막 마이그레이션 롤백
 kysely migrate down
 
-# Show migration status
+# 마이그레이션 상태 확인
 kysely migrate list
 ```
 
-### Migration File
+### 마이그레이션 파일
 
 ```typescript
 // migrations/2024_01_15_001_create_user_profile.ts
 import { type Kysely, sql } from 'kysely'
 
-// IMPORTANT: Always use Kysely<any>, not your typed DB interface.
-// Migrations are frozen in time and must not depend on current schema types.
+// 중요: 타입화된 DB 인터페이스가 아닌 Kysely<any>를 항상 사용하세요.
+// 마이그레이션은 시간에 고정(frozen)되며 현재 스키마 타입에 의존해서는 안 됩니다.
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable('user_profile')
@@ -258,20 +258,20 @@ export async function down(db: Kysely<any>): Promise<void> {
 }
 ```
 
-### Programmatic Migrator
+### 프로그래밍 방식 마이그레이터(Migrator)
 
 ```typescript
 import { Migrator, FileMigrationProvider } from 'kysely'
 import { promises as fs } from 'fs'
 import * as path from 'path'
-// ESM only — CJS can use __dirname directly
+// ESM 전용 — CJS는 __dirname을 직접 사용 가능
 import { fileURLToPath } from 'url'
 const migrationFolder = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   './migrations',
 )
 
-// `db` is your Kysely<any> database instance
+// `db`는 Kysely<any> 데이터베이스 인스턴스
 const migrator = new Migrator({
   db,
   provider: new FileMigrationProvider({
@@ -279,8 +279,8 @@ const migrator = new Migrator({
     path,
     migrationFolder,
   }),
-  // WARNING: Only enable in development. Disables timestamp-ordering
-  // validation, which can cause schema drift between environments.
+  // 경고: 개발 환경에서만 활성화하세요. 타임스탬프 순서 검증을 비활성화하여
+  // 환경 간 스키마 드리프트(schema drift)를 유발할 수 있습니다.
   // allowUnorderedMigrations: true,
 })
 
@@ -302,23 +302,23 @@ if (error) {
 
 ## Django (Python)
 
-### Workflow
+### 워크플로우
 
 ```bash
-# Generate migration from model changes
+# 모델 변경으로부터 마이그레이션 생성
 python manage.py makemigrations
 
-# Apply migrations
+# 마이그레이션 적용
 python manage.py migrate
 
-# Show migration status
+# 마이그레이션 상태 확인
 python manage.py showmigrations
 
-# Generate empty migration for custom SQL
+# 커스텀 SQL을 위한 빈 마이그레이션 생성
 python manage.py makemigrations --empty app_name -n description
 ```
 
-### Data Migration
+### 데이터 마이그레이션
 
 ```python
 from django.db import migrations
@@ -334,7 +334,7 @@ def backfill_display_names(apps, schema_editor):
         User.objects.bulk_update(batch, ["display_name"], batch_size=batch_size)
 
 def reverse_backfill(apps, schema_editor):
-    pass  # Data migration, no reverse needed
+    pass  # 데이터 마이그레이션, 역방향 불필요
 
 class Migration(migrations.Migration):
     dependencies = [("accounts", "0015_add_display_name")]
@@ -346,7 +346,7 @@ class Migration(migrations.Migration):
 
 ### SeparateDatabaseAndState
 
-Remove a column from the Django model without dropping it from the database immediately:
+데이터베이스에서 즉시 삭제하지 않고 Django 모델에서 컬럼을 제거하는 방법:
 
 ```python
 class Migration(migrations.Migration):
@@ -355,30 +355,30 @@ class Migration(migrations.Migration):
             state_operations=[
                 migrations.RemoveField(model_name="user", name="legacy_field"),
             ],
-            database_operations=[],  # Don't touch the DB yet
+            database_operations=[],  # DB는 아직 건드리지 않음
         ),
     ]
 ```
 
 ## golang-migrate (Go)
 
-### Workflow
+### 워크플로우
 
 ```bash
-# Create migration pair
+# 마이그레이션 쌍 생성
 migrate create -ext sql -dir migrations -seq add_user_avatar
 
-# Apply all pending migrations
+# 대기 중인 모든 마이그레이션 적용
 migrate -path migrations -database "$DATABASE_URL" up
 
-# Rollback last migration
+# 마지막 마이그레이션 롤백
 migrate -path migrations -database "$DATABASE_URL" down 1
 
-# Force version (fix dirty state)
+# 버전 강제 지정 (dirty 상태 수정)
 migrate -path migrations -database "$DATABASE_URL" force VERSION
 ```
 
-### Migration Files
+### 마이그레이션 파일
 
 ```sql
 -- migrations/000003_add_user_avatar.up.sql
@@ -390,42 +390,42 @@ DROP INDEX IF EXISTS idx_users_avatar;
 ALTER TABLE users DROP COLUMN IF EXISTS avatar_url;
 ```
 
-## Zero-Downtime Migration Strategy
+## 무중단 마이그레이션 전략
 
-For critical production changes, follow the expand-contract pattern:
-
-```
-Phase 1: EXPAND
-  - Add new column/table (nullable or with default)
-  - Deploy: app writes to BOTH old and new
-  - Backfill existing data
-
-Phase 2: MIGRATE
-  - Deploy: app reads from NEW, writes to BOTH
-  - Verify data consistency
-
-Phase 3: CONTRACT
-  - Deploy: app only uses NEW
-  - Drop old column/table in separate migration
-```
-
-### Timeline Example
+중요한 프로덕션 변경에는 확장-계약(expand-contract) 패턴을 따르세요:
 
 ```
-Day 1: Migration adds new_status column (nullable)
-Day 1: Deploy app v2 — writes to both status and new_status
-Day 2: Run backfill migration for existing rows
-Day 3: Deploy app v3 — reads from new_status only
-Day 7: Migration drops old status column
+Phase 1: EXPAND (확장)
+  - 새 컬럼/테이블 추가 (NULL 허용 또는 기본값 있음)
+  - 배포: 앱이 기존과 새 컬럼 모두에 쓰기
+  - 기존 데이터 백필
+
+Phase 2: MIGRATE (마이그레이션)
+  - 배포: 앱이 새 컬럼에서 읽고, 양쪽 모두에 쓰기
+  - 데이터 일관성 검증
+
+Phase 3: CONTRACT (수축)
+  - 배포: 앱이 새 컬럼만 사용
+  - 별도 마이그레이션으로 기존 컬럼/테이블 삭제
 ```
 
-## Anti-Patterns
+### 타임라인 예시
 
-| Anti-Pattern | Why It Fails | Better Approach |
+```
+Day 1: 마이그레이션으로 new_status 컬럼 추가 (NULL 허용)
+Day 1: 앱 v2 배포 — status와 new_status 양쪽에 쓰기
+Day 2: 기존 행을 위한 백필 마이그레이션 실행
+Day 3: 앱 v3 배포 — new_status에서만 읽기
+Day 7: 기존 status 컬럼 삭제 마이그레이션
+```
+
+## 안티 패턴
+
+| 안티 패턴 | 실패 이유 | 더 나은 접근 |
 |-------------|-------------|-----------------|
-| Manual SQL in production | No audit trail, unrepeatable | Always use migration files |
-| Editing deployed migrations | Causes drift between environments | Create new migration instead |
-| NOT NULL without default | Locks table, rewrites all rows | Add nullable, backfill, then add constraint |
-| Inline index on large table | Blocks writes during build | CREATE INDEX CONCURRENTLY |
-| Schema + data in one migration | Hard to rollback, long transactions | Separate migrations |
-| Dropping column before removing code | Application errors on missing column | Remove code first, drop column next deploy |
+| 프로덕션에서 직접 SQL 실행 | 감사 추적 없음, 반복 불가 | 항상 마이그레이션 파일 사용 |
+| 배포된 마이그레이션 편집 | 환경 간 드리프트 유발 | 새 마이그레이션 생성 |
+| 기본값 없이 NOT NULL | 테이블 잠금, 모든 행 재작성 | NULL 허용 추가 후 백필, 그 다음 제약조건 추가 |
+| 대용량 테이블에서 인라인 인덱스 | 빌드 중 쓰기 차단 | CREATE INDEX CONCURRENTLY |
+| 하나의 마이그레이션에 스키마 + 데이터 | 롤백 어려움, 긴 트랜잭션 | 마이그레이션 분리 |
+| 코드 제거 전 컬럼 삭제 | 누락된 컬럼으로 애플리케이션 오류 | 코드 먼저 제거 후 다음 배포에서 컬럼 삭제 |
