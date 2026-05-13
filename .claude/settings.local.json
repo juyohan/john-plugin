@@ -25,7 +25,13 @@
       "Bash(touch /tmp/test-go/go.mod)",
       "Bash(xargs -I{} basename {} .md)",
       "Bash(xargs -I{} basename {})",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(gh api *)",
+      "Bash(awk 'NR>=85 && NR<=118' /Users/juyohan/John/ai/john-plugin/skills/review/SKILL.md)",
+      "Bash(awk 'NR>=355 && NR<=398' /Users/juyohan/John/ai/john-plugin/skills/review/SKILL.md)",
+      "Bash(awk 'NR>=444 && NR<=518' /Users/juyohan/John/ai/john-plugin/skills/review/SKILL.md)",
+      "Bash(awk 'NR>=726 && NR<=756' /Users/juyohan/John/ai/john-plugin/skills/review/SKILL.md)",
+      "Bash(awk 'NR>=852 && NR<=910' /Users/juyohan/John/ai/john-plugin/skills/review/SKILL.md)"
     ]
   }
 }
