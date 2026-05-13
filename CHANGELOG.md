@@ -2,6 +2,15 @@
 
 All notable changes to the `john-plugin` project will be documented in this file.
 
+## [1.3.0] - 2026-05-13
+
+### Changed
+- **Genie Skills 구조 리팩토링**: brainstorm, plan, review, work SKILL.md를 간결하게 재작성, 현재 사용 에이전트 기준으로 정렬
+- **Stage Boundary 규칙 추가** (`CLAUDE.md`): 각 `/genie:*` 단계 완료 후 자동으로 다음 단계로 넘어가지 않도록 명시적 정지 규칙 추가
+- **불필요한 참조 파일 제거**: handoff, requirements-capture, synthesis-summary, universal-planning 등 10개 레퍼런스 파일 삭제
+- **Korean translation**: 모든 skills SKILL.md 한국어 번역 완료
+- **새 참조 파일 추가** (`skills/brainstorm/references/deep-product.md`): 제품 중심 브레인스토밍 심화 워크플로우
+
 ## [1.0.1] - 2026-05-12
 
 ### Fixed
