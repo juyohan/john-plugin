@@ -9,7 +9,7 @@
 1.  **Brainstorm (`/genie:brainstorm`)**: 요구사항 확정.
 2.  **Plan (`/genie:plan`)**: 파일·인터페이스 수준까지 구현 계획 확정. 언어 감지 후 언어별 스킬/룰 자동 제안.
 3.  **TDD (`/genie:test`)**: `/genie:plan` 결과를 기반으로 실패하는 테스트 먼저 작성 (RED).
-4.  **Work (`/genie:build`)**: 테스트를 통과하는 최소 구현 후 리팩토링 (GREEN → IMPROVE).
+4.  **Work (`/genie:work`)**: 테스트를 통과하는 최소 구현 후 리팩토링 (GREEN → IMPROVE).
 5.  **Review (ECC 기준)**: 언어별 reviewer (프로젝트 감지 자동 선택) + `security`. CRITICAL 이슈는 머지 차단, HIGH는 머지 전 수정. ECC `rules/common/code-review.md` 체크리스트 적용.
 6.  **Compound (`/genie:learn`)**: 지식 자산화 및 레슨 런 정리.
 
@@ -46,7 +46,7 @@ think·strategy 노트는 brainstorm 산출물과 같은 폴더에 suffix로 보
 | 요구사항 정의 | `/genie:brainstorm` | `docs/brainstorms/YYYY/MM/DD-<제목>.md` ← 메인 산출물 |
 | 구현 계획 | `/genie:plan` | `docs/plans/YYYY/MM/DD-<제목>.md` |
 | TDD 명세 | `/genie:test` | `docs/tests/YYYY/MM/DD-<제목>.md` |
-| 구현·디버깅 | `/genie:build`, `/genie:fix`, `/genie:optimize` | `docs/work/YYYY/MM/DD-<제목>.md` |
+| 구현·디버깅 | `/genie:work`, `/genie:fix`, `/genie:optimize` | `docs/work/YYYY/MM/DD-<제목>.md` |
 | 코드 리뷰 | `/genie:review` | `docs/reviews/YYYY/MM/DD-<제목>.md` |
 | 지식 자산화 | `/genie:learn` | `docs/compounds/YYYY/MM/DD-<제목>.md` |
 

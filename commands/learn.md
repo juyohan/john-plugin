@@ -1,5 +1,6 @@
 ---
 description: Capture lessons learned — document solved problems for future reference
+model: haiku
 ---
 
 > **[스테이지 경계]** 이 단계가 완료되면 **반드시 멈추십시오.**
@@ -13,7 +14,7 @@ description: Capture lessons learned — document solved problems for future ref
 
 `genie:learn` is the **knowledge-capture** skill. After you solve a non-trivial problem, this skill writes a structured doc to `docs/solutions/` covering symptoms, root cause, what didn't work, the working solution, and prevention strategies. Future runs of `ce-plan`, `genie:think`, `ce-debug`, and `ce-work` consult this folder as institutional memory — so the same investigation never has to happen twice.
 
-The compound-engineering ideation chain is `/ce-ideate → /genie:brainstorm → /genie:plan → /genie:build`. `genie:learn` is the **closing loop** — captured at the end of a debugging or build session, the doc feeds back upstream as grounding for future runs. The first time you solve "N+1 query in brief generation" takes 30 minutes of research; the second time, you find the doc and the fix takes 2 minutes.
+The compound-engineering ideation chain is `/ce-ideate → /genie:brainstorm → /genie:plan → /genie:work`. `genie:learn` is the **closing loop** — captured at the end of a debugging or build session, the doc feeds back upstream as grounding for future runs. The first time you solve "N+1 query in brief generation" takes 30 minutes of research; the second time, you find the doc and the fix takes 2 minutes.
 
 ---
 
@@ -137,7 +138,7 @@ Skip `genie:learn` when:
 `genie:learn` is the closing loop of multiple workflows:
 
 - **`/genie:fix` Phase 4** — after a successful fix and PR, optionally offers `genie:learn` when the bug is generalizable (3+ recurrence, wrong assumption about a shared dependency)
-- **`/genie:build` Phase 4** — after shipping, surfaces `genie:learn` when the work yielded a reusable pattern, convention, or tooling decision
+- **`/genie:work` Phase 4** — after shipping, surfaces `genie:learn` when the work yielded a reusable pattern, convention, or tooling decision
 - **Stand-alone** — invoked directly after any non-trivial problem-solving session
 
 The output feeds back into upstream skills:
@@ -210,6 +211,6 @@ The skill asks for consent before applying the edit. You can decline; the doc st
 
 - [`ce-compound-refresh`](./ce-compound-refresh.md) — maintain `docs/solutions/` over time as the codebase evolves
 - [`ce-debug`](./genie:fix.md) — common upstream caller after a fix is verified
-- [`ce-work`](./genie:build.md) — common upstream caller after shipping
+- [`ce-work`](./genie:work.md) — common upstream caller after shipping
 - [`ce-plan`](./genie:plan.md) — reads `docs/solutions/` as institutional memory during planning
 - [`genie:think`](./ce-ideate.md) — reads `docs/solutions/` as part of grounding

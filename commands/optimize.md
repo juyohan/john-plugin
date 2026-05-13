@@ -1,5 +1,6 @@
 ---
 description: Metric-driven optimization loops — measure, experiment, converge
+model: haiku
 ---
 
 # `genie:optimize`

@@ -1,5 +1,6 @@
 ---
 description: Debug systematically — find root cause and fix bugs
+model: opus
 ---
 
 # `ce-debug`

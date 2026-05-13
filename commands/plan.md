@@ -1,5 +1,6 @@
 ---
 description: Implementation planning — decisions, units, files, test scenarios, scope, risks
+model: sonnet
 ---
 
 > **[스테이지 경계]** 이 단계가 완료되면 **반드시 멈추십시오.**
@@ -20,7 +21,7 @@ It works for any multi-step task where structure helps — software features, re
 This is the third step in the compound-engineering ideation chain:
 
 ```text
-/ce-ideate         /genie:brainstorm      /genie:plan             /genie:build
+/ce-ideate         /genie:brainstorm      /genie:plan             /genie:work
 "What's worth      "What does this     "What's needed       "Build it."
  exploring?"        need to be?"        to accomplish
                                         this?"
@@ -37,7 +38,7 @@ But it stands alone just as well — many teams reach for `ce-plan` directly wit
 | What does it do? | Researches context, captures decisions and scope, breaks work into atomic units with stable IDs, enumerates test scenarios per unit, and auto-strengthens weak sections via a confidence check |
 | When to use it | Requirements ready and execution guardrails needed; solo planning when the task is clear; non-software multi-step tasks (study plans, research, maintenance, events, trips) |
 | What it produces | Plan in `docs/plans/YYYY-MM-DD-NNN-<type>-<name>-plan.md` |
-| What's next | `/genie:build`, create a tracked issue, open in Proof for review, or pause |
+| What's next | `/genie:work`, create a tracked issue, open in Proof for review, or pause |
 | Distinguishing | Guardrails over choreography (WHAT, not HOW); U-IDs (stable); origin tracing (R/A/F/AE → U); test scenarios per unit; automatic deepening; multi-agent research |
 
 ---
@@ -113,7 +114,7 @@ It dispatches research in parallel — repo analyst, learnings researcher — an
 
 The plan is written. The confidence check then runs automatically — it identifies that `Risks & Dependencies` is thin on the mute-leak risk and that one unit's test scenarios miss permission edge cases, dispatches a data-integrity reviewer and a correctness reviewer, and synthesizes their findings back into the plan. The plan is stamped with a `deepened:` date.
 
-Document review then runs in headless mode. The cheap minimum dispatches (coherence + feasibility) since the plan has origin set and touches no high-stakes domains; `safe_auto` fixes (a typo, a broken cross-reference) apply silently. Remaining findings surface as a one-line summary above the post-generation menu — e.g., `Doc review applied 2 fixes. 3 decisions, 1 FYI remain.` The menu surfaces: start `/genie:build`, run deeper doc review (when actionable findings remain), create a tracked issue, open in Proof for HITL review, or pause.
+Document review then runs in headless mode. The cheap minimum dispatches (coherence + feasibility) since the plan has origin set and touches no high-stakes domains; `safe_auto` fixes (a typo, a broken cross-reference) apply silently. Remaining findings surface as a one-line summary above the post-generation menu — e.g., `Doc review applied 2 fixes. 3 decisions, 1 FYI remain.` The menu surfaces: start `/genie:work`, run deeper doc review (when actionable findings remain), create a tracked issue, open in Proof for HITL review, or pause.
 
 ---
 
@@ -151,7 +152,7 @@ Skip `ce-plan` when:
    |  scope boundaries preserved (incl. "Outside this product's identity")
    |  confidence-checked and auto-deepened
    v
-/genie:build            (execute against the guardrails)
+/genie:work            (execute against the guardrails)
    |  reads U-IDs as the unit of execution
    |  figures out the actual HOW with code in front of it
    |  derives progress from git, not plan body
@@ -231,7 +232,7 @@ Yes — and it's increasingly common. Universal-planning preserves the U-ID conc
 
 - [`ce-brainstorm`](./genie:brainstorm.md) — produce the requirements doc that becomes the plan's origin
 - [`genie:think`](./ce-ideate.md) — upstream "what to even work on" ideation
-- [`ce-work`](./genie:build.md) — execute the plan U-ID by U-ID
+- [`ce-work`](./genie:work.md) — execute the plan U-ID by U-ID
 - [`ce-doc-review`](./ce-doc-review.md) — persona-based review of the plan
 - [`ce-debug`](./genie:fix.md) — bug-shaped prompts route here
 - [`genie:strategy`](./ce-strategy.md) — anchor plans to documented product strategy

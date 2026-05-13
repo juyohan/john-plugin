@@ -1,5 +1,6 @@
 ---
 description: Generate and evaluate ideas — what is worth exploring?
+model: opus
 ---
 
 # `genie:think`
@@ -12,7 +13,7 @@ $ARGUMENTS
 
 Execute the **`genie:think`** skill. Read `skills/ce-ideate/SKILL.md` and follow the instructions exactly, using any `$ARGUMENTS` as the initial topic or focus area.
 
-**Workflow position:** `genie:think` (optional) → `/genie:brainstorm` → `/genie:plan` → `/genie:build`
+**Workflow position:** `genie:think` (optional) → `/genie:brainstorm` → `/genie:plan` → `/genie:work`
 
 **Saves output to:** `docs/brainstorms/YYYY/MM/DD-<title>-ideation.md`
 

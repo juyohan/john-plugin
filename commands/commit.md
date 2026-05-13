@@ -1,5 +1,6 @@
 ---
 description: Create a well-structured git commit with a clear, value-focused message
+model: haiku
 ---
 
 # `ce-commit`

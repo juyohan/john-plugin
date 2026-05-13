@@ -1,5 +1,6 @@
 ---
 description: Structured code review with layered personas — before merging
+model: sonnet
 ---
 
 # `ce-code-review`
@@ -12,7 +13,7 @@ $ARGUMENTS
 
 Execute the **`ce-code-review`** skill. Read `skills/genie:review/SKILL.md` and follow the instructions exactly. Pass `$ARGUMENTS` as the target (leave empty to review current branch, or provide a PR link).
 
-**Workflow position:** `/genie:build` → `/genie:review` → `/genie:commit`
+**Workflow position:** `/genie:work` → `/genie:review` → `/genie:commit`
 
 **Severity tiers:** CRITICAL (blocks merge) → HIGH (fix before merge) → MEDIUM (consider) → LOW (optional)
 

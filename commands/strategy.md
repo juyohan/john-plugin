@@ -1,5 +1,6 @@
 ---
 description: Create or update STRATEGY.md with product direction, goals, metrics
+model: opus
 ---
 
 # `genie:strategy`

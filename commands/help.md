@@ -1,5 +1,6 @@
 ---
 description: Workflow guidance — which genie command to use right now?
+model: haiku
 ---
 
 # `ce-help`
@@ -14,7 +15,7 @@ description: Workflow guidance — which genie command to use right now?
 |-----------|-----------|
 | 아이디어만 있음 | `/ce-ideate` 또는 `/genie:brainstorm` |
 | 요구사항 문서 있음 | `/genie:plan` |
-| 계획 문서 있음 | `genie:test` → `/genie:build` |
+| 계획 문서 있음 | `genie:test` → `/genie:work` |
 | 코드 작성 완료 | `/genie:review` |
 | 리뷰 완료 | `/genie:commit` |
 | 작업 완료, 정리 필요 | `/ce-compound` |
@@ -38,7 +39,7 @@ description: Workflow guidance — which genie command to use right now?
   ↓
 tdd-guide         테스트 먼저    → docs/tests/
   ↓
-/genie:build          구현           → docs/work/
+/genie:work          구현           → docs/work/
   ↓
 /genie:review   코드 리뷰      → docs/reviews/
   ↓

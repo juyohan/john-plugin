@@ -1,5 +1,6 @@
 ---
 description: Collaborative requirements definition — think through what to build, one question at a time
+model: sonnet
 ---
 
 > **[스테이지 경계]** 이 단계가 완료되면 **반드시 멈추십시오.**
@@ -18,7 +19,7 @@ It runs equally well on software features, on entirely non-software topics (even
 This is the middle step in the compound-engineering ideation chain:
 
 ```text
-/ce-ideate         /genie:brainstorm      /genie:plan             /genie:build
+/ce-ideate         /genie:brainstorm      /genie:plan             /genie:work
 "What's worth      "What does this     "What's needed       "Build it."
  exploring?"        need to be?"        to accomplish
                                         this?"
@@ -35,7 +36,7 @@ It's also the most common standalone entry point — for any feature, decision, 
 | What does it do? | Collaborative dialogue to clarify scope, pressure-test premises, explore approaches, and write a right-sized requirements doc |
 | When to use it | Vague feature ideas, "let's brainstorm", multiple plausible directions, unclear scope; non-software decisions and projects |
 | What it produces | Requirements doc in `docs/brainstorms/` (with R-IDs, A-IDs, F-IDs, AE-IDs in software mode) |
-| What's next | `/genie:plan`, `/genie:build` for trivial scope, doc review, or Proof iteration |
+| What's next | `/genie:plan`, `/genie:work` for trivial scope, doc review, or Proof iteration |
 
 ---
 
@@ -155,7 +156,7 @@ Skip `ce-brainstorm` when:
    |  R-IDs flow into Requirements; A/F/AE-IDs trace into units and tests
    |  origin scope boundaries are preserved verbatim
    v
-/genie:build
+/genie:work
 ```
 
 When `ce-plan` loads with a requirements doc as input, it does not re-litigate product behavior. The doc is authoritative. Plan-time decisions are about execution guardrails — not what's being built.
@@ -214,5 +215,5 @@ Yes — a domain-agnostic facilitator preserves the one-question-at-a-time disci
 - [`genie:think`](./ce-ideate.md) — upstream "what's worth exploring" discovery
 - [`ce-plan`](./genie:plan.md) — turn the requirements doc into an implementation plan
 - [`ce-doc-review`](./ce-doc-review.md) — persona-based review of the requirements doc
-- [`ce-work`](./genie:build.md) — execute lightweight changes directly from a brainstorm
+- [`ce-work`](./genie:work.md) — execute lightweight changes directly from a brainstorm
 - [`genie:strategy`](./ce-strategy.md) — anchor brainstorms to a documented product strategy

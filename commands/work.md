@@ -1,5 +1,6 @@
 ---
 description: Execute implementation against the plan — ship complete features
+model: sonnet
 ---
 
 > **[스테이지 경계]** 이 단계가 완료되면 **반드시 멈추십시오.**
@@ -16,7 +17,7 @@ description: Execute implementation against the plan — ship complete features
 This is the fourth and final step in the compound-engineering ideation chain:
 
 ```text
-/ce-ideate         /genie:brainstorm      /genie:plan             /genie:build
+/ce-ideate         /genie:brainstorm      /genie:plan             /genie:work
 "What's worth      "What does this     "What's needed       "Build it."
  exploring?"        need to be?"        to accomplish
                                         this?"
@@ -139,7 +140,7 @@ Skip `ce-work` when:
 /genie:plan
    |  guardrails — U-IDs, files, test scenarios, scope, risks
    v
-/genie:build
+/genie:work
    |  honors the guardrails; figures out the HOW with code in front of it
    |  derives progress from git, not plan body
    |  ships through quality gates to PR
