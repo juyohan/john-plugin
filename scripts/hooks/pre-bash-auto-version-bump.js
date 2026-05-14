@@ -28,8 +28,10 @@ function getCommitsSinceLastBump(repoRoot) {
 }
 
 function determineBumpType(commits) {
+  // Note: BREAKING CHANGE in commit body/footer is not detected (only subject line is read).
+  // Use feat!: or fix!: subject prefix for breaking changes.
   for (const msg of commits) {
-    if (/^[a-z]+[^:]*!:|BREAKING CHANGE/.test(msg)) return 'major';
+    if (/^[a-z]+[^:]*!:/.test(msg)) return 'major';
   }
   for (const msg of commits) {
     if (/^feat[^:]*:/.test(msg)) return 'minor';
@@ -45,7 +47,7 @@ function bumpVersion(version, type) {
 }
 
 function buildChangelogEntry(version, date, commits) {
-  const breaking = commits.filter(c => /^[a-z]+[^:]*!:|BREAKING CHANGE/.test(c));
+  const breaking = commits.filter(c => /^[a-z]+[^:]*!:/.test(c));
   const added    = commits.filter(c => /^feat[^:]*:/.test(c) && !breaking.includes(c));
   const fixed    = commits.filter(c => /^fix[^:]*:/.test(c));
   const changed  = commits.filter(c => !breaking.includes(c) && !added.includes(c) && !fixed.includes(c));
@@ -102,8 +104,8 @@ function run(rawInput) {
     fs.writeFileSync(changelogPath, newChangelog);
 
     // Commit
-    execSync(`git add "${pluginJsonPath}" "${changelogPath}"`, { cwd: repoRoot });
-    execSync(`git commit -m "chore: bump version to ${newVersion}"`, { cwd: repoRoot });
+    execSync(`git add "${pluginJsonPath}" "${changelogPath}"`, { cwd: repoRoot, stdio: 'pipe' });
+    execSync(`git commit -m "chore: bump version to ${newVersion}"`, { cwd: repoRoot, stdio: 'pipe' });
 
     return {
       stdout: passThrough,
