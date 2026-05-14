@@ -6,6 +6,7 @@ const { isHookEnabled } = require('../lib/hook-flags');
 const { run: runBlockNoVerify } = require('./block-no-verify');
 const { run: runAutoTmuxDev } = require('./auto-tmux-dev');
 const { run: runTmuxReminder } = require('./pre-bash-tmux-reminder');
+const { run: runAutoVersionBump } = require('./pre-bash-auto-version-bump');
 const { run: runGitPushReminder } = require('./pre-bash-git-push-reminder');
 const { run: runCommitQuality } = require('./pre-bash-commit-quality');
 const { run: runGateGuard } = require('./gateguard-fact-force');
@@ -29,6 +30,10 @@ const PRE_BASH_HOOKS = [
     id: 'pre:bash:tmux-reminder',
     profiles: 'strict',
     run: rawInput => runTmuxReminder(rawInput),
+  },
+  {
+    id: 'pre:bash:auto-version-bump',
+    run: rawInput => runAutoVersionBump(rawInput),
   },
   {
     id: 'pre:bash:git-push-reminder',

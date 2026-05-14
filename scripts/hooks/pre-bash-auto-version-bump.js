@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+'use strict';
+
+const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+const MAX_STDIN = 1024 * 1024;
+
+function getRepoRoot() {
+  return execSync('git rev-parse --show-toplevel', { encoding: 'utf8' }).trim();
+}
+
+function getCommitsSinceLastBump(repoRoot) {
+  const raw = execSync('git log --no-merges --format=%s', {
+    encoding: 'utf8',
+    cwd: repoRoot,
+  }).trim();
+
+  if (!raw) return [];
+
+  const commits = [];
+  for (const line of raw.split('\n')) {
+    if (/^chore: bump version to\s+\d/.test(line)) break;
+    if (line.trim()) commits.push(line.trim());
+  }
+  return commits;
+}
+
+function determineBumpType(commits) {
+  for (const msg of commits) {
+    if (/^[a-z]+[^:]*!:|BREAKING CHANGE/.test(msg)) return 'major';
+  }
+  for (const msg of commits) {
+    if (/^feat[^:]*:/.test(msg)) return 'minor';
+  }
+  return 'patch';
+}
+
+function bumpVersion(version, type) {
+  const parts = version.split('.').map(Number);
+  if (type === 'major') return `${parts[0] + 1}.0.0`;
+  if (type === 'minor') return `${parts[0]}.${parts[1] + 1}.0`;
+  return `${parts[0]}.${parts[1]}.${parts[2] + 1}`;
+}
+
+function buildChangelogEntry(version, date, commits) {
+  const breaking = commits.filter(c => /^[a-z]+[^:]*!:|BREAKING CHANGE/.test(c));
+  const added    = commits.filter(c => /^feat[^:]*:/.test(c) && !breaking.includes(c));
+  const fixed    = commits.filter(c => /^fix[^:]*:/.test(c));
+  const changed  = commits.filter(c => !breaking.includes(c) && !added.includes(c) && !fixed.includes(c));
+
+  let entry = `## [${version}] - ${date}\n`;
+  if (breaking.length) entry += `\n### Breaking Changes\n${breaking.map(c => `- ${c}`).join('\n')}\n`;
+  if (added.length)    entry += `\n### Added\n${added.map(c => `- ${c}`).join('\n')}\n`;
+  if (fixed.length)    entry += `\n### Fixed\n${fixed.map(c => `- ${c}`).join('\n')}\n`;
+  if (changed.length)  entry += `\n### Changed\n${changed.map(c => `- ${c}`).join('\n')}\n`;
+  return entry;
+}
+
+function run(rawInput) {
+  try {
+    const input = typeof rawInput === 'string' ? JSON.parse(rawInput) : rawInput;
+    const cmd = String(input.tool_input?.command || '');
+
+    if (!/\bgit\s+push\b/.test(cmd)) {
+      return typeof rawInput === 'string' ? rawInput : JSON.stringify(rawInput);
+    }
+
+    const repoRoot    = getRepoRoot();
+    const commits     = getCommitsSinceLastBump(repoRoot);
+    const passThrough = typeof rawInput === 'string' ? rawInput : JSON.stringify(rawInput);
+
+    if (commits.length === 0) {
+      return {
+        stdout: passThrough,
+        stderr: '[auto-version-bump] No unreleased commits — skipping.\n',
+        exitCode: 0,
+      };
+    }
+
+    const pluginJsonPath = path.join(repoRoot, '.claude-plugin', 'plugin.json');
+    const changelogPath  = path.join(repoRoot, 'CHANGELOG.md');
+
+    const pluginJson     = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
+    const currentVersion = pluginJson.version;
+    const bumpType       = determineBumpType(commits);
+    const newVersion     = bumpVersion(currentVersion, bumpType);
+    const today          = new Date().toISOString().split('T')[0];
+
+    // Update plugin.json
+    pluginJson.version = newVersion;
+    fs.writeFileSync(pluginJsonPath, JSON.stringify(pluginJson, null, 2) + '\n');
+
+    // Update CHANGELOG.md — insert before first ## [ entry
+    const changelog    = fs.readFileSync(changelogPath, 'utf8');
+    const insertIdx    = changelog.indexOf('\n## [');
+    const newEntry     = '\n' + buildChangelogEntry(newVersion, today, commits);
+    const newChangelog = insertIdx !== -1
+      ? changelog.slice(0, insertIdx) + newEntry + changelog.slice(insertIdx)
+      : changelog + newEntry;
+    fs.writeFileSync(changelogPath, newChangelog);
+
+    // Commit
+    execSync(`git add "${pluginJsonPath}" "${changelogPath}"`, { cwd: repoRoot });
+    execSync(`git commit -m "chore: bump version to ${newVersion}"`, { cwd: repoRoot });
+
+    return {
+      stdout: passThrough,
+      stderr: `[auto-version-bump] ${currentVersion} → ${newVersion} (${bumpType})\n`,
+      exitCode: 0,
+    };
+  } catch (err) {
+    const passThrough = typeof rawInput === 'string' ? rawInput : JSON.stringify(rawInput);
+    return {
+      stdout: passThrough,
+      stderr: `[auto-version-bump] Warning: ${err.message} — skipping bump.\n`,
+      exitCode: 0,
+    };
+  }
+}
+
+if (require.main === module) {
+  let raw = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', chunk => {
+    if (raw.length < MAX_STDIN) raw += chunk.substring(0, MAX_STDIN - raw.length);
+  });
+  process.stdin.on('end', () => {
+    const result = run(raw);
+    if (result && typeof result === 'object') {
+      if (result.stderr) process.stderr.write(result.stderr);
+      process.stdout.write(String(result.stdout || ''));
+      process.exitCode = Number.isInteger(result.exitCode) ? result.exitCode : 0;
+      return;
+    }
+    process.stdout.write(String(result));
+  });
+}
+
+module.exports = { run };
