@@ -2,6 +2,14 @@
 
 All notable changes to the `john-plugin` project will be documented in this file.
 
+## [1.3.1] - 2026-05-14
+
+### Changed
+- **TDD SKILL.md 리팩토링** (`skills/tdd/SKILL.md`): 412줄 → 112줄로 축약, Mock 위주에서 실 의존성 기반 통합 테스트 우선으로 무게중심 이동
+
+### Fixed
+- **커버리지 임계값 누락 수정** (`skills/tdd/SKILL.md`): `coverageThresholds`에 `"statements": 80` 추가
+
 ## [1.3.0] - 2026-05-13
 
 ### Changed
