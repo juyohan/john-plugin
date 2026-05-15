@@ -12,6 +12,26 @@ paths:
 
 Configure in `~/.claude/settings.json`:
 
-- **gofmt/goimports**: Auto-format `.go` files after edit
-- **go vet**: Run static analysis after editing `.go` files
-- **staticcheck**: Run extended static checks on modified packages
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "goimports -w \"$FILE_PATH\"",
+        "description": "Auto-format and fix imports after edit"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "go vet ./... 2>&1 | tail -10",
+        "description": "Run go vet after edit"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "staticcheck ./... 2>&1 | tail -10",
+        "description": "Run extended static checks after edit"
+      }
+    ]
+  }
+}
+```

@@ -69,6 +69,11 @@
 | **python-reviewer** | Python 전용 이슈 |
 | **go-reviewer** | Go 전용 이슈 |
 | **rust-reviewer** | Rust 전용 이슈 |
+| **java-reviewer** | Java/Spring Boot 전용 이슈 |
+| **kotlin-reviewer** | Kotlin/Android/KMP 전용 이슈 |
+| **swift-reviewer** | Swift/iOS 전용 이슈 |
+
+> **이 프로젝트에서**: `/genie:review` 커맨드가 언어별 리뷰어를 자동 선택합니다. Genie 커맨드 별칭(`ts`, `py`, `go`, `security`, `review`)은 `commands/` 디렉토리를 통해 위 에이전트를 호출합니다.
 
 ## 리뷰 워크플로우
 

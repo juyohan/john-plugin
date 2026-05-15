@@ -2,6 +2,8 @@
 
 # Web Hooks
 
+> **Note:** These snippets are for `~/.claude/settings.json` (user-level). If a project already ships its own `hooks/hooks.json` (e.g. genie-plugin), the project hooks take precedence for project-specific tooling — do not duplicate them here.
+
 ## Recommended PostToolUse Hooks
 
 Prefer project-local tooling. Do not wire hooks to remote one-off package execution.

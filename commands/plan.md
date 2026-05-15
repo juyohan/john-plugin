@@ -8,11 +8,11 @@ model: sonnet
 
 
 
-# `ce-plan`
+# `genie:plan`
 
 > Establish the guardrails an implementation needs — decisions, units, files, tests, scope, risks — without prescribing the actual code or step-by-step choreography. Plans capture the **WHAT**; the implementing agent figures out the **HOW**.
 
-`ce-plan` produces plans that are **decision documents with execution guardrails**, not implementation choreography. The plan captures what decisions have been made, what scope is in or out, what atomic units of work exist, what files each unit touches, what test scenarios must pass, and what risks need mitigation. It does **not** pre-write code, exact API signatures, or step-by-step shell command sequences — those are for the implementing agent (`ce-work`, another AI agent, or a human) to determine when code is in front of them.
+`genie:plan` produces plans that are **decision documents with execution guardrails**, not implementation choreography. The plan captures what decisions have been made, what scope is in or out, what atomic units of work exist, what files each unit touches, what test scenarios must pass, and what risks need mitigation. It does **not** pre-write code, exact API signatures, or step-by-step shell command sequences — those are for the implementing agent (`genie:work`, another AI agent, or a human) to determine when code is in front of them.
 
 This separation matters. Plans that pre-write implementation tend to be wrong by the time you implement them: signatures don't compile, choreography is stale, micro-steps obscure the real decisions. Plans that capture guardrails stay portable for weeks or months and respect the judgment the implementer brings at execution time.
 
@@ -21,13 +21,13 @@ It works for any multi-step task where structure helps — software features, re
 This is the third step in the compound-engineering ideation chain:
 
 ```text
-/ce-ideate         /genie:brainstorm      /genie:plan             /genie:work
+/genie:think         /genie:brainstorm      /genie:plan             /genie:work
 "What's worth      "What does this     "What's needed       "Build it."
  exploring?"        need to be?"        to accomplish
                                         this?"
 ```
 
-But it stands alone just as well — many teams reach for `ce-plan` directly with a requirements doc, GitHub issue, PRD, rough description, or non-software multi-step task.
+But it stands alone just as well — many teams reach for `genie:plan` directly with a requirements doc, GitHub issue, PRD, rough description, or non-software multi-step task.
 
 ---
 
@@ -56,7 +56,7 @@ Plans written by humans (or AI without structure) tend to fail in predictable wa
 
 ## The Solution
 
-`ce-plan` separates **WHAT decisions need to be honored** from **HOW to satisfy them in code**:
+`genie:plan` separates **WHAT decisions need to be honored** from **HOW to satisfy them in code**:
 
 - The plan captures decisions, scope boundaries, atomic units, files, test scenarios, and risks — the shape and constraints of execution
 - It does not pre-write code, exact API signatures, or step-by-step shell choreography — those decisions are deferred to the implementing agent at execution time
@@ -82,11 +82,11 @@ This is also what makes the same engine work for non-software tasks. A hot-water
 
 Each unit's heading is `- U1. **Name**`, `- U2. **Name**`, etc. The stability rule: never renumber existing IDs after reordering, splitting, or deleting. Splits keep the original U-ID on the original concept; new units take the next unused number; deletions leave gaps (gaps are fine, never backfilled).
 
-This matters because `ce-work` references units by U-ID across plan edits. Renumbering during a deepening pass silently breaks every blocker reference, every PR description that cites a unit, and every downstream conversation. The stability rule prevents that class of bug.
+This matters because `genie:work` references units by U-ID across plan edits. Renumbering during a deepening pass silently breaks every blocker reference, every PR description that cites a unit, and every downstream conversation. The stability rule prevents that class of bug.
 
 ### 3. Origin tracing — R/A/F/AE IDs from brainstorm flow through the plan
 
-When the plan is sourced from a `ce-brainstorm` requirements doc, identifiers flow through: Requirements (R-IDs) trace into the plan's Requirements section; Actors (A-IDs) carry forward when they affect behavior or permissions; Key Flows (F-IDs) cite into implementation units that realize them; Acceptance Examples (AE-IDs) cite into test scenarios that enforce them (`Covers AE3. <scenario>`). Every section of the origin doc is verified against the plan before finalization. Nothing silently drops.
+When the plan is sourced from a `genie:brainstorm` requirements doc, identifiers flow through: Requirements (R-IDs) trace into the plan's Requirements section; Actors (A-IDs) carry forward when they affect behavior or permissions; Key Flows (F-IDs) cite into implementation units that realize them; Acceptance Examples (AE-IDs) cite into test scenarios that enforce them (`Covers AE3. <scenario>`). Every section of the origin doc is verified against the plan before finalization. Nothing silently drops.
 
 ### 4. Test scenarios per unit, in named categories
 
@@ -94,7 +94,7 @@ Every feature-bearing unit enumerates test scenarios from each applicable catego
 
 ### 5. Confidence check and automatic deepening
 
-After the plan is written, `ce-plan` automatically scores sections against checklists with risk-weighted bonuses, picks the top weak sections, dispatches targeted sub-agents to strengthen them (correctness reviewer for implementation units, data integrity guardian for migrations, architecture strategist for key technical decisions), and synthesizes findings back into the plan. Auto mode integrates findings directly; interactive mode (when you ask to deepen an existing plan) presents findings for accept/reject. The expensive moment to discover a thin section is during execution, not during planning.
+After the plan is written, `genie:plan` automatically scores sections against checklists with risk-weighted bonuses, picks the top weak sections, dispatches targeted sub-agents to strengthen them (correctness reviewer for implementation units, data integrity guardian for migrations, architecture strategist for key technical decisions), and synthesizes findings back into the plan. Auto mode integrates findings directly; interactive mode (when you ask to deepen an existing plan) presents findings for accept/reject. The expensive moment to discover a thin section is during execution, not during planning.
 
 ### 6. Multi-agent research, in parallel
 
@@ -108,7 +108,7 @@ The guardrails-not-choreography frame transfers cleanly across domains. Real (no
 
 ## Quick Example
 
-You invoke `ce-plan` with a requirements doc from `ce-brainstorm`. The skill detects the origin, uses it as primary input, and verifies no resolve-before-planning blockers remain.
+You invoke `genie:plan` with a requirements doc from `genie:brainstorm`. The skill detects the origin, uses it as primary input, and verifies no resolve-before-planning blockers remain.
 
 It dispatches research in parallel — repo analyst, learnings researcher — and detects the codebase has strong local patterns for this work, so it skips external research. A spec-flow analyzer runs to surface edge cases. The brainstorm-sourced synthesis summary surfaces what's stated, what the agent inferred (e.g., "mute state stored on the subscription, not the user"), and what's out of scope (carried from origin).
 
@@ -120,27 +120,27 @@ Document review then runs in headless mode. The cheap minimum dispatches (cohere
 
 ## When to Reach For It
 
-Reach for `ce-plan` when:
+Reach for `genie:plan` when:
 
-- You have a requirements doc from `ce-brainstorm` ready
+- You have a requirements doc from `genie:brainstorm` ready
 - You have a GitHub issue, PRD, or feature description that's clear enough
 - The work is multi-step and benefits from sequencing, dependency ordering, and scope boundaries
 - You want test or verification scenarios enumerated before execution
 - You're picking up a stale plan and want it deepened (use "deepen the plan" or "deepening pass")
 - The task is **non-software but multi-step** — study plan, event, trip, maintenance routine, research workflow, personal project
 
-Skip `ce-plan` when:
+Skip `genie:plan` when:
 
-- The task is genuinely one-step (just do it; or `ce-work` for direct execution)
-- The product or outcome isn't yet decided → `ce-brainstorm` first
-- The bug has a known root cause and an obvious fix → `ce-debug` or just fix it
+- The task is genuinely one-step (just do it; or `genie:work` for direct execution)
+- The product or outcome isn't yet decided → `genie:brainstorm` first
+- The bug has a known root cause and an obvious fix → `genie:fix` or just fix it
 
 ---
 
 ## Use as Part of the Chained Workflow
 
 ```text
-/ce-ideate          (optional)
+/genie:think          (optional)
    |
    v
 /genie:brainstorm      (define one direction)
@@ -160,16 +160,16 @@ Skip `ce-plan` when:
 /genie:review     (optional)
    |
    v
-/ce-compound        — capture the learning
+/genie:learn        — capture the learning
 ```
 
-The handoff from `ce-plan` to `ce-work` is concrete: `ce-work` reads U-IDs, file paths, scope boundaries, and test scenarios — then determines the actual implementation. The plan tells the implementer **what must be true** when the unit is done; the implementer figures out **how to make it true**. This division is what makes plans portable across implementer and across time.
+The handoff from `genie:plan` to `genie:work` is concrete: `genie:work` reads U-IDs, file paths, scope boundaries, and test scenarios — then determines the actual implementation. The plan tells the implementer **what must be true** when the unit is done; the implementer figures out **how to make it true**. This division is what makes plans portable across implementer and across time.
 
 ---
 
 ## Use Standalone
 
-Many people reach for `ce-plan` directly when they already have what to do — for software and equally often for non-software multi-step tasks.
+Many people reach for `genie:plan` directly when they already have what to do — for software and equally often for non-software multi-step tasks.
 
 **Software:**
 
@@ -201,7 +201,7 @@ In universal-planning mode, the U-IDs, dependency ordering, scope boundaries, an
 | `<requirements doc path>` | Origin-sourced planning |
 | `<plan path>` | Resume offer (or deepen, if intent matches) |
 | `deepen the plan` / `deepening pass` | Re-deepen fast path (interactive mode) |
-| `<bug description>` | Routes to `ce-debug` suggestion menu |
+| `<bug description>` | Routes to `genie:fix` suggestion menu |
 | `<task in another repo>` | Cross-repo announcement, plan lands in target |
 
 ---
@@ -209,10 +209,10 @@ In universal-planning mode, the U-IDs, dependency ordering, scope boundaries, an
 ## FAQ
 
 **Doesn't a plan tell you HOW to build something?**
-Not in `ce-plan`'s framing. The plan tells you what must be honored — decisions, scope, units, files, tests, risks. It deliberately does not pre-write code, exact API signatures, or step-by-step shell choreography. The implementing agent figures out HOW with code in front of them. This separation keeps plans portable, prevents brittle pre-commitments, and respects the judgment the implementer brings at execution time. It's also what lets the same engine plan a software refactor, a hot-water-tank maintenance, and a 6-week study plan with the same structural rigor.
+Not in `genie:plan`'s framing. The plan tells you what must be honored — decisions, scope, units, files, tests, risks. It deliberately does not pre-write code, exact API signatures, or step-by-step shell choreography. The implementing agent figures out HOW with code in front of them. This separation keeps plans portable, prevents brittle pre-commitments, and respects the judgment the implementer brings at execution time. It's also what lets the same engine plan a software refactor, a hot-water-tank maintenance, and a 6-week study plan with the same structural rigor.
 
 **Why U-IDs instead of just numbered units?**
-Numbering breaks when units are reordered, split, or deleted — every reference in the issue, PR, and downstream conversation becomes wrong. U-IDs are stable: reorder leaves them in place, splits keep the original on the original concept, deletes leave gaps. `ce-work`'s blocker references work across plan edits because of this.
+Numbering breaks when units are reordered, split, or deleted — every reference in the issue, PR, and downstream conversation becomes wrong. U-IDs are stable: reorder leaves them in place, splits keep the original on the original concept, deletes leave gaps. `genie:work`'s blocker references work across plan edits because of this.
 
 **Why does the confidence check run automatically?**
 The expensive moment to discover a thin section is during execution, not during planning. Auto-deepening dispatches targeted research while research context is still warm — much cheaper than re-research weeks later when implementation surfaces a missed risk.
@@ -230,9 +230,8 @@ Yes — and it's increasingly common. Universal-planning preserves the U-ID conc
 
 ## See Also
 
-- [`ce-brainstorm`](./genie:brainstorm.md) — produce the requirements doc that becomes the plan's origin
-- [`genie:think`](./ce-ideate.md) — upstream "what to even work on" ideation
-- [`ce-work`](./genie:work.md) — execute the plan U-ID by U-ID
-- [`ce-doc-review`](./ce-doc-review.md) — persona-based review of the plan
-- [`ce-debug`](./genie:fix.md) — bug-shaped prompts route here
-- [`genie:strategy`](./ce-strategy.md) — anchor plans to documented product strategy
+- [`genie:brainstorm`](./brainstorm.md) — produce the requirements doc that becomes the plan's origin
+- [`genie:think`](./think.md) — upstream "what to even work on" ideation
+- [`genie:work`](./work.md) — execute the plan U-ID by U-ID
+- [`genie:fix`](./fix.md) — bug-shaped prompts route here
+- [`genie:strategy`](./strategy.md) — anchor plans to documented product strategy

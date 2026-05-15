@@ -1,6 +1,6 @@
 # YAML Frontmatter 스키마 (YAML Frontmatter Schema)
 
-이 디렉토리의 `schema.yaml`은 `ce-compound`에 의해 작성되는 `docs/solutions/` frontmatter에 대한 정식 계약(canonical contract)입니다.
+이 디렉토리의 `schema.yaml`은 `genie:learn`에 의해 작성되는 `docs/solutions/` frontmatter에 대한 정식 계약(canonical contract)입니다.
 
 이 파일을 다음 항목에 대한 빠른 참조로 사용하십시오:
 - 필수 필드

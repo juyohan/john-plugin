@@ -47,7 +47,7 @@ git checkout -b <branch-name> "$BASE_REF"
 - **커밋되지 않은 변경 사항이 덮어써질 수 있어 Checkout 실패:** 로컬 `<base>`가 사용자가 편집한 파일에서 `origin/<base>`와 충돌합니다. Stash 후 재시도하고 Pop 합니다:
 
   ```bash
-  git stash push -u -m "ce-commit-push-pr: pre-branch <branch-name>"
+  git stash push -u -m "genie:push-pr: pre-branch <branch-name>"
   git checkout -b <branch-name> "$BASE_REF"
   git stash pop
   ```

@@ -32,26 +32,26 @@
 
 테스트 작성 시 Arrange-Act-Assert 구조를 선호합니다:
 
-```typescript
-test('유사도를 올바르게 계산한다', () => {
-  // Arrange (준비)
-  const vector1 = [1, 0, 0]
-  const vector2 = [0, 1, 0]
+```
+// Arrange (준비)
+입력값1 = [1, 0, 0]
+입력값2 = [0, 1, 0]
 
-  // Act (실행)
-  const similarity = calculateCosineSimilarity(vector1, vector2)
+// Act (실행)
+결과 = calculateCosineSimilarity(입력값1, 입력값2)
 
-  // Assert (검증)
-  expect(similarity).toBe(0)
-})
+// Assert (검증)
+결과 == 0 이어야 한다
 ```
 
 ### 테스트 명명 규칙
 
 테스트 대상의 동작을 설명하는 구체적인 이름을 사용하십시오:
 
-```typescript
-test('쿼리와 일치하는 시장이 없으면 빈 배열을 반환한다', () => {})
-test('API 키가 누락되면 에러를 던진다', () => {})
-test('Redis를 사용할 수 없으면 부분 문자열 검색으로 폴백한다', () => {})
 ```
+"쿼리와 일치하는 항목이 없으면 빈 결과를 반환한다"
+"필수 키가 누락되면 에러를 던진다"
+"외부 서비스를 사용할 수 없으면 폴백 로직으로 전환한다"
+```
+
+언어별 구현 예시는 각 언어 디렉토리의 `testing.md`를 참조하십시오.

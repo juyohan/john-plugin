@@ -1,6 +1,8 @@
 ---
 name: tdd
 description: 새로운 기능 작성, 버그 수정, 코드 리팩토링 시 사용합니다. 80% 이상의 커버리지(단위, 통합, E2E 테스트 포함)를 갖춘 테스트 주도 개발을 강제합니다.
+allowed-tools:
+  - gem
 ---
 > **기본 가이드라인**: 이 스킬에는 [SKILL.md](../SKILL.md)가 적용됩니다.
 
@@ -62,7 +64,8 @@ docker-compose -f docker-compose.test.yml down
 4. **코드 구현** — 테스트를 통과할 최소한의 코드
 5. **테스트 재실행** — 통과해야 합니다 (GREEN)
 6. **리팩토링** — 중복 제거, 네이밍 개선, 테스트는 green 유지
-7. **커버리지 검증** — 80% 이상 확인 (`npm run test:coverage`)
+7. **커버리지 검증** — 80% 이상 확인
+   (예: `npm run test:coverage` · `pytest --cov` · `go test -cover ./...` · `./gradlew jacocoTestReport`)
 
 ## 테스트 파일 구조
 
@@ -83,13 +86,13 @@ src/
 
 ## 커버리지 기준
 
-```json
-{
-  "coverageThresholds": {
-    "global": { "branches": 80, "functions": 80, "lines": 80, "statements": 80 }
-  }
-}
-```
+branches, functions, lines, statements 각 80% 이상.
+
+설정 위치 (사용 중인 도구에 맞게 선택):
+- **Jest**: `jest.config.js` → `coverageThresholds.global` 각 항목 80
+- **pytest**: `pytest.ini` 또는 `pyproject.toml` → `--cov-fail-under=80`
+- **Go**: `go test -cover ./...` 후 커버리지 수동 확인
+- **JaCoCo**: `build.gradle` → `minimumCoverage = 0.80`
 
 ## 주의사항
 

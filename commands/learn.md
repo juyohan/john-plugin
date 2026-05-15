@@ -12,9 +12,9 @@ model: haiku
 
 > Document a recently solved problem so the next encounter takes minutes instead of hours. Knowledge compounds.
 
-`genie:learn` is the **knowledge-capture** skill. After you solve a non-trivial problem, this skill writes a structured doc to `docs/solutions/` covering symptoms, root cause, what didn't work, the working solution, and prevention strategies. Future runs of `ce-plan`, `genie:think`, `ce-debug`, and `ce-work` consult this folder as institutional memory — so the same investigation never has to happen twice.
+`genie:learn` is the **knowledge-capture** skill. After you solve a non-trivial problem, this skill writes a structured doc to `docs/solutions/` covering symptoms, root cause, what didn't work, the working solution, and prevention strategies. Future runs of `genie:plan`, `genie:think`, `genie:fix`, and `genie:work` consult this folder as institutional memory — so the same investigation never has to happen twice.
 
-The compound-engineering ideation chain is `/ce-ideate → /genie:brainstorm → /genie:plan → /genie:work`. `genie:learn` is the **closing loop** — captured at the end of a debugging or build session, the doc feeds back upstream as grounding for future runs. The first time you solve "N+1 query in brief generation" takes 30 minutes of research; the second time, you find the doc and the fix takes 2 minutes.
+The compound-engineering ideation chain is `/genie:think → /genie:brainstorm → /genie:plan → /genie:work`. `genie:learn` is the **closing loop** — captured at the end of a debugging or build session, the doc feeds back upstream as grounding for future runs. The first time you solve "N+1 query in brief generation" takes 30 minutes of research; the second time, you find the doc and the fix takes 2 minutes.
 
 ---
 
@@ -25,7 +25,7 @@ The compound-engineering ideation chain is `/ce-ideate → /genie:brainstorm →
 | What does it do? | Documents a solved problem to `docs/solutions/[category]/[filename].md` with structured frontmatter, bug-track or knowledge-track sections, and cross-references |
 | When to use it | After solving a non-trivial problem; when the user says "that worked", "it's fixed", "problem solved" |
 | What it produces | One doc in `docs/solutions/`, plus an optional small edit to `AGENTS.md`/`CLAUDE.md` for discoverability |
-| What's next | Optional `/ce-compound-refresh` if the new learning suggests an older doc may be stale |
+| What's next | Optional `/genie:learn-refresh` if the new learning suggests an older doc may be stale |
 
 ---
 
@@ -75,7 +75,7 @@ The track determines section order and frontmatter fields. Forcing bug-track fie
 The Related Docs Finder scores overlap with existing `docs/solutions/` content across five dimensions: problem statement, root cause, solution approach, referenced files, prevention rules.
 
 - **High overlap** (4-5 dimensions match) → **update the existing doc** with fresher context. The existing path stays the same; a `last_updated` field is added. Two docs describing the same problem inevitably drift.
-- **Moderate overlap** (2-3 dimensions match) → create the new doc, flag for consolidation review (potential `ce-compound-refresh` trigger).
+- **Moderate overlap** (2-3 dimensions match) → create the new doc, flag for consolidation review (potential `/genie:learn-refresh` trigger).
 - **Low or none** → create the new doc normally.
 
 ### 4. Discoverability check — knowledge only compounds if agents can find it
@@ -86,7 +86,7 @@ The proposed addition matches the existing file's tone and density — a single-
 
 ### 5. Selective refresh trigger
 
-After capturing the new learning, `genie:learn` checks whether it should invoke `/ce-compound-refresh` on a narrow scope hint. It does NOT default to running refresh — only when the new learning suggests a specific older doc may now be stale (contradicted, superseded, or in a domain that just got refactored).
+After capturing the new learning, `genie:learn` checks whether it should invoke `/genie:learn-refresh` on a narrow scope hint. It does NOT default to running refresh — only when the new learning suggests a specific older doc may now be stale (contradicted, superseded, or in a domain that just got refactored).
 
 ### 6. Specialized post-review
 
@@ -98,7 +98,7 @@ Full mode optionally dispatches `ce-session-historian` to search prior sessions 
 
 ### 8. Auto-invoke triggers
 
-Phrases like "that worked", "it's fixed", "working now", "problem solved" auto-invoke the skill so capture happens at the moment context is freshest. The user can override with `/ce-compound [context]` to capture immediately.
+Phrases like "that worked", "it's fixed", "working now", "problem solved" auto-invoke the skill so capture happens at the moment context is freshest. The user can override with `/genie:learn [context]` to capture immediately.
 
 ---
 
@@ -112,7 +112,7 @@ Three subagents dispatch in parallel: Context Analyzer reads conversation histor
 
 The orchestrator assembles the doc, validates frontmatter via the YAML safety script, and writes `docs/solutions/performance-issues/n-plus-one-brief-generation.md`. The discoverability check finds `AGENTS.md` doesn't mention `docs/solutions/`, proposes a one-line addition to the existing directory listing, and applies it after you confirm.
 
-Phase 3 dispatches `ce-performance-oracle` and `ce-kieran-rails-reviewer` to validate the code examples and approach. Phase 2.5 surfaces a refresh recommendation: the older N+1 doc may benefit from consolidation review. The skill suggests `/ce-compound-refresh n-plus-one` as a narrow scope hint and ends.
+Phase 3 dispatches `ce-performance-oracle` and `ce-kieran-rails-reviewer` to validate the code examples and approach. Phase 2.5 surfaces a refresh recommendation: the older N+1 doc may benefit from consolidation review. The skill suggests `/genie:learn-refresh n-plus-one` as a narrow scope hint and ends.
 
 ---
 
@@ -144,10 +144,10 @@ Skip `genie:learn` when:
 The output feeds back into upstream skills:
 
 - `/genie:plan` reads `docs/solutions/` via `ce-learnings-researcher` during Phase 1 research
-- `/ce-ideate` reads it as part of the comprehensive grounding step
+- `/genie:think` reads it as part of the comprehensive grounding step
 - `/genie:fix` reads it for prior context when an issue tracker reference is fetched
 
-When the new learning suggests an older doc may now be stale, `genie:learn` recommends `/ce-compound-refresh` with a narrow scope hint.
+When the new learning suggests an older doc may now be stale, `genie:learn` recommends `/genie:learn-refresh` with a narrow scope hint.
 
 ---
 
@@ -155,8 +155,8 @@ When the new learning suggests an older doc may now be stale, `genie:learn` reco
 
 The skill is its own complete cycle:
 
-- **Just-finished problem** — `/ce-compound` (or auto-invoked from "that worked")
-- **With context hint** — `/ce-compound "the email digest race condition we fixed"`
+- **Just-finished problem** — `/genie:learn` (or auto-invoked from "that worked")
+- **With context hint** — `/genie:learn "the email digest race condition we fixed"`
 - **Lightweight on a long session** — when context is tight, pick lightweight mode at the prompt
 
 The auto-invoke triggers happen mid-conversation; you don't need to remember the slash command if you've just confirmed something works.
@@ -209,8 +209,8 @@ The skill asks for consent before applying the edit. You can decline; the doc st
 
 ## See Also
 
-- [`ce-compound-refresh`](./ce-compound-refresh.md) — maintain `docs/solutions/` over time as the codebase evolves
-- [`ce-debug`](./genie:fix.md) — common upstream caller after a fix is verified
-- [`ce-work`](./genie:work.md) — common upstream caller after shipping
-- [`ce-plan`](./genie:plan.md) — reads `docs/solutions/` as institutional memory during planning
-- [`genie:think`](./ce-ideate.md) — reads `docs/solutions/` as part of grounding
+- `/genie:learn-refresh` — maintain `docs/solutions/` over time as the codebase evolves
+- [`genie:fix`](./fix.md) — common upstream caller after a fix is verified
+- [`genie:work`](./work.md) — common upstream caller after shipping
+- [`genie:plan`](./plan.md) — reads `docs/solutions/` as institutional memory during planning
+- [`genie:think`](./think.md) — reads `docs/solutions/` as part of grounding

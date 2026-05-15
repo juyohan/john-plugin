@@ -1,6 +1,6 @@
 ---
 name: worktree
-description: 병렬 기능 작업 또는 PR 검토를 위해 격리된 git 워크트리를 생성합니다. 현재 체크아웃을 방해하지 않고 작업을 시작하고 싶을 때, 또는 `ce-work`나 `ce-code-review`에서 워크트리 옵션을 제공할 때 사용합니다.
+description: 병렬 기능 작업 또는 PR 검토를 위해 격리된 git 워크트리를 생성합니다. 현재 체크아웃을 방해하지 않고 작업을 시작하고 싶을 때, 또는 `genie:work`나 `genie:review`에서 워크트리 옵션을 제공할 때 사용합니다.
 allowed-tools: Bash(bash *worktree-manager.sh)
   - gem
 ---
@@ -88,7 +88,7 @@ cp .env* .worktrees/<branch>/
 
 ## 통합
 
-`ce-work` 및 `ce-code-review`는 이 스킬을 옵션으로 제공합니다. 사용자가 해당 흐름에서 "worktree"를 선택하면, 작업 설명에서 유도된 의미 있는 브랜치 이름(예: `feat/crowd-sniff`, `fix/email-validation`)과 함께 `bash "${CLAUDE_SKILL_DIR:-.}/scripts/worktree-manager.sh" create <branch>`를 호출하세요. 작업 내용을 가리는 `worktree-jolly-beaming-raven`과 같은 자동 생성된 이름은 피하세요.
+`genie:work` 및 `genie:review`는 이 스킬을 옵션으로 제공합니다. 사용자가 해당 흐름에서 "worktree"를 선택하면, 작업 설명에서 유도된 의미 있는 브랜치 이름(예: `feat/crowd-sniff`, `fix/email-validation`)과 함께 `bash "${CLAUDE_SKILL_DIR:-.}/scripts/worktree-manager.sh" create <branch>`를 호출하세요. 작업 내용을 가리는 `worktree-jolly-beaming-raven`과 같은 자동 생성된 이름은 피하세요.
 
 ## 문제 해결
 

@@ -141,7 +141,8 @@ function validateCommitMessage(command) {
   // Extract commit message from command
   const messageMatch = command.match(/(?:-m|--message)[=\s]+["']?([^"']+)["']?/);
   if (!messageMatch) return null;
-  
+  if (messageMatch[1].trim().startsWith('$(')) return null;
+
   const message = messageMatch[1];
   const issues = [];
   
@@ -188,48 +189,14 @@ function validateCommitMessage(command) {
   return { message, issues };
 }
 
-function getPathEnv() {
-  const pathKey = Object.keys(process.env).find(key => key.toLowerCase() === 'path') || 'PATH';
-  return process.env[pathKey] || '';
-}
-
-function isPathLike(command) {
-  return command.includes(path.sep) || (process.platform === 'win32' && /[\\/]/.test(command));
-}
-
-function getExecutableCandidates(command) {
-  if (process.platform !== 'win32' || path.extname(command)) {
-    return [command];
-  }
-
-  const pathExt = process.env.PATHEXT || '.COM;.EXE;.BAT;.CMD';
-  return [command, ...pathExt.split(';').filter(Boolean).map(ext => `${command}${ext.toLowerCase()}`)];
-}
-
-function resolveCommand(command) {
-  if (isPathLike(command)) {
-    return getExecutableCandidates(command).find(candidate => fs.existsSync(candidate)) || null;
-  }
-
-  for (const dir of getPathEnv().split(path.delimiter).filter(Boolean)) {
-    for (const candidate of getExecutableCandidates(path.join(dir, command))) {
-      if (fs.existsSync(candidate)) {
-        return candidate;
-      }
-    }
-  }
-
-  return null;
-}
-
-function runLinterCommand(command, args) {
-  const useShell = process.platform === 'win32' && /\.(?:cmd|bat)$/i.test(command);
-  return spawnSync(command, args, {
+function trySpawn(command, args) {
+  const result = spawnSync(command, args, {
     encoding: 'utf8',
     stdio: ['pipe', 'pipe', 'pipe'],
     timeout: 30000,
-    shell: useShell
   });
+  if (result.error && result.error.code === 'ENOENT') return null;
+  return result;
 }
 
 function commandOutput(result) {
@@ -238,69 +205,37 @@ function commandOutput(result) {
 
 /**
  * Run linter on staged files
- * @param {string[]} files 
+ * @param {string[]} files
  * @returns {object} Lint results
  */
 function runLinter(files) {
   const jsFiles = files.filter(f => /\.(js|jsx|ts|tsx)$/.test(f));
   const pyFiles = files.filter(f => f.endsWith('.py'));
   const goFiles = files.filter(f => f.endsWith('.go'));
-  
-  const results = {
-    eslint: null,
-    pylint: null,
-    golint: null
-  };
-  
-  // Run ESLint if available
+
+  const results = { eslint: null, ruff: null, govet: null };
+
   if (jsFiles.length > 0) {
     const eslintBin = process.platform === 'win32' ? 'eslint.cmd' : 'eslint';
     const eslintPath = path.join(process.cwd(), 'node_modules', '.bin', eslintBin);
     if (fs.existsSync(eslintPath)) {
-      const result = runLinterCommand(eslintPath, ['--format', 'compact', ...jsFiles]);
-      results.eslint = {
-        success: result.status === 0,
-        output: commandOutput(result)
-      };
+      const result = spawnSync(eslintPath, ['--format', 'compact', ...jsFiles], {
+        encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 30000,
+      });
+      results.eslint = { success: result.status === 0, output: commandOutput(result) };
     }
   }
-  
-  // Run Pylint if available
+
   if (pyFiles.length > 0) {
-    try {
-      const pylintPath = resolveCommand('pylint');
-      if (!pylintPath) {
-        results.pylint = null;
-      } else {
-        const result = runLinterCommand(pylintPath, ['--output-format=text', ...pyFiles]);
-        results.pylint = {
-          success: result.status === 0,
-          output: commandOutput(result)
-        };
-      }
-    } catch {
-      // Pylint not available
-    }
+    const result = trySpawn('ruff', ['check', '--output-format=text', ...pyFiles]);
+    if (result) results.ruff = { success: result.status === 0, output: commandOutput(result) };
   }
-  
-  // Run golint if available
+
   if (goFiles.length > 0) {
-    try {
-      const golintPath = resolveCommand('golint');
-      if (!golintPath) {
-        results.golint = null;
-      } else {
-        const result = runLinterCommand(golintPath, goFiles);
-        results.golint = {
-          success: !result.stdout || result.stdout.trim() === '',
-          output: commandOutput(result)
-        };
-      }
-    } catch {
-      // golint not available
-    }
+    const result = trySpawn('go', ['vet', './...']);
+    if (result) results.govet = { success: result.status === 0, output: commandOutput(result) };
   }
-  
+
   return results;
 }
 
@@ -328,11 +263,8 @@ function evaluate(rawInput) {
     const stagedFiles = getStagedFiles();
     
     if (stagedFiles.length === 0) {
-      console.error('[Hook] No staged files found. Use "git add" to stage files first.');
       return { output: rawInput, exitCode: 0 };
     }
-    
-    console.error(`[Hook] Checking ${stagedFiles.length} staged file(s)...`);
     
     // Check each staged file
     const filesToCheck = stagedFiles.filter(shouldCheckFile);
@@ -380,16 +312,16 @@ function evaluate(rawInput) {
       errorCount++;
     }
     
-    if (lintResults.pylint && !lintResults.pylint.success) {
-      console.error('\nPylint Issues:');
-      console.error(lintResults.pylint.output);
+    if (lintResults.ruff && !lintResults.ruff.success) {
+      console.error('\nRuff Issues:');
+      console.error(lintResults.ruff.output);
       totalIssues++;
       errorCount++;
     }
-    
-    if (lintResults.golint && !lintResults.golint.success) {
-      console.error('\ngolint Issues:');
-      console.error(lintResults.golint.output);
+
+    if (lintResults.govet && !lintResults.govet.success) {
+      console.error('\ngo vet Issues:');
+      console.error(lintResults.govet.output);
       totalIssues++;
       errorCount++;
     }
@@ -405,8 +337,6 @@ function evaluate(rawInput) {
         console.error('\n[Hook] WARNING: Warnings found. Consider fixing them, but commit is allowed.');
         console.error('[Hook] To bypass these checks, use: git commit --no-verify');
       }
-    } else {
-      console.error('\n[Hook] PASS: All checks passed!');
     }
     
   } catch (error) {

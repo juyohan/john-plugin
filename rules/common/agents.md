@@ -6,7 +6,6 @@
 
 | 에이전트 | 용도 | 사용 시점 |
 |-------|---------|-------------|
-<<<<<<< HEAD
 | planner | 구현 계획 수립 | 복잡한 기능, 리팩토링 |
 | architect | 시스템 설계 | 아키텍처 결정 |
 | tdd-guide | 테스트 주도 개발 | 새로운 기능, 버그 수정 |
@@ -17,21 +16,29 @@
 | refactor-cleaner | 죽은 코드 정리 | 코드 유지보수 |
 | doc-updater | 문서화 | 문서 업데이트 |
 | rust-reviewer | Rust 코드 리뷰 | Rust 프로젝트 |
-=======
-| planner | Implementation planning | Complex features, refactoring |
-| architect | System design | Architectural decisions |
-| tdd-guide | Test-driven development | New features, bug fixes |
-| code-reviewer | Code review | After writing code |
-| security-reviewer | Security analysis | Before commits |
-| build-error-resolver | Fix build errors | When build fails |
-| e2e-runner | E2E testing | Critical user flows |
-| refactor-cleaner | Dead code cleanup | Code maintenance |
-| doc-updater | Documentation | Updating docs |
-| rust-reviewer | Rust code review | Rust projects |
-| harmonyos-app-resolver | HarmonyOS app development | HarmonyOS/ArkTS projects |
->>>>>>> 60782502d54e2dc5a619fe3bd2bffb94f7935677
+| harmonyos-app-resolver | HarmonyOS 앱 개발 | HarmonyOS/ArkTS 프로젝트 |
+
+## Genie 워크플로우 커맨드
+
+이 프로젝트는 `/genie:*` 커맨드로 각 개발 단계를 실행합니다. 각 커맨드는 해당 단계 완료 시 반드시 정지합니다 — 자동 연계 금지.
+
+| 커맨드 | 목적 | 스테이지 |
+|--------|------|---------|
+| `/genie:brainstorm` | 요구사항 문서화 | Define |
+| `/genie:plan` | 구현 계획 수립 | Plan |
+| `/genie:test` | 실패 테스트 작성 (RED) | Test |
+| `/genie:work` | 구현 + 리팩토링 (GREEN) | Work |
+| `/genie:review` | 코드 리뷰 | Review |
+| `/genie:commit` | 커밋 생성 | Ship |
+| `/genie:learn` | 학습 자산화 및 레슨 런 정리 | Learn |
+
+> **Genie 커맨드 vs ECC 에이전트**: `/genie:*` 커맨드가 주된 실행 단위입니다. ECC 글로벌 에이전트(`~/.claude/agents/`)는 각 커맨드 내부에서 호출됩니다.
+> - `/genie:test` → `tdd-guide` / `/genie:review` → `code-reviewer`, 언어별 reviewer
+> - 빌드 에러: `build-error-resolver` 대신 언어별 커맨드(`fix-go`, `fix-java`, `fix-kotlin`, `fix-swift`)를 사용하십시오.
 
 ## 즉각적인 에이전트 활용
+
+> **주의**: 아래 지침은 `/genie:*` 워크플로우 **외부**의 탐색적·독립 작업에 적용됩니다. `/genie:*` 실행 중에는 각 단계 경계(완료 후 사용자 확인)를 반드시 준수하십시오 — 자동 연계 금지.
 
 사용자의 별도 요청 없이도 다음의 경우 에이전트를 사용하십시오:
 1. 복잡한 기능 요청 - **planner** 에이전트 사용

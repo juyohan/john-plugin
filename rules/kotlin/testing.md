@@ -34,7 +34,7 @@ fun `loading state emitted then data`() = runTest {
 
 ## Fakes Over Mocks
 
-Prefer hand-written fakes over mocking frameworks:
+Prefer hand-written fakes over mocking frameworks. Fakes implement the real interface, so a signature change breaks compilation rather than silently passing. They are also faster to run and easier to read in test context. Reserve mocking frameworks (MockK, Mockito-Kotlin) for third-party types you cannot implement.
 
 ```kotlin
 class FakeItemRepository : ItemRepository {
@@ -125,4 +125,20 @@ src/
 └── iosTest/kotlin/        # iOS-specific tests
 ```
 
-Minimum test coverage: ViewModel + UseCase for every feature.
+Minimum test coverage: ViewModel + UseCase for every feature. Target ≥80% overall.
+
+Enforce with Kover (`build.gradle.kts`):
+
+```kotlin
+plugins {
+    id("org.jetbrains.kotlinx.kover") version "0.7.6"
+}
+
+koverReport {
+    verify {
+        rule {
+            minBound(80)
+        }
+    }
+}
+```

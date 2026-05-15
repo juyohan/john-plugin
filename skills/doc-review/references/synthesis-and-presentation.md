@@ -127,7 +127,7 @@
 - 심각도가 `P0` 또는 `P1`임 (전제 수준의 이슈는 본질적으로 높은 우선순위를 가짐)
 - `autofix_class`가 `manual`임 (루트 자체는 판단을 필요로 함 — safe/gated 루트는 조치 대상이지 전파 대상이 아님)
 - `why_it_matters` 또는 `title`이 세부 사항이 아닌 기초적인 전제에 도전함. 신호 문구 (어휘가 아닌 형태): "premise unsupported", "justification missing", "do-nothing baseline not evaluated", "is X justified", "unsupported by evidence", "is the proposed solution the right approach"
-- 발견 사항의 `section`이 프레이밍 수준(Problem Frame, Summary, Overview, Why, Motivation, Goals — `Summary`는 새 ce-plan / ce-brainstorm 템플릿 헤더이며, `Overview`는 레거시로 유지됨)이거나, 발견 사항이 명명된 컴포넌트의 존재 여부를 명시적으로 질문함
+- 발견 사항의 `section`이 프레이밍 수준(Problem Frame, Summary, Overview, Why, Motivation, Goals — `Summary`는 새 genie:plan / genie:brainstorm 템플릿 헤더이며, `Overview`는 레거시로 유지됨)이거나, 발견 사항이 명명된 컴포넌트의 존재 여부를 명시적으로 질문함
 
 여러 후보가 기준에 부합하면 모두 승격시키십시오. 위의 기준(P0/P1, manual, 프레이밍 수준 섹션, 전제 도전 신호 문구)은 충분히 제한적이어서 잘 작성된 문서에 대해 이 리스트는 짧을 것입니다. 수치적 캡을 더 씌우지 마십시오. 두 개의 유효한 루트가 존재할 때 하나만 루트로 선택하면 두 번째 루트의 자연스러운 종속 항목들이 독립적인 manual 발견 사항으로 남게 됩니다 — 이는 체인이 해결하고자 하는 바로 그 UX 문제입니다.
 
@@ -386,12 +386,12 @@ B. Exit without further action
 
 `<next stage>` 치환은 Phase 1의 문서 유형을 사용합니다:
 
-- 요구사항 문서(Requirements document) → `ce-plan`
-- 계획 문서(Plan document) → `ce-work`
+- 요구사항 문서(Requirements document) → `genie:plan`
+- 계획 문서(Plan document) → `genie:work`
 
 **레이블 조정:** 적용할 대기 중인 결정이 없는 경우, 기본 옵션에서 `Apply decisions and` 접두사를 뺍니다 — 레이블은 시스템이 수행하는 작업과 일치해야 합니다. 수정 사항이 대기 중일 때는 `Apply decisions and proceed`, 아무것도 대기 중이지 않을 때는 `Proceed`를 사용합니다.
 
-**호출자 컨텍스트 처리 (암시적):** 최종 질문의 "Proceed to <next stage>" 옵션은 가시적인 대화 상태로부터 에이전트에 의해 컨텍스트에 따라 해석됩니다. ce-doc-review가 다른 스킬의 흐름 내부에서 호출된 경우(예: ce-brainstorm Phase 4 재검토, ce-plan phase 5.3.8), 에이전트는 중첩된 `/ce-plan` 또는 `/ce-work` 디스패치를 실행하지 않습니다 — 자체 로직을 계속 수행하는 호출자의 흐름으로 제어권을 반환합니다. 단독으로 호출된 경우 "Proceed"는 적절한 다음 스킬을 디스패치합니다. 명시적인 호출자 힌트 인자는 필요하지 않습니다. 이 암시적 처리가 실제 환경에서 신뢰할 수 없는 것으로 판명되면 명시적인 `nested:true` 플래그를 후속 조치로 추가할 수 있습니다.
+**호출자 컨텍스트 처리 (암시적):** 최종 질문의 "Proceed to <next stage>" 옵션은 가시적인 대화 상태로부터 에이전트에 의해 컨텍스트에 따라 해석됩니다. doc-review가 다른 스킬의 흐름 내부에서 호출된 경우(예: genie:brainstorm Phase 4 재검토, genie:plan phase 5.3.8), 에이전트는 중첩된 `/genie:plan` 또는 `/genie:work` 디스패치를 실행하지 않습니다 — 자체 로직을 계속 수행하는 호출자의 흐름으로 제어권을 반환합니다. 단독으로 호출된 경우 "Proceed"는 적절한 다음 스킬을 디스패치합니다. 명시적인 호출자 힌트 인자는 필요하지 않습니다. 이 암시적 처리가 실제 환경에서 신뢰할 수 없는 것으로 판명되면 명시적인 `nested:true` 플래그를 후속 조치로 추가할 수 있습니다.
 
 ### Iteration limit (반복 제한)
 
@@ -405,7 +405,7 @@ B. Exit without further action
 - 사용자가 논의하지 않은 새로운 섹션이나 요구사항을 추가하지 마십시오.
 - 과도하게 엔지니어링하거나 복잡성을 추가하지 마십시오.
 - 별도의 검토 파일을 만들거나 메타데이터 섹션을 추가하지 마십시오.
-- 호출자 스킬(ce-brainstorm, ce-plan 또는 ce-doc-review를 호출하는 외부 플러그인 스킬)을 수정하지 마십시오.
+- 호출자 스킬(genie:brainstorm, genie:plan 또는 doc-review를 호출하는 외부 플러그인 스킬)을 수정하지 마십시오.
 
 ## Iteration Guidance (반복 지침)
 

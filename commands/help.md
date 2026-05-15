@@ -3,7 +3,7 @@ description: Workflow guidance — which genie command to use right now?
 model: haiku
 ---
 
-# `ce-help`
+# `genie:help`
 
 > Get routed to the right command for your current situation.
 
@@ -13,15 +13,15 @@ model: haiku
 
 | 현재 상태 | 다음 단계 |
 |-----------|-----------|
-| 아이디어만 있음 | `/ce-ideate` 또는 `/genie:brainstorm` |
+| 아이디어만 있음 | `/genie:think` 또는 `/genie:brainstorm` |
 | 요구사항 문서 있음 | `/genie:plan` |
 | 계획 문서 있음 | `genie:test` → `/genie:work` |
 | 코드 작성 완료 | `/genie:review` |
 | 리뷰 완료 | `/genie:commit` |
-| 작업 완료, 정리 필요 | `/ce-compound` |
+| 작업 완료, 정리 필요 | `/genie:learn` |
 | 막혔을 때 | `/genie:fix` |
-| 성능 이슈 | `/ce-optimize` |
-| 제품 방향 확인/수정 | `/ce-strategy` |
+| 성능 이슈 | `/genie:optimize` |
+| 제품 방향 확인/수정 | `/genie:strategy` |
 | 프로젝트 맞춤 도구 확인 | `node scripts/detect-project.js` |
 
 ---
@@ -29,9 +29,9 @@ model: haiku
 ## Full Workflow
 
 ```
-/ce-ideate        (선택) 아이디어 탐색
+/genie:think        (선택) 아이디어 탐색
   ↓
-/ce-strategy      (선택) 전략 정렬
+/genie:strategy      (선택) 전략 정렬
   ↓
 /genie:brainstorm    요구사항 정의  → docs/brainstorms/
   ↓
@@ -45,7 +45,7 @@ tdd-guide         테스트 먼저    → docs/tests/
   ↓
 /genie:commit        커밋
   ↓
-/ce-compound      지식 자산화    → docs/compounds/
+/genie:learn      지식 자산화    → docs/compounds/
 ```
 
 ---

@@ -3,7 +3,7 @@ description: Debug systematically — find root cause and fix bugs
 model: opus
 ---
 
-# `ce-debug`
+# `genie:fix`
 
 > Systematically locate root cause, reproduce the failure, and fix it — without guessing.
 
@@ -11,7 +11,7 @@ $ARGUMENTS
 
 ---
 
-Execute the **`ce-debug`** skill. Read `skills/genie:fix/SKILL.md` and follow the instructions exactly, using any `$ARGUMENTS` as the issue reference, error message, test path, or bug description.
+Execute the **`genie:fix`** skill. Read `skills/fix/SKILL.md` and follow the instructions exactly, using any `$ARGUMENTS` as the issue reference, error message, test path, or bug description.
 
 **Saves output to:** `docs/work/YYYY/MM/DD-<title>.md`
 

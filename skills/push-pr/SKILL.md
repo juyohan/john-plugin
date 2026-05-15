@@ -96,7 +96,7 @@ printf '=== STATUS ===\n'; git status; printf '\n=== DIFF ===\n'; git diff HEAD;
 본문은 반드시 임시 파일에 기록한 뒤 `--body-file <path>`를 통해 전달해야 합니다. `--body-file -`, stdin 파이프, heredoc, `--body "$(cat ...)"` 방식은 사용하지 마십시오. 래퍼나 stdin 처리 과정에서 PR 본문이 비어버릴 수 있으며, `gh`는 성공(exit 0)으로 종료되어 URL을 반환할 수 있기 때문입니다.
 
 ```bash
-BODY_FILE=$(mktemp "${TMPDIR:-/tmp}/ce-pr-body.XXXXXX") && cat > "$BODY_FILE" <<'__CE_PR_BODY_END__'
+BODY_FILE=$(mktemp "${TMPDIR:-/tmp}/pr-body.XXXXXX") && cat > "$BODY_FILE" <<'__CE_PR_BODY_END__'
 <작성된 본문 마크다운이 그대로 들어갑니다>
 __CE_PR_BODY_END__
 ```
@@ -208,7 +208,7 @@ git push -u origin HEAD
 본문은 반드시 임시 파일에 기록한 뒤 `--body-file <path>`를 통해 전달해야 합니다. `--body-file -`, stdin 파이프, heredoc, `--body "$(cat ...)"` 방식은 사용하지 마십시오. 래퍼나 stdin 처리 과정에서 PR 본문이 비어버릴 수 있으며, `gh`는 성공(exit 0)으로 종료되어 URL을 반환할 수 있기 때문입니다.
 
 ```bash
-BODY_FILE=$(mktemp "${TMPDIR:-/tmp}/ce-pr-body.XXXXXX") && cat > "$BODY_FILE" <<'__CE_PR_BODY_END__'
+BODY_FILE=$(mktemp "${TMPDIR:-/tmp}/pr-body.XXXXXX") && cat > "$BODY_FILE" <<'__CE_PR_BODY_END__'
 <작성된 본문 마크다운이 그대로 들어갑니다>
 __CE_PR_BODY_END__
 ```

@@ -11,9 +11,9 @@ $ARGUMENTS
 
 ---
 
-Execute the **`genie:strategy`** skill. Read `skills/ce-strategy/SKILL.md` and follow the instructions exactly, using any `$ARGUMENTS` to identify which section to update or create.
+Execute the **`genie:strategy`** skill. Read `skills/strategy/SKILL.md` and follow the instructions exactly, using any `$ARGUMENTS` to identify which section to update or create.
 
-**Workflow position:** `/ce-strategy` anchors all downstream brainstorm and plan work to documented product strategy.
+**Workflow position:** `/genie:strategy` anchors all downstream brainstorm and plan work to documented product strategy.
 
 **Saves output to:** `docs/brainstorms/YYYY/MM/DD-<title>-strategy.md`
 

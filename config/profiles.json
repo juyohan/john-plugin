@@ -18,8 +18,7 @@
         "pre:edit-write:suggest-compact",
         "pre:observe:continuous-learning",
         "pre:governance-capture",
-        "pre:config-protection",
-        "pre:mcp-health-check"
+        "pre:config-protection"
       ]
     },
     "strict": {
@@ -32,7 +31,6 @@
         "pre:observe:continuous-learning",
         "pre:governance-capture",
         "pre:config-protection",
-        "pre:mcp-health-check",
         "post:observe:evaluate-session"
       ]
     }

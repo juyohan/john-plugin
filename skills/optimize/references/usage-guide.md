@@ -1,8 +1,8 @@
-# `/ce-optimize` 사용 가이드
+# `/genie:optimize` 사용 가이드
 
 ## 이 스킬의 목적
 
-`/ce-optimize`는 다음과 같은 어려운 엔지니어링 문제를 위해 설계되었습니다:
+`/genie:optimize`는 다음과 같은 어려운 엔지니어링 문제를 위해 설계되었습니다:
 
 1. 여러 코드 또는 설정 변형(variant)을 시도할 수 있는 경우.
 2. 각 변형에 대해 동일한 평가를 실행할 수 있는 경우.
@@ -12,7 +12,7 @@
 
 ## 사용 시기
 
-문제가 다음과 같을 때 `/ce-optimize`를 사용하십시오:
+문제가 다음과 같을 때 `/genie:optimize`를 사용하십시오:
 
 - "RAM 낭비 없이 OOM 크래시를 멈추는 가장 작은 메모리 제한 찾기."
 - "모든 것을 하나의 쓰레기 클러스터로 뭉개지 않고 클러스터링 파라미터 튜닝하기."
@@ -37,7 +37,7 @@
 
 ## 사용하지 않아야 할 시기
 
-다음과 같은 경우 `/ce-optimize`는 적절한 도구가 아닙니다:
+다음과 같은 경우 `/genie:optimize`는 적절한 도구가 아닙니다:
 
 - 수정 사항이 명확하여 실험이 필요 없는 경우
 - 반복 가능한 측정 하네스가 없는 경우
@@ -79,7 +79,7 @@
 ### 1. 메모리 튜닝 (Memory Tuning)
 
 ```text
-Use /ce-optimize to find the smallest memory setting that keeps this service stable under our load test.
+Use /genie:optimize to find the smallest memory setting that keeps this service stable under our load test.
 
 The current container limit is 512 MB and the app sometimes OOM-crashes. Do not just jump to 8 GB. Try a small set of realistic memory limits, run the same load test for each one, and score the results using:
 - did the process OOM
@@ -92,7 +92,7 @@ Prefer the smallest memory limit that passes the guard rails.
 ### 2. 클러스터링 품질 (Clustering Quality)
 
 ```text
-Use /ce-optimize to improve issue and PR clustering quality.
+Use /genie:optimize to improve issue and PR clustering quality.
 
 We have about 18k open issues and PRs. We want to test changes that improve clustering quality, reduce singleton clusters, and improve match quality within each cluster.
 
@@ -104,7 +104,7 @@ Do not optimize only for coverage. Use LLM-as-judge to sample clusters and confi
 ### 3. 프롬프트 최적화 (Prompt Optimization)
 
 ```text
-Use /ce-optimize to create a summarization prompt for issues and PRs that minimizes token spend while still producing summaries that are good enough for downstream clustering.
+Use /genie:optimize to create a summarization prompt for issues and PRs that minimizes token spend while still producing summaries that are good enough for downstream clustering.
 
 I want the loop to compare prompt variants, measure token cost, and judge whether the summaries preserve the distinctions needed to cluster related issues together without merging unrelated ones.
 ```

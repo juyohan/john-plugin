@@ -16,6 +16,12 @@ allowed-tools:
 입력이 비어 있으면: "무엇을 플랜할까요?" 질문. 질문은 한 번에 하나. AskUserQuestion 우선.
 모든 파일 참조는 레포지토리 상대 경로 사용 (절대 경로 금지).
 
+## 실행 모드
+
+- **대화형 모드** (기본): 종합 확인·플래닝 질문을 사용자와 주고받는다.
+- **Headless 모드**: 비대화형 컨텍스트에서 트리거. 확인 없이 진행하며 Inferred 항목은 플랜의 `## Assumptions`에 기록.
+- **파이프라인 모드**: `LFG` 또는 `disable-model-invocation` 신호 시 트리거. 메뉴·확인·Doc Review 없이 즉시 호출자에게 반환. Headless보다 엄격.
+
 ## 1. 분류
 
 소프트웨어 작업(코드/레포/API/DB 참조 또는 build/modify/deploy 요청)이면 섹션 2로 진행.
@@ -40,7 +46,7 @@ allowed-tools:
 
 종합 제시 후 명시적 확인을 기다리십시오. 수정 요청 시 → 통합 후 재제시, 확인 전까지 플랜 작성 금지.
 **Headless 모드**: 확인 없이 진행. Inferred 항목은 플랜의 `## Assumptions` 섹션에 기록.
-종합은 결정/범위 체크포인트입니다. 파일 경로, 코드, 구현 세부사항을 포함하지 마십시오.
+종합은 결정/범위 체크포인트입니다. 종합 제시 시에만 파일 경로·코드·구현 세부사항을 포함하지 마십시오 (플랜 본문에는 포함됩니다).
 
 ## 4. 조사
 
@@ -78,7 +84,7 @@ allowed-tools:
 
 비선형 의존성을 가진 4개 이상 단위, 3개 이상 상호작용 표면, 3개 이상 동작 모드, 3개 이상 상호작용 결정이 있으면 Mermaid 또는 마크다운 테이블로 구조를 시각화하십시오.
 
-**저장 경로:** `docs/plans/YYYY/MM/DD-<제목>.md` (저장 전 `mkdir -p` 실행)
+**저장 경로:** 저장 전 `date +%Y/%m/%d`로 오늘 날짜를 확인하고 `mkdir -p docs/plans/YYYY/MM`를 실행하십시오. 파일: `docs/plans/YYYY/MM/DD-<제목>.md`
 R/A/F/AE-ID를 Requirements, Units, 테스트 시나리오에 추적하십시오. 결정 사항에는 근거를 포함하십시오.
 
 ## 7. 심화 및 핸드오프
@@ -86,8 +92,10 @@ R/A/F/AE-ID를 Requirements, Units, 테스트 시나리오에 추적하십시오
 **Confidence Check (플랜 작성 후 자동 실행):**
 
 섹션별 점수 산정 → 상위 2~5개 심화 후보 선정 (Lightweight는 1~2개):
-- 트리거 수(체크리스트 해당 항목) + 리스크 보너스(고위험 도메인) + 핵심 섹션 보너스(Key Decisions, Units, Risks)
-- 임계값: 총점 2점 이상, 또는 고위험 도메인 1점 이상
+- **트리거 체크리스트** (각 1점): Open Questions 미해결 ≥ 2개 · Risks 섹션 1줄 이하 · 외부 의존성 있는데 Context/Sources 없음 · Key Technical Decisions 부재 · 테스트 시나리오 edge case 누락
+- **고위험 도메인 보너스** (+1): 인증·결제·마이그레이션·외부 API 관련 단위 존재 시
+- **핵심 섹션 보너스** (+1): Key Decisions, Units, Risks 중 하나라도 얇을 때
+- 임계값: 총점 2점 이상, 또는 고위험 도메인 보너스 해당 시
 
 에이전트 할당 (섹션당 1~3개, 총 8개 이하):
 - Requirements/Open Questions → `code-explorer`, `code-architect`
@@ -97,23 +105,18 @@ R/A/F/AE-ID를 Requirements, Units, 테스트 시나리오에 추적하십시오
 - System-Wide Impact → `architect`, `performance-optimizer`, `security-reviewer`
 - Risks/Dependencies → 리스크 유형에 맞는 전문가 에이전트
 
-심화 필요 없으면 "Confidence check passed" 보고 후 Doc Review로 진행.
+심화 필요 없으면 "Confidence check passed" 보고 후 핸드오프로 진행.
 
 **심화 의도 (`deepen` 감지 시):**
 - Interactive 모드: 발견 사항을 하나씩 제시, 수락/거부 선택.
 - `deepened:` 필드가 이미 있으면 재심화 명시 요청 없이는 강제하지 않음.
 - "strengthen", "gaps", "rigor" 단어만으로는 심화 의도로 트리거하지 마십시오.
 
-**Doc Review**: confidence check 후 `/genie:review`를 `mode:headless`로 실행. safe_auto 수정 적용, 남은 발견 사항 한 줄 요약 출력.
+**핸드오프** (저장된 플랜 상대 경로 포함):
 
-**Post-Generation 메뉴** (`<플랜 절대 경로>` 포함):
-1. `/genie:work` 시작 (권장)
-2. 상세 문서 검토 실행
-3. 이슈 생성 (GitHub/Linear)
-4. Proof에서 열기
-5. 일단 종료
-
-파이프라인 모드(LFG, `disable-model-invocation`)에서는 메뉴 없이 즉시 호출자에게 반환.
+다음 단계: `/genie:test`
+- Lightweight이거나 즉시 구현 가능하면 `/genie:work` 직행
+- 파이프라인 모드(`LFG`, `disable-model-invocation`)이면 즉시 호출자에게 반환
 
 ## 8. 비소프트웨어 플래닝
 
@@ -123,6 +126,7 @@ R/A/F/AE-ID를 Requirements, Units, 테스트 시나리오에 추적하십시오
 
 **진행:**
 1. 1~3개 명확화 질문 (답변이 플랜 구조를 바꿀 때). 항상 "가정으로 바로 작성" 옵션 포함.
-2. 조사 필요성: 장소·가격·일정 등 시간 민감한 사실에 의존하면 병렬 웹 검색 먼저 실행.
+2. 조사 필요성: 장소·가격·일정 등 시간 민감한 사실에 의존하면 gem 도구로 병렬 웹 검색 먼저 실행.
 3. U-ID, 범위 경계, 검증 시나리오는 소프트웨어와 동일하게 적용.
 4. 템플릿 조정: YAML frontmatter 대신 `# 제목` + `Created:` 날짜. Software confidence check 생략.
+5. 완료 후: 섹션 6 저장 경로 적용. Doc Review 생략. 핸드오프는 직접 실행 또는 사용자 재량.

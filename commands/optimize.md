@@ -11,7 +11,7 @@ $ARGUMENTS
 
 ---
 
-Execute the **`genie:optimize`** skill. Read `skills/ce-optimize/SKILL.md` and follow the instructions exactly. Pass `$ARGUMENTS` as the optimization spec YAML path or optimization goal description.
+Execute the **`genie:optimize`** skill. Read `skills/optimize/SKILL.md` and follow the instructions exactly. Pass `$ARGUMENTS` as the optimization spec YAML path or optimization goal description.
 
 **Saves output to:** `docs/work/YYYY/MM/DD-<title>.md`
 

@@ -16,13 +16,12 @@
 
 'use strict';
 
-const crypto = require('crypto');
 const { execFileSync, spawnSync } = require('child_process');
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 
 const { findProjectRoot, detectFormatter, resolveFormatterBin } = require('../lib/resolve-formatter');
+const { getAccumFile } = require('../lib/accum-file');
 
 const MAX_STDIN = 1024 * 1024;
 // Total ms budget reserved for all batches (leaves headroom below the 300s Stop timeout)
@@ -35,14 +34,6 @@ const UNSAFE_PATH_CHARS = /[&|<>^%!\s()]/;
 /** Parse the accumulator text into a deduplicated array of file paths. */
 function parseAccumulator(raw) {
   return [...new Set(raw.split('\n').map(l => l.trim()).filter(Boolean))];
-}
-
-function getAccumFile() {
-  const raw =
-    process.env.CLAUDE_SESSION_ID ||
-    crypto.createHash('sha1').update(process.cwd()).digest('hex').slice(0, 12);
-  const sessionId = raw.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
-  return path.join(os.tmpdir(), `ecc-edited-${sessionId}.txt`);
 }
 
 function formatBatch(projectRoot, files, timeoutMs) {

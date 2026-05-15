@@ -11,9 +11,29 @@ paths:
 
 Configure in `~/.claude/settings.json`:
 
-- **SwiftFormat**: Auto-format `.swift` files after edit
-- **SwiftLint**: Run lint checks after editing `.swift` files
-- **swift build**: Type-check modified packages after edit
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "swiftformat \"$FILE_PATH\"",
+        "description": "Auto-format Swift files after edit"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "swiftlint lint --fix \"$FILE_PATH\" 2>&1 | tail -10",
+        "description": "Run SwiftLint and auto-fix after edit"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "swift build 2>&1 | tail -10",
+        "description": "Type-check modified packages after edit"
+      }
+    ]
+  }
+}
+```
 
 ## Warning
 

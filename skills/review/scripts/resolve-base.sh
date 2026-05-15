@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Resolve the review base branch and compute the merge-base for ce-code-review.
+# Resolve the review base branch and compute the merge-base for genie:review.
 # Handles fork-safe remote resolution, PR metadata, and multi-fallback detection.
 #
 # Usage: bash scripts/resolve-base.sh

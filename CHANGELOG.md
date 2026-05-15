@@ -1,6 +1,18 @@
 # Changelog
 
-All notable changes to the `john-plugin` project will be documented in this file.
+All notable changes to the `genie-plugin` project will be documented in this file.
+
+## [1.4.0] - 2026-05-15
+
+### Added
+- **브랜치 보호 규칙** (`AGENTS.md`): `main`·`master`·`develop`·`staging` 브랜치에서 작업 시 자동 차단 및 별도 브랜치 생성 요구 — 예외 없음, 매 요청마다 적용
+- **Codex 지원** (`README.md`): Codex 2단계 설치 가이드, 스킬 호출 방법, 플랫폼별 차이표, 워크플로우 예시 추가
+
+### Changed
+- **네임스페이스 통합 완료** (`commands/`, `skills/`): 모든 `ce-*` 참조를 `genie:*`로 일괄 정리 (회색지대 포함 — 임시 경로, 스크립트 주석, YAML 스키마 주석)
+- **레포지토리 이름 변경**: `john-plugin` → `genie-plugin` (README, CHANGELOG, marketplace.json, rules 파일 반영)
+- **`skills/commit/SKILL.md` 개선**: 플랫폼 질문 도구 섹션 추출(DRY), 보호 브랜치 목록에 `develop`·`staging` 추가
+- **README.md 전면 재작성**: 현재 상태 기준 설치·워크플로우·에이전트·Codex 가이드 포함
 
 ## [1.3.1] - 2026-05-14
 
@@ -27,7 +39,7 @@ All notable changes to the `john-plugin` project will be documented in this file
   - **`agents` field**: Removed the `agents` array from `plugin.json`. Claude Code's schema does not support this field and relies on auto-discovery from the `agents/` directory instead.
   - **`commands` & `skills` fields**: Modified to use directory paths (`["./commands/"]`, `["./skills/"]`) instead of explicit external file paths, which the validator rejects.
 - **Auto-discovery Setup**: Created `commands/` and `skills/` directories and populated them with symbolic links pointing to the respective files in the `compound-engineering-plugin` and `everything-claude-code` repositories to ensure Claude Code automatically discovers them without violating schema rules.
-- **Marketplace Configuration**: Created `.claude-plugin/marketplace.json` to properly register the repository as a valid marketplace and moved `plugin.json` into the `.claude-plugin` directory. Fixed a naming mismatch where the marketplace referred to the plugin as `john` instead of `john-plugin`.
+- **Marketplace Configuration**: Created `.claude-plugin/marketplace.json` to properly register the repository as a valid marketplace and moved `plugin.json` into the `.claude-plugin` directory. Fixed a naming mismatch where the marketplace referred to the plugin as `john` instead of `genie-plugin`.
 - **Documentation**: Updated `AGENTS.md` and `README.md` to correct the `ce-brainstorm` reference (from agent to command) and provided clear manual steps for copying rules, as plugins cannot auto-distribute them.
 
 ## [1.0.0] - 2026-05-12

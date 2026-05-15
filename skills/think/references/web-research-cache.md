@@ -18,14 +18,14 @@
 ]
 ```
 
-파일은 `<scratch-dir>/web-research-cache.json`에 위치하며, 여기서 `<scratch-dir>`은 SKILL.md Phase 1에서 한 번 결정된 `/tmp/compound-engineering/ce-ideate/<run-id>`입니다.
+파일은 `<scratch-dir>/web-research-cache.json`에 위치하며, 여기서 `<scratch-dir>`은 SKILL.md Phase 1에서 한 번 결정된 `/tmp/compound-engineering/think/<run-id>`입니다.
 
 ## 재사용 확인 (Reuse check)
 
 `web-researcher`를 파견하기 전에, bash에서 스크래치 루트(scratch root, `<scratch-dir>`의 상위 디렉토리)를 확인하고 형제 run-id 디렉토리들을 나열하십시오 — 세션 내의 정교화 루프는 run-id가 아닌 주제별로 다른 실행의 캐시를 재사용할 수 있습니다:
 
 ```bash
-SCRATCH_ROOT="/tmp/compound-engineering/ce-ideate"
+SCRATCH_ROOT="/tmp/compound-engineering/think"
 find "$SCRATCH_ROOT" -maxdepth 2 -name 'web-research-cache.json' -type f 2>/dev/null
 ```
 

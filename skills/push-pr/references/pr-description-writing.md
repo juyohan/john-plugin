@@ -1,6 +1,6 @@
 # PR 설명 작성 (PR Description Writing)
 
-올바른 커밋 범위를 결정하고 PR 제목과 본문을 구성하는 방법입니다. `ce-commit-push-pr` 호출자에 의해 필요 시 로드됩니다 — 미리 로드하지 마십시오.
+올바른 커밋 범위를 결정하고 PR 제목과 본문을 구성하는 방법입니다. `genie:push-pr` 호출자에 의해 필요 시 로드됩니다 — 미리 로드하지 마십시오.
 
 Step Pre-A는 커밋 범위, diff, 그리고 (기존 PR의 경우) 현재 PR 본문을 결정합니다. Step A부터 H는 Pre-A의 결과물이 컨텍스트에 있다고 가정합니다.
 
@@ -12,7 +12,7 @@ Step Pre-A는 커밋 범위, diff, 그리고 (기존 PR의 경우) 현재 PR 본
 
 ### 모드 (Mode)
 
-- **Current-branch 모드.** HEAD와 레포의 기본 베이스를 비교하여 설명합니다. 호출자에게 명시적인 PR 참조가 없을 때 사용됩니다 (ce-commit-push-pr 전체 워크플로의 Step 6; PR 참조 없는 설명 전용 모드).
+- **Current-branch 모드.** HEAD와 레포의 기본 베이스를 비교하여 설명합니다. 호출자에게 명시적인 PR 참조가 없을 때 사용됩니다 (genie:push-pr 전체 워크플로의 Step 6; PR 참조 없는 설명 전용 모드).
 - **PR 모드.** 특정 PR의 커밋 범위를 설명합니다. DU-3(현재 브랜치의 기존 PR) 및 설명 전용 모드(사용자가 PR URL/번호를 입력함)에서 사용됩니다. PR 참조는 단순 번호, `#NN`, `pr:NN` 또는 전체 URL일 수 있습니다 — 호출자는 이를 `gh pr view <ref>`에 직접 전달합니다. (`gh pr view`는 번호와 URL을 기본적으로 수락합니다. `#NN` 및 `pr:NN`은 전달 전 `#` 또는 `pr:`을 제거해야 합니다.)
 
 ### PR 메타데이터 결정 (PR 모드 및 기존 PR이 있는 current-branch 모드)

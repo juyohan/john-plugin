@@ -7,7 +7,7 @@ allowed-tools:
 > **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.
 
 
-# /ce-compound
+# /genie:learn
 
 ## 다중 에이전트 협업 (Multi-Agent Collaboration)
 
@@ -36,8 +36,8 @@ allowed-tools:
 ## 사용법
 
 ```bash
-/ce-compound                    # 가장 최근의 수정 사항 문서화
-/ce-compound [간략한 문맥]       # 추가적인 문맥 힌트 제공
+/genie:learn                    # 가장 최근의 수정 사항 문서화
+/genie:learn [간략한 문맥]       # 추가적인 문맥 힌트 제공
 ```
 
 ## 사전 확인된 컨텍스트 (Pre-resolved context)
@@ -214,6 +214,8 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
 
 **진행하기 전에 모든 단계 1 하위 에이전트가 완료될 때까지 기다리십시오.**
 
+**에이전트 결과 검증:** Context Analyzer 또는 Solution Extractor가 빈 결과를 반환한 경우, 사용자에게 보고하고 중단합니다. Related Docs Finder 또는 Session Historian 실패는 Coverage에 기록하고 계속 진행합니다.
+
 오케스트레이팅 에이전트(메인 대화)는 다음 단계들을 수행합니다:
 
 1. 단계 1 하위 에이전트들로부터 모든 텍스트 결과를 수집합니다.
@@ -234,7 +236,8 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
    - 여러 세션에 걸친 패턴을 사용하여 **예방 (Prevention)** 또는 **중요성 (Why This Matters)** 섹션을 풍성하게 만듭니다.
    - 세션에서 가져온 내용에는 "(session history)" 태그를 붙여 미래의 독자가 출처를 알 수 있게 합니다.
    - 내용이 부실하거나 "관련된 이전 세션 없음"인 경우 세션 문맥 없이 진행합니다.
-4. 수집된 조각들을 모아 전체 마크다운 파일을 구성합니다. 새 문서를 만드는 경우 `assets/resolution-template.md`를 읽어 섹션 구조를 확인합니다.
+4. **민감 정보 제거:** 코드 예시에 자격증명, API 키, 비밀번호, 개인식별정보가 포함된 경우 `[REDACTED]` 또는 환경변수 형태로 대체한 후 문서에 포함합니다.
+5. 수집된 조각들을 모아 전체 마크다운 파일을 구성합니다. 새 문서를 만드는 경우 `assets/resolution-template.md`를 읽어 섹션 구조를 확인합니다.
 5. `references/schema.yaml`을 기준으로 YAML frontmatter를 검증합니다. 배열 항목에 대한 YAML 안전 따옴표 규칙을 적용하십시오 (`references/yaml-schema.md` > YAML Safety Rules 참조).
 6. 필요한 경우 디렉토리를 생성합니다: `mkdir -p docs/solutions/[category]/`
 7. 파일을 작성합니다: 업데이트된 기존 문서 또는 새로운 `docs/solutions/[category]/[filename].md`
@@ -248,9 +251,9 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
 
 새로운 학습 내용을 작성한 후, 이 해결책이 오래된 문서들을 새로고침해야 할 증거가 되는지 결정합니다.
 
-`ce-compound-refresh`는 기본적으로 따라오는 후속 작업이 **아닙니다**. 새로운 학습 내용이 기존의 학습 또는 패턴 문서가 부정확해졌음을 시사할 때만 선택적으로 사용하십시오.
+`/genie:learn-refresh`는 기본적으로 따라오는 후속 작업이 **아닙니다**. 새로운 학습 내용이 기존의 학습 또는 패턴 문서가 부정확해졌음을 시사할 때만 선택적으로 사용하십시오.
 
-다음 중 하나 이상이 참일 때 `ce-compound-refresh` 호출이 타당합니다:
+다음 중 하나 이상이 참일 때 `/genie:learn-refresh` 호출이 타당합니다:
 1. 관련 학습 또는 패턴 문서가 이번에 확인된 수정 사항과 상충되는 방식을 권장함
 2. 이번 수정 사항이 이전에 문서화된 해결책을 명확히 대체(supersede)함
 3. 이번 작업에 리팩토링, 마이그레이션, 이름 변경 또는 의존성 업그레이드가 포함되어 기존 문서의 참조들이 무효화되었을 가능성이 높음
@@ -258,32 +261,32 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
 5. 관련 문서 검색기가 동일 문제 공간에서 새로고침이 필요한 높은 확신의 후보들을 찾아냄
 6. 관련 문서 검색기가 기존 문서와 **중간 정도의 중복(moderate overlap)**을 보고함 — 집중적인 검토를 통해 통합할 기회가 있을 수 있음
 
-다음의 경우에는 `ce-compound-refresh`를 호출할 필요가 **없습니다**:
+다음의 경우에는 `/genie:learn-refresh`를 호출할 필요가 **없습니다**:
 1. 관련 문서가 발견되지 않음
 2. 관련 문서들이 새로운 학습 내용과 여전히 일관성을 유지함
 3. 중복이 표면적이며 이전의 지침을 바꾸지 않음
 4. 새로고침을 위해 근거가 빈약한 광범위한 히스토리 조사가 필요함
 
 다음 규칙을 따르십시오:
-- **명백히 오래된 후보가 하나** 있는 경우, 새 학습 내용 작성이 완료된 후 해당 파일로 범위를 좁혀 `ce-compound-refresh`를 호출합니다.
-- **동일 영역에 여러 후보**가 있는 경우, 해당 모듈, 카테고리 또는 패턴 세트에 대해 타겟팅된 새로고침을 실행할지 사용자에게 묻습니다.
-- 컨텍스트가 이미 부족하거나 Lightweight 모드인 경우, 자동으로 광범위한 새로고침으로 확장하지 마십시오. 대신 범위 힌트와 함께 `ce-compound-refresh`를 다음 단계로 권장하십시오.
+- **명백히 오래된 후보가 하나** 있는 경우, 새 학습 내용 작성이 완료된 후 AskUserQuestion으로 확인합니다: "`/genie:learn-refresh`를 `<파일경로>`에 대해 실행할까요? (예 / 아니오 - 나중에)". 확인 후 호출합니다.
+- **동일 영역에 여러 후보**가 있는 경우, 해당 모듈, 카테고리 또는 패턴 세트에 대해 타겟팅된 새로고침을 실행할지 AskUserQuestion으로 묻습니다.
+- 컨텍스트가 이미 부족하거나 Lightweight 모드인 경우, 자동으로 광범위한 새로고침으로 확장하지 마십시오. 대신 범위 힌트와 함께 `/genie:learn-refresh`를 다음 단계로 권장하십시오.
 
-`ce-compound-refresh`를 호출하거나 권장할 때는 전달할 인자를 명확히 하십시오. 가장 좁고 유용한 범위를 선호하십시오:
+`/genie:learn-refresh`를 호출하거나 권장할 때는 전달할 인자를 명확히 하십시오. 가장 좁고 유용한 범위를 선호하십시오:
 - 오래되었을 가능성이 높은 **특정 파일**
 - 검토가 필요한 여러 문서가 포함된 **모듈 또는 컴포넌트 이름**
 - 노후화가 집중된 특정 해결 영역의 **카테고리 이름**
 - `docs/solutions/patterns/`에 있는 **패턴 파일 이름 또는 패턴 주제**
 
 예시:
-- `/ce-compound-refresh plugin-versioning-requirements`
-- `/ce-compound-refresh payments`
-- `/ce-compound-refresh performance-issues`
-- `/ce-compound-refresh critical-patterns`
+- `/genie:learn-refresh plugin-versioning-requirements`
+- `/genie:learn-refresh payments`
+- `/genie:learn-refresh performance-issues`
+- `/genie:learn-refresh critical-patterns`
 
 단일 범위 힌트라도 변경 사항이 한 도메인, 카테고리 또는 패턴 영역 내에서 횡단적인 경우 여러 관련 문서로 확장될 수 있습니다.
 
-사용자가 명시적으로 광범위한 조사를 원하는 경우가 아니라면 인자 없이 `ce-compound-refresh`를 호출하지 마십시오.
+사용자가 명시적으로 광범위한 조사를 원하는 경우가 아니라면 인자 없이 `/genie:learn-refresh`를 호출하지 마십시오.
 
 항상 새로운 학습 내용을 먼저 캡처하십시오. 새로고침은 타겟팅된 유지보수 후속 작업이지 문서화의 전제 조건이 아닙니다.
 
@@ -321,13 +324,18 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
       ```
    c. Full 모드에서는 사용자에게 이것이 왜 중요한지 설명하십시오 — 이 저장소에서 작업하는 에이전트들(새로운 세션, 다른 도구, 혹은 플러그인이 없는 협업자 포함)은 지침 파일에 명시되지 않으면 `docs/solutions/`를 확인해야 한다는 것을 알 수 없습니다. 제안된 변경 사항과 위치를 보여준 뒤, 플랫폼의 질문 도구를 사용하여 편집 전 동의를 얻으십시오. 질문을 소리 없이 건너뛰지 마십시오. Lightweight 모드에서는 한 줄의 노트를 출력하고 넘어갑니다.
 
-### 단계 3: 선택적 강화 (Optional Enhancement)
+### 단계 3: 조건부 강화 (Conditional Enhancement)
 
 **진행하기 전에 단계 2가 완료될 때까지 기다리십시오.**
 
 <parallel_tasks>
 
-문제 유형에 따라 선택적으로 전문 에이전트를 호출하여 문서를 검토합니다:
+> **제한:** 이 에이전트들은 텍스트 피드백만 반환합니다. Write, Edit를 사용하거나 파일을 생성해서는 안 됩니다. 오케스트레이터가 피드백을 반영하여 최종 문서를 수정합니다.
+>
+> **폴백:** 에이전트를 찾을 수 없는 경우 다음 ECC 표준 에이전트를 사용합니다:
+> `ce-performance-oracle` → `performance-optimizer` / `ce-security-sentinel` → `security-reviewer` / `ce-code-simplicity-reviewer` → `code-reviewer` / `ce-kieran-*-reviewer` → `code-reviewer`
+
+문제 유형에 따라 조건부로 전문 에이전트를 호출하여 문서를 검토합니다:
 - **performance_issue** → `ce-performance-oracle`
 - **security_issue** → `ce-security-sentinel`
 - **database_issue** → `ce-data-integrity-guardian`
@@ -358,6 +366,7 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
    - 버그 트랙: 문제, 근본 원인, 주요 코드 스니펫이 포함된 해결책, 예방 팁 하나
    - 지식 트랙: 문맥, 주요 예시가 포함된 지침, 적용 참고 사항 하나
 4. **전문 에이전트 리뷰 생략** (단계 3): 컨텍스트 보존을 위해 생략합니다.
+5. **발견 가능성 확인 (Discoverability Check):** AGENTS.md/CLAUDE.md가 `docs/solutions/`를 안내하지 않는 경우, 파일 편집 없이 팁 한 줄을 출력합니다.
 
 **Lightweight 출력:**
 ```
@@ -372,12 +381,12 @@ Compound 프로세스를 돕기 위해 [환경 이름] 세션 히스토리에서
 
 참고: 이 문서는 lightweight 모드로 생성되었습니다. 더 풍부한 문서
 (교차 참조, 상세 예방 전략, 전문 리뷰 등)가 필요하다면, 
-새 세션에서 /ce-compound를 다시 실행하십시오.
+새 세션에서 /genie:learn를 다시 실행하십시오.
 ```
 
 **하위 에이전트는 실행되지 않습니다. 병렬 작업도 없습니다. 파일 하나가 작성됩니다.**
 
-Lightweight 모드에서는 중복 확인을 건너뜁니다 (Related Docs Finder 하위 에이전트 없음). 즉, 기존 문서와 겹치는 문서를 생성할 수도 있습니다. 이는 허용됩니다 — 나중에 `ce-compound-refresh`가 이를 잡아낼 것입니다. 명백하고 좁은 새로고침 대상이 있는 경우에만 `ce-compound-refresh`를 제안하십시오. Lightweight 세션에서 광범위한 새로고침으로 확장하지 마십시오.
+Lightweight 모드에서는 중복 확인을 건너뜁니다 (Related Docs Finder 하위 에이전트 없음). 즉, 기존 문서와 겹치는 문서를 생성할 수도 있습니다. 이는 허용됩니다 — 나중에 `/genie:learn-refresh`가 이를 잡아낼 것입니다. 명백하고 좁은 새로고침 대상이 있는 경우에만 `/genie:learn-refresh`를 제안하십시오. Lightweight 세션에서 광범위한 새로고침으로 확장하지 마십시오.
 
 ---
 
@@ -465,12 +474,6 @@ Lightweight 모드에서는 중복 확인을 건너뜁니다 (Related Docs Finde
 이 문서는 Email Processing 또는 Brief System 모듈에서 유사한 이슈가 
 발생했을 때 향후 참조를 위해 검색 가능해집니다.
 
-다음 작업은 무엇입니까?
-1. 워크플로우 계속 진행 (추천)
-2. 관련 문서 링크 추가
-3. 다른 참조 업데이트
-4. 문서 보기
-5. 기타
 ```
 
 **성공 출력을 표시한 후, 플랫폼의 질문 도구를 사용하여 "다음 작업은 무엇입니까?" 옵션을 제시하십시오:** `AskUserQuestion` (Claude Code), `request_user_input` (Codex), `ask_user` (Gemini/Pi). 도구가 없거나 오류가 발생하는 경우에만 채팅 창에 번호가 매겨진 옵션을 제시하십시오. 질문을 소리 없이 건너뛰지 마십시오. 사용자의 선택 없이는 워크플로우를 계속하거나 턴을 종료하지 마십시오.
@@ -510,7 +513,7 @@ Lightweight 모드에서는 중복 확인을 건너뜁니다 (Related Docs Finde
 
 <auto_invoke> <trigger_phrases> - "that worked" - "it's fixed" - "working now" - "problem solved" </trigger_phrases>
 
-<manual_override> 자동 감지를 기다리지 않고 즉시 문서화하려면 /ce-compound [문맥] 명령을 사용하십시오. </manual_override> </auto_invoke>
+<manual_override> 자동 감지를 기다리지 않고 즉시 문서화하려면 /genie:learn [문맥] 명령을 사용하십시오. </manual_override> </auto_invoke>
 
 ## 출력
 
@@ -538,9 +541,9 @@ Lightweight 모드에서는 중복 확인을 건너뜁니다 (Related Docs Finde
 
 ### 호출 시점
 - **자동 실행** (선택 사항): 문서화 후 강화 목적으로 실행 가능
-- **수동 실행**: 사용자가 /ce-compound 완료 후 더 깊은 검토를 위해 호출 가능
+- **수동 실행**: 사용자가 /genie:learn 완료 후 더 깊은 검토를 위해 호출 가능
 
 ## 관련 명령
 
 - `/research [주제]` - 심층 조사 (docs/solutions/에서 패턴 검색)
-- `/ce-plan` - 계획 워크플로우 (문서화된 해결책 참조)
+- `/genie:plan` - 계획 워크플로우 (문서화된 해결책 참조)

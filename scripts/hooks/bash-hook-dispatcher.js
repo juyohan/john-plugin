@@ -24,6 +24,7 @@ const PRE_BASH_HOOKS = [
   },
   {
     id: 'pre:bash:auto-tmux-dev',
+    profiles: 'standard,strict',
     run: rawInput => runAutoTmuxDev(rawInput),
   },
   {
@@ -55,6 +56,7 @@ const PRE_BASH_HOOKS = [
 const POST_BASH_HOOKS = [
   {
     id: 'post:bash:command-log-audit',
+    profiles: 'strict',
     run: rawInput => runCommandLog(rawInput, 'audit'),
   },
   {
@@ -89,33 +91,17 @@ function readStdinRaw() {
 }
 
 function normalizeHookResult(previousRaw, output) {
-  if (typeof output === 'string' || Buffer.isBuffer(output)) {
-    return {
-      raw: String(output),
-      stderr: '',
-      exitCode: 0,
-    };
+  if (typeof output === 'string') {
+    return { raw: output, stderr: '', exitCode: 0 };
   }
-
   if (output && typeof output === 'object') {
-    const nextRaw = Object.prototype.hasOwnProperty.call(output, 'stdout')
-      ? String(output.stdout ?? '')
-      : !Number.isInteger(output.exitCode) || output.exitCode === 0
-        ? previousRaw
-        : '';
-
     return {
-      raw: nextRaw,
+      raw: 'stdout' in output ? String(output.stdout ?? '') : previousRaw,
       stderr: typeof output.stderr === 'string' ? output.stderr : '',
       exitCode: Number.isInteger(output.exitCode) ? output.exitCode : 0,
     };
   }
-
-  return {
-    raw: previousRaw,
-    stderr: '',
-    exitCode: 0,
-  };
+  return { raw: previousRaw, stderr: '', exitCode: 0 };
 }
 
 function runHooks(rawInput, hooks) {

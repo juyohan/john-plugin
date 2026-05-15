@@ -204,12 +204,10 @@ function run(raw) {
       const ps = findPowerShell();
       if (ps) {
         const { success, reason } = notifyWindows(ps, TITLE, summary);
-        if (success) {
-          // notification sent successfully
-        } else if (reason && reason.toLowerCase().includes('burnttoast')) {
+        if (!success && reason && reason.toLowerCase().includes('burnttoast')) {
           // BurntToast module not found
           log('[DesktopNotify] Tip: Install BurntToast module to enable notifications');
-        } else if (reason) {
+        } else if (!success && reason) {
           // Other PowerShell/notification error - log for debugging
           log(`[DesktopNotify] Notification failed: ${reason}`);
         }

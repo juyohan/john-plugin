@@ -96,11 +96,6 @@ try {
 
 ## 참고 자료
 
-<<<<<<< HEAD
 Spring Security 인증 및 인가 패턴은 `springboot-security` 스킬을 참조하십시오.
+JWT/OIDC, RBAC 및 CDI를 사용한 Quarkus 보안은 `quarkus-security` 스킬을 참조하십시오.
 일반 보안 체크리스트는 `security-review` 스킬을 참조하십시오.
-=======
-See skill: `springboot-security` for Spring Security authentication and authorization patterns.
-See skill: `quarkus-security` for Quarkus security with JWT/OIDC, RBAC, and CDI.
-See skill: `security-review` for general security checklists.
->>>>>>> 60782502d54e2dc5a619fe3bd2bffb94f7935677

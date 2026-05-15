@@ -11,7 +11,7 @@ function run(rawInput) {
     if (/(npm run build|pnpm build|yarn build)/.test(cmd)) {
       return {
         stdout: typeof rawInput === 'string' ? rawInput : JSON.stringify(rawInput),
-        stderr: '[Hook] Build completed - async analysis running in background',
+        stderr: '[Hook] Build command detected',
         exitCode: 0,
       };
     }

@@ -14,22 +14,12 @@
 
 'use strict';
 
-const crypto = require('crypto');
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 
-const MAX_STDIN = 1024 * 1024;
+const { getAccumFile } = require('../lib/accum-file');
 
-function getAccumFile() {
-  const raw =
-    process.env.CLAUDE_SESSION_ID ||
-    crypto.createHash('sha1').update(process.cwd()).digest('hex').slice(0, 12);
-  // Strip path separators and traversal sequences so the value is safe to embed
-  // directly in a filename regardless of what CLAUDE_SESSION_ID contains.
-  const sessionId = raw.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
-  return path.join(os.tmpdir(), `ecc-edited-${sessionId}.txt`);
-}
+const MAX_STDIN = 1024 * 1024;
 
 /**
  * @param {string} rawInput - Raw JSON string from stdin

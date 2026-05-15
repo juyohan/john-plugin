@@ -142,11 +142,6 @@ public record ApiResponse<T>(boolean success, T data, String error) {
 
 ## 참고 자료
 
-<<<<<<< HEAD
 Spring Boot 아키텍처 패턴은 `springboot-patterns` 스킬을 참조하십시오.
+REST, Panache 및 메시징을 사용한 Quarkus 아키텍처 패턴은 `quarkus-patterns` 스킬을 참조하십시오.
 엔티티 설계 및 쿼리 최적화는 `jpa-patterns` 스킬을 참조하십시오.
-=======
-See skill: `springboot-patterns` for Spring Boot architecture patterns.
-See skill: `quarkus-patterns` for Quarkus architecture patterns with REST, Panache, and messaging.
-See skill: `jpa-patterns` for entity design and query optimization.
->>>>>>> 60782502d54e2dc5a619fe3bd2bffb94f7935677

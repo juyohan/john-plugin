@@ -18,7 +18,7 @@
 </scope-rules>
 
 <output-contract>
-실행 ID가 있으면 전체 분석을 `/tmp/compound-engineering/ce-code-review/{run_id}/{reviewer_name}.json`에 기록하십시오. 기록 실패 시 계속 진행하십시오. 실행 ID가 없으면 이 단계를 생략하십시오.
+실행 ID가 있으면 전체 분석을 `/tmp/compound-engineering/review/{run_id}/{reviewer_name}.json`에 기록하십시오. 기록 실패 시 계속 진행하십시오. 실행 ID가 없으면 이 단계를 생략하십시오.
 
 항상 병합 티어 필드만 포함된 컴팩트 JSON을 반환하십시오: `title, severity, file, line, confidence, autofix_class, owner, requires_verification, pre_existing, suggested_fix`. 최상위 레벨에 `reviewer, residual_risks, testing_gaps`를 포함하십시오. `why_it_matters`와 `evidence`는 컴팩트 반환에서 생략하십시오.
 

@@ -111,12 +111,8 @@ class OrderRepositoryIT {
 }
 ```
 
-<<<<<<< HEAD
 Spring Boot 통합 테스트는 `springboot-tdd` 스킬을 참조하십시오.
-=======
-For Spring Boot integration tests, see skill: `springboot-tdd`.
-For Quarkus integration tests, see skill: `quarkus-tdd`.
->>>>>>> 60782502d54e2dc5a619fe3bd2bffb94f7935677
+Quarkus 통합 테스트는 `quarkus-tdd` 스킬을 참조하십시오.
 
 ## 테스트 명명 규칙
 
@@ -126,17 +122,12 @@ For Quarkus integration tests, see skill: `quarkus-tdd`.
 
 ## 커버리지 (Coverage)
 
-- 라인 커버리지 80% 이상을 목표로 합니다.
+- LINE, BRANCH, METHOD 커버리지 각 80% 이상을 목표로 합니다. (JaCoCo 기준)
 - 커버리지 리포팅에는 JaCoCo를 사용합니다.
 - 서비스 및 도메인 로직에 집중하고, 단순한 getter/설정 클래스는 제외해도 무방합니다.
 
 ## 참고 자료
 
-<<<<<<< HEAD
 MockMvc 및 Testcontainers를 사용한 Spring Boot TDD 패턴은 `springboot-tdd` 스킬을 참조하십시오.
+REST Assured 및 Dev Services를 사용한 Quarkus TDD 패턴은 `quarkus-tdd` 스킬을 참조하십시오.
 테스트 기대 사항은 `java-coding-standards` 스킬을 참조하십시오.
-=======
-See skill: `springboot-tdd` for Spring Boot TDD patterns with MockMvc and Testcontainers.
-See skill: `quarkus-tdd` for Quarkus TDD patterns with REST Assured and Dev Services.
-See skill: `java-coding-standards` for testing expectations.
->>>>>>> 60782502d54e2dc5a619fe3bd2bffb94f7935677

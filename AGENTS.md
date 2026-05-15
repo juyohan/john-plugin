@@ -1,17 +1,30 @@
-# John Engineering OS (CE + ECC Unified)
+# John Plugin — 에이전트 지침
 
-이 프로젝트는 Compound Engineering(CE)의 전략적 워크플로우를 기반으로 하며, Everything Claude Code(ECC)의 강력한 실행 도구들을 통합하여 사용합니다.
+> **모든 에이전트의 단일 지침 파일입니다.**
+> - Claude Code: `CLAUDE.md` → `@AGENTS.md` 로 이 파일을 로드합니다.
+> - Codex: `AGENTS.md` 를 직접 읽습니다.
 
-## 1. 워크플로우 가이드 (The Compound Loop)
+CE(Compound Engineering) 워크플로우를 뼈대로 삼아 ECC(Everything Claude Code)의
+스킬·룰·훅 인프라를 통합한 단일 Claude Code 플러그인.
 
-모든 작업은 다음 순서를 엄격히 준수합니다:
+---
 
-1.  **Brainstorm (`/genie:brainstorm`)**: 요구사항 확정.
-2.  **Plan (`/genie:plan`)**: 파일·인터페이스 수준까지 구현 계획 확정. 언어 감지 후 언어별 스킬/룰 자동 제안.
-3.  **TDD (`/genie:test`)**: `/genie:plan` 결과를 기반으로 실패하는 테스트 먼저 작성 (RED).
-4.  **Work (`/genie:work`)**: 테스트를 통과하는 최소 구현 후 리팩토링 (GREEN → IMPROVE).
-5.  **Review (ECC 기준)**: 언어별 reviewer (프로젝트 감지 자동 선택) + `security`. CRITICAL 이슈는 머지 차단, HIGH는 머지 전 수정. ECC `rules/common/code-review.md` 체크리스트 적용.
-6.  **Compound (`/genie:learn`)**: 지식 자산화 및 레슨 런 정리.
+## 1. 핵심 워크플로우
+
+```
+/genie:brainstorm → /genie:plan → /genie:test → /genie:work
+```
+
+모든 기능 개발은 이 순서를 따릅니다. `/genie:plan` 완료 후 구현 전에 반드시 `/genie:test`로 테스트를 먼저 작성합니다.
+
+1. **Brainstorm (`/genie:brainstorm`)**: 요구사항 확정.
+2. **Plan (`/genie:plan`)**: 파일·인터페이스 수준까지 구현 계획 확정. 언어 감지 후 언어별 스킬/룰 자동 제안.
+3. **TDD (`/genie:test`)**: `/genie:plan` 결과를 기반으로 실패하는 테스트 먼저 작성 (RED).
+4. **Work (`/genie:work`)**: 테스트를 통과하는 최소 구현 후 리팩토링 (GREEN → IMPROVE).
+5. **Review (ECC 기준)**: 언어별 reviewer (프로젝트 감지 자동 선택) + `security`. CRITICAL 이슈는 머지 차단, HIGH는 머지 전 수정.
+6. **Compound (`/genie:learn`)**: 지식 자산화 및 레슨 런 정리.
+
+---
 
 ## 2. 에이전트 역할 정의
 
@@ -29,32 +42,50 @@
 | **E2E** | `e2e` | Genie | 핵심 사용자 흐름 E2E 테스트 |
 | **Docs** | `docs` | Genie | 문서 업데이트 |
 
-## 3. 저장소 문서 관례 (Repository Docs Convention)
+---
 
-CE 워크플로우의 **각 단계를 지날 때마다** 해당 단계의 산출물을 `docs/` 아래에 기록한다.
-문서의 양이 많아짐에 따라 시인성을 높이기 위해 **년도/월별 폴더 구조**를 사용하며, 파일명에는 일자(`DD`)를 포함하여 정렬 순서를 유지한다.
+## 3. 저장소 문서 관례
 
-형식: `docs/<카테고리>/YYYY/MM/DD-<제목>.md`
+각 단계의 산출물 저장 경로는 해당 스킬 내부에 정의되어 있다.
 
-`/genie:think → /genie:strategy → /genie:brainstorm`은 하나의 **정의(Define) 페이즈**이므로,
-think·strategy 노트는 brainstorm 산출물과 같은 폴더에 suffix로 보관한다.
+**교차 단계 규칙**: 같은 작업이라면 `<제목>`을 단계 간 통일한다 — 동일한 제목으로 `docs/`를 검색하면 전체 흐름을 추적할 수 있다.
 
-| 단계 | 스킬 | 문서 경로 |
-|------|------|-----------|
-| 아이디어 탐색 (선택) | `/genie:think` | `docs/brainstorms/YYYY/MM/DD-<제목>-ideation.md` |
-| 전략 정렬 (선택) | `/genie:strategy` | `docs/brainstorms/YYYY/MM/DD-<제목>-strategy.md` |
-| 요구사항 정의 | `/genie:brainstorm` | `docs/brainstorms/YYYY/MM/DD-<제목>.md` ← 메인 산출물 |
-| 구현 계획 | `/genie:plan` | `docs/plans/YYYY/MM/DD-<제목>.md` |
-| TDD 명세 | `/genie:test` | `docs/tests/YYYY/MM/DD-<제목>.md` |
-| 구현·디버깅 | `/genie:work`, `/genie:fix`, `/genie:optimize` | `docs/work/YYYY/MM/DD-<제목>.md` |
-| 코드 리뷰 | `/genie:review` | `docs/reviews/YYYY/MM/DD-<제목>.md` |
-| 지식 자산화 | `/genie:learn` | `docs/compounds/YYYY/MM/DD-<제목>.md` |
-
-- `<제목>`을 단계 간 통일하면 같은 작업의 전체 흐름을 `docs/`에서 추적 가능
 - `/genie:commit` 등 git 단계는 커밋 자체가 산출물이므로 별도 문서 불필요
-- `docs/work/`에는 구현 중 의사결정, 블로커, 변경 이유 등 커밋 메시지에 담기지 않는 내용을 기록
 
-## 4. 핵심 규칙 (Core Rules)
-- **Test First**: 모든 기능은 `tdd-workflow` 스킬을 통해 테스트 코드가 선행되어야 함.
-- **Strategy First**: `STRATEGY.md`에 정의되지 않은 기능 개발은 금지됨.
-- **Atomic Commits**: 각 작업 트리 유닛 단위로 명확한 커밋 메시지를 작성함.
+---
+
+## 4. 브랜치 보호 규칙
+
+**보호 브랜치**: `main` · `master` · `develop` · `staging`
+
+코드 작성, 파일 편집, 커밋 등 **모든 작업 요청** 전에 현재 브랜치를 확인하십시오. 현재 브랜치가 보호 브랜치이면:
+
+1. **즉시 멈추십시오** — 요청된 작업을 시작하지 마십시오.
+2. **아래 형식으로 경고를 출력하십시오:**
+
+   ```
+   [보호 브랜치] 현재 브랜치: `<현재 브랜치>`
+   이 브랜치에 직접 작업하는 것은 허용되지 않습니다.
+   제안 브랜치: `<작업 내용 기반 이름>`
+   새 브랜치를 생성할까요? (네 / 직접 이름 입력)
+   ```
+
+3. **사용자의 응답을 기다리십시오.** 응답 전에 어떤 작업도 수행하지 마십시오.
+4. 사용자가 새 브랜치를 선택하면 `git checkout -b <branch-name>`으로 생성 후 작업을 진행합니다.
+
+보호 브랜치에서의 직접 작업은 **어떠한 경우에도 허용되지 않습니다.** 사용자가 계속 요청하더라도 매번 경고를 반복하고 브랜치 생성을 요구하십시오.
+
+이 규칙은 세션 내 **매 작업 요청마다** 적용됩니다. 이전 요청에서 이미 경고했더라도 브랜치가 여전히 보호 브랜치라면 다시 확인하고 경고합니다.
+
+---
+
+## 5. 플러그인 구조
+
+```
+.claude-plugin/   — 플러그인 메타데이터 (name: "genie")
+commands/         — Claude Code 커맨드 (/genie:brainstorm, /genie:plan 등)
+skills/           — Genie 스킬 (brainstorm, plan, work 등)
+scripts/hooks/    — ECC 훅 자동화 (GateGuard, observe-runner 등)
+docs/             — 프로젝트 문서 (brainstorms, plans 등)
+```
+

@@ -11,8 +11,29 @@ paths:
 
 Configure in `~/.claude/settings.json`:
 
-- **black/ruff**: Auto-format `.py` files after edit
-- **mypy/pyright**: Run type checking after editing `.py` files
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "ruff format \"$FILE_PATH\"",
+        "description": "Auto-format Python files after edit"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "ruff check --fix \"$FILE_PATH\"",
+        "description": "Lint and auto-fix Python files after edit"
+      },
+      {
+        "matcher": "Write|Edit",
+        "command": "pyright \"$FILE_PATH\" 2>&1 | tail -5",
+        "description": "Type-check after edit"
+      }
+    ]
+  }
+}
+```
 
 ## Warnings
 

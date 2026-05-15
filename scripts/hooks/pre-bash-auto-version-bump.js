@@ -84,6 +84,14 @@ function run(rawInput) {
     const pluginJsonPath = path.join(repoRoot, '.claude-plugin', 'plugin.json');
     const changelogPath  = path.join(repoRoot, 'CHANGELOG.md');
 
+    if (!fs.existsSync(pluginJsonPath)) {
+      return {
+        stdout: passThrough,
+        stderr: '[auto-version-bump] Not a plugin repo (.claude-plugin/plugin.json not found) — skipping.\n',
+        exitCode: 0,
+      };
+    }
+
     const pluginJson     = JSON.parse(fs.readFileSync(pluginJsonPath, 'utf8'));
     const currentVersion = pluginJson.version;
     const bumpType       = determineBumpType(commits);

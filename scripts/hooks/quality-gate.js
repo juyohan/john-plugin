@@ -6,9 +6,8 @@
  * - Targets one file when file_path is provided
  * - Falls back to no-op when language/tooling is unavailable
  *
- * For JS/TS files with Biome, this hook is skipped because
- * post-edit-format.js already runs `biome check --write`.
- * This hook still handles .json/.md files for Biome, and all
+ * For JS/TS files with Biome, formatting is handled upstream;
+ * this hook still handles .json/.md files for Biome, and all
  * Prettier / Go / Python checks.
  */
 
@@ -50,7 +49,7 @@ function log(msg) {
 
 /**
  * Run quality-gate checks for a single file based on its extension.
- * Skips JS/TS files when Biome is configured (handled by post-edit-format).
+ * Skips JS/TS files when Biome is configured (formatting handled upstream).
  *
  * @param {string} filePath - Path to the edited file
  */
@@ -71,7 +70,7 @@ function maybeRunQualityGate(filePath) {
     const formatter = detectFormatter(projectRoot);
 
     if (formatter === 'biome') {
-      // JS/TS already handled by post-edit-format via `biome check --write`
+      // JS/TS formatting handled upstream; skip
       if (['.ts', '.tsx', '.js', '.jsx'].includes(ext)) {
         return;
       }
@@ -106,27 +105,31 @@ function maybeRunQualityGate(filePath) {
   if (ext === '.go') {
     if (fix) {
       const r = exec('gofmt', ['-w', filePath]);
-      if (r.status !== 0 && strict) {
-        log(`[QualityGate] gofmt failed for ${filePath}`);
-      }
-    } else if (strict) {
+      if (r.status !== 0) log(`[QualityGate] gofmt failed for ${filePath}`);
+    } else {
       const r = exec('gofmt', ['-l', filePath]);
-      if (r.status !== 0) {
-        log(`[QualityGate] gofmt failed for ${filePath}`);
-      } else if (r.stdout && r.stdout.trim()) {
-        log(`[QualityGate] gofmt check failed for ${filePath}`);
+      if (r.stdout && r.stdout.trim()) {
+        log(`[QualityGate] ${path.basename(filePath)} needs formatting (run gofmt -w)`);
       }
+    }
+    const projectRoot = findProjectRoot(path.dirname(filePath));
+    const goVet = exec('go', ['vet', './...'], projectRoot);
+    if (goVet.status !== 0 && goVet.stderr) {
+      log(`[QualityGate] go vet: ${goVet.stderr.trim().split('\n')[0]}`);
     }
     return;
   }
 
   if (ext === '.py') {
-    const args = ['format'];
-    if (!fix) args.push('--check');
-    args.push(filePath);
-    const r = exec('ruff', args);
-    if (r.status !== 0 && strict) {
-      log(`[QualityGate] Ruff check failed for ${filePath}`);
+    const fmtArgs = fix ? ['format', filePath] : ['format', '--check', filePath];
+    const fmt = exec('ruff', fmtArgs);
+    if (fmt.status !== 0) {
+      log(`[QualityGate] ${path.basename(filePath)} needs formatting (run ruff format)`);
+    }
+    const lint = exec('ruff', ['check', filePath]);
+    if (lint.status !== 0) {
+      const first = (lint.stdout || lint.stderr || '').trim().split('\n')[0];
+      if (first) log(`[QualityGate] ruff check: ${first}`);
     }
   }
 }
