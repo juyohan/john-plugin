@@ -2,6 +2,19 @@
 
 All notable changes to the `genie-plugin` project will be documented in this file.
 
+## [1.7.0] - 2026-05-15
+
+### Added
+- feat: add .agents/plugins/marketplace.json for Codex plugin support
+
+## [1.6.0] - 2026-05-15
+
+### Added
+- **Codex 마켓플레이스 지원** (`.agents/plugins/marketplace.json`): `codex plugin marketplace add juyohan/genie-plugin`으로 설치 가능
+
+### Changed
+- **README 설치 섹션 정리**: Claude Code·Codex 설치 순서를 비교 표로 통일
+
 ## [1.5.1] - 2026-05-15
 
 ### Changed
