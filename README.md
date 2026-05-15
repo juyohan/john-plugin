@@ -111,51 +111,12 @@ codex plugin marketplace add juyohan/genie-plugin
 
 ---
 
-## Codex 사용 가이드
-
-### 설치 후 동작
-
-설치가 완료되면 Codex는 `AGENTS.md`를 자동으로 읽어 브랜치 보호, 워크플로우 규칙을 적용합니다. `@genie:*` 에이전트도 `/agents`에서 확인할 수 있습니다.
-
-### 스킬 호출
-
-Claude Code의 `/genie:*` 커맨드는 Codex에서 직접 실행되지 않습니다. 플러그인 설치 후 스킬을 참조하여 에이전트에게 지시합니다.
-
-```
-"skills/commit/SKILL.md 를 읽고 커밋을 진행해줘"
-"skills/review/SKILL.md 를 읽고 현재 변경사항을 리뷰해줘"
-"skills/brainstorm/SKILL.md 를 읽고 요구사항 정의를 시작해줘"
-```
-
-### 플랫폼 차이
-
-| 항목 | Claude Code | Codex |
-|------|-------------|-------|
-| 커맨드 진입 | `/genie:*` | 스킬 파일 직접 참조 |
-| 지침 파일 | `CLAUDE.md` → `@AGENTS.md` | `AGENTS.md` 직접 읽음 |
-| 질문 도구 | `AskUserQuestion` | `request_user_input` |
-| 컨텍스트 수집 | `!` 명령어 자동 실행 | 스킬 내 "컨텍스트 폴백" 섹션의 bash 명령 직접 실행 |
-| 브랜치 보호 | 자동 적용 | `AGENTS.md` 섹션 4 규칙에 따라 적용 |
-
-### 워크플로우 예시 (Codex)
-
-```
-1. skills/brainstorm/SKILL.md 를 읽고 요구사항 정의 시작
-2. skills/plan/SKILL.md 를 읽고 구현 계획 작성
-3. skills/tdd/SKILL.md 를 읽고 테스트 먼저 작성
-4. skills/work/SKILL.md 를 읽고 구현 진행
-5. skills/review/SKILL.md 를 읽고 코드 리뷰
-6. skills/commit/SKILL.md 를 읽고 커밋
-```
-
----
-
 ## 디렉토리 구조
 
 ```
 AGENTS.md         — 에이전트 지침 (Claude Code + Codex 공용)
 CLAUDE.md         — Claude Code 진입점 (@AGENTS.md 로드)
-.claude-plugin/   — 플러그인 메타데이터 (name: genie, version: 1.3.1)
+.claude-plugin/   — 플러그인 메타데이터 (name: genie, version: 1.5.0)
 commands/         — Claude Code 커맨드 정의 (/genie:*)
 agents/           — 전문 에이전트 정의 (@genie:ts, @genie:review 등)
 skills/           — 스킬 구현 로직 (Claude Code + Codex 공용)
