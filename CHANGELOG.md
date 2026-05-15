@@ -2,6 +2,11 @@
 
 All notable changes to the `genie-plugin` project will be documented in this file.
 
+## [1.5.1] - 2026-05-15
+
+### Changed
+- docs: remove redundant Codex usage guide from README
+
 ## [1.5.0] - 2026-05-15
 
 ### Added
