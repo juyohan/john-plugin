@@ -1,0 +1,21 @@
+{
+  "name": "genie-plugin",
+  "version": "1.5.0",
+  "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
+  "author": {
+    "name": "John"
+  },
+  "repository": "https://github.com/juyohan/genie-plugin",
+  "category": "workflow",
+  "tags": [
+    "agents",
+    "skills",
+    "tdd",
+    "compound-engineering",
+    "workflow"
+  ],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "instructions": "./AGENTS.md"
+}
