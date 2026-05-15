@@ -48,7 +48,6 @@ post:bash:dispatcher         — PostToolUse: bash-hook-dispatcher.js 진입점
 |-------|:-------:|:--------:|:------:|
 | `pre:bash:block-no-verify` | ✓ | ✓ | ✓ |
 | `pre:bash:auto-tmux-dev` | — | ✓ | ✓ |
-| `pre:bash:auto-version-bump` | — | ✓ | ✓ |
 | `pre:bash:gateguard-fact-force` | — | ✓ | ✓ |
 | `post:bash:command-log-cost` | — | ✓ | ✓ |
 | `post:bash:pr-created` | — | ✓ | ✓ |
