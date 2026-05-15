@@ -2,6 +2,18 @@
 
 All notable changes to the `genie-plugin` project will be documented in this file.
 
+## [1.5.0] - 2026-05-15
+
+### Added
+- feat: rename to genie-plugin v1.4.0 with Codex support and branch protection
+- feat: add auto version bump hook on git push
+
+### Fixed
+- fix: resolve auto-version-bump hook issues (stdio isolation, BREAKING CHANGE detection)
+
+### Changed
+- docs: add auto-version-bump brainstorm, plan, and review artifacts
+
 ## [1.4.0] - 2026-05-15
 
 ### Added
