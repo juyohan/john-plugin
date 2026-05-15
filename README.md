@@ -3,25 +3,20 @@
 **Genie**는 Claude Code와 Codex를 위한 Compound Engineering 워크플로우 플러그인입니다.
 아이디어 구체화부터 구현, 리뷰, 지식 자산화까지 — 일관된 단계별 루프로 개발을 진행합니다.
 
-> 버전: **1.4.0** · Claude Code · Codex 지원
+> 버전: **1.6.0** · Claude Code · Codex 지원
 
 ---
 
 ## 설치
 
-### Claude Code
+| 단계 | Claude Code | Codex |
+|------|-------------|-------|
+| **1. 마켓플레이스 등록** | `/plugin marketplace add juyohan/genie-plugin` | `codex plugin marketplace add juyohan/genie-plugin` |
+| **2. 플러그인 설치** | `/plugin install genie-plugin@john` | `codex` 실행 → `/plugins` → **genie-plugin** → Install → 재시작 |
 
-```bash
-# 1. 마켓플레이스 등록
-/plugin marketplace add juyohan/genie-plugin
+> `genie-plugin@john` = 마켓플레이스 `john`의 `genie-plugin`. 설치 후 플러그인 이름은 `genie`.
 
-# 2. 플러그인 설치
-/plugin install genie-plugin@john
-```
-
-> 마켓플레이스 이름 `john` (author), 설치 식별자 `genie-plugin` (레포 이름), 설치 후 플러그인 이름 `genie`.
-
-#### 규칙 적용 (필수)
+### 규칙 적용 (Claude Code 전용 · 필수)
 
 플러그인은 코딩 규칙을 자동으로 복사하지 않습니다. 설치 후 수동으로 복사하세요.
 
@@ -29,16 +24,6 @@
 mkdir -p ~/.claude/rules/john
 cp -R ~/.claude/plugins/genie/rules/* ~/.claude/rules/john/
 ```
-
-### Codex
-
-**Step 1 — Codex에 마켓플레이스 등록:**
-```bash
-codex plugin marketplace add juyohan/genie-plugin
-```
-
-**Step 2 — Codex TUI를 통한 플러그인 설치:**
-`codex`를 실행하고 `/plugins`를 입력하여 **genie-plugin**을 찾은 다음 **Install**을 선택하세요. 설치 완료 후 Codex를 재시작하세요.
 
 ---
 
