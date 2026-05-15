@@ -81,8 +81,9 @@ function run(rawInput) {
       };
     }
 
-    const pluginJsonPath = path.join(repoRoot, '.claude-plugin', 'plugin.json');
-    const changelogPath  = path.join(repoRoot, 'CHANGELOG.md');
+    const pluginJsonPath  = path.join(repoRoot, '.claude-plugin', 'plugin.json');
+    const codexMarketPath = path.join(repoRoot, '.agents', 'plugins', 'marketplace.json');
+    const changelogPath   = path.join(repoRoot, 'CHANGELOG.md');
 
     if (!fs.existsSync(pluginJsonPath)) {
       return {
@@ -102,6 +103,13 @@ function run(rawInput) {
     pluginJson.version = newVersion;
     fs.writeFileSync(pluginJsonPath, JSON.stringify(pluginJson, null, 2) + '\n');
 
+    // Update Codex marketplace.json if it exists
+    if (fs.existsSync(codexMarketPath)) {
+      const codexMarket = JSON.parse(fs.readFileSync(codexMarketPath, 'utf8'));
+      codexMarket.version = newVersion;
+      fs.writeFileSync(codexMarketPath, JSON.stringify(codexMarket, null, 2) + '\n');
+    }
+
     // Update CHANGELOG.md — insert before first ## [ entry
     const changelog    = fs.readFileSync(changelogPath, 'utf8');
     const insertIdx    = changelog.indexOf('\n## [');
@@ -112,7 +120,9 @@ function run(rawInput) {
     fs.writeFileSync(changelogPath, newChangelog);
 
     // Commit
-    execSync(`git add "${pluginJsonPath}" "${changelogPath}"`, { cwd: repoRoot, stdio: 'pipe' });
+    const filesToStage = [pluginJsonPath, changelogPath];
+    if (fs.existsSync(codexMarketPath)) filesToStage.push(codexMarketPath);
+    execSync(`git add ${filesToStage.map(f => `"${f}"`).join(' ')}`, { cwd: repoRoot, stdio: 'pipe' });
     execSync(`git commit -m "chore: bump version to ${newVersion}"`, { cwd: repoRoot, stdio: 'pipe' });
 
     return {
