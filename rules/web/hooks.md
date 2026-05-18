@@ -1,3 +1,13 @@
+---
+paths:
+  - "**/*.html"
+  - "**/*.css"
+  - "**/*.scss"
+  - "**/*.sass"
+  - "**/*.vue"
+  - "**/*.svelte"
+  - "**/*.astro"
+---
 > This file extends [common/hooks.md](../common/hooks.md) with web-specific hook recommendations.
 
 # Web Hooks
@@ -97,7 +107,7 @@ Block oversized writes from tool input content, not from a file that may not exi
     "PreToolUse": [
       {
         "matcher": "Write",
-        "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller modules');process.exit(2)}console.log(d)})\"",
+        "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{const i=JSON.parse(d);const c=i.tool_input?.content||'';const lines=c.split('\n').length;if(lines>800){console.error('[Hook] BLOCKED: File exceeds 800 lines ('+lines+' lines)');console.error('[Hook] Split into smaller modules');process.exit(2)}console.log(d)})\"",
         "description": "Block writes that exceed 800 lines"
       }
     ]

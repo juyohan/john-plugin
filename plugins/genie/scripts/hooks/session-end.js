@@ -293,6 +293,12 @@ async function main() {
 function buildSummarySection(summary) {
   let section = '## Session Summary\n\n';
 
+  // Last Active Task — injected by session-start on compact resume to avoid re-executing stale ARGUMENTS
+  if (summary.userMessages.length > 0) {
+    const lastMsg = summary.userMessages[summary.userMessages.length - 1];
+    section += `### Last Active Task\n${lastMsg.replace(/\n/g, ' ').replace(/`/g, '\\`')}\n\n`;
+  }
+
   // Tasks (from user messages — collapse newlines and escape backticks to prevent markdown breaks)
   section += '### Tasks\n';
   for (const msg of summary.userMessages) {
