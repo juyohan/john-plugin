@@ -135,7 +135,7 @@
         ],
         "description": "Record edited JS/TS file paths for batch format+typecheck at Stop time",
         "id": "post:edit:accumulator"
-      },
+      }
     ],
     "PostToolUseFailure": [],
     "Stop": [
