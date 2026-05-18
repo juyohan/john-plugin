@@ -3,7 +3,6 @@ name: proof
 description: proofeditor.ai("Proof editor")의 협업 마크다운 에디터인 Proof를 통해 마크다운 문서에 대해 생성, 공유, 보기, 댓글 달기, 편집 및 인간 참여형(human-in-the-loop) 리뷰 루프를 실행합니다. 사용자가 로컬 마크다운 파일을 Proof에서 렌더링하거나 보기를 원할 때, 마크다운을 공유하여 URL을 얻고 싶을 때, Proof 문서에서 협업 반복 작업을 수행하고 싶을 때, Proof에서 댓글을 달거나 수정을 제안하고 싶을 때, 사양/계획/초안에 대해 인간 리뷰(HITL)를 수행하고 싶을 때, Proof 문서를 로컬로 다시 동기화하고 싶을 때, 또는 proofeditor.ai URL을 기반으로 작업하고 싶을 때 사용합니다. "view this in proof", "share to proof", "iterate with proof", "HITL this doc"과 같은 문구와 인간 리뷰를 위한 genie:brainstorm / genie:think / genie:plan의 핸드오프 시 트리거됩니다. 또한 사용자가 Proof라는 이름을 언급하지 않더라도 렌더링/공유된 마크다운 리뷰 인터페이스를 명확히 요청하는 경우에도 매칭됩니다. 증거(evidence), 수학/논리 증명, 입증 책임(burden of proof), 개념 증명(proof-of-concept) 또는 인라인 텍스트 리뷰가 예상되는 단순한 "proofread this" 요청에는 트리거되지 않습니다.
 allowed-tools:
   - gem
-
   - Bash
   - Read
   - Write

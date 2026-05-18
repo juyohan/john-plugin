@@ -2,7 +2,10 @@
 name: resolve-pr
 description: PR 리뷰 피드백의 유효성을 평가하고 문제를 병렬로 수정하여 해결합니다. PR 리뷰 코멘트에 응답하거나, 리뷰 스레드를 해결하거나, 코드 리뷰 피드백을 수정할 때 사용합니다.
 argument-hint: "[PR 번호, 코멘트 URL 또는 현재 브랜치의 PR인 경우 공란]"
-allowed-tools: Bash(gh *), Bash(git *), Read
+allowed-tools:
+  - Bash(gh *)
+  - Bash(git *)
+  - Read
   - gem
 ---
 > **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.

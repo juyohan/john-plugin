@@ -1,7 +1,8 @@
 ---
 name: worktree
 description: 병렬 기능 작업 또는 PR 검토를 위해 격리된 git 워크트리를 생성합니다. 현재 체크아웃을 방해하지 않고 작업을 시작하고 싶을 때, 또는 `genie:work`나 `genie:review`에서 워크트리 옵션을 제공할 때 사용합니다.
-allowed-tools: Bash(bash *worktree-manager.sh)
+allowed-tools:
+  - Bash(bash *worktree-manager.sh)
   - gem
 ---
 > **Base guidelines**: [SKILL.md](../SKILL.md) applies to this skill.

@@ -22,12 +22,15 @@
     "longDescription": "Genie is a Compound Engineering plugin that guides development from idea to commit. Brainstorm requirements one question at a time, generate implementation plans with guardrails, write failing tests first (TDD), implement against the plan, run multi-persona code review, and capture learnings — all through a consistent /genie:* command loop.",
     "developerName": "John",
     "category": "Coding",
-    "capabilities": ["Interactive", "Read", "Write"],
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
     "defaultPrompt": [
       "/genie:brainstorm a new feature",
       "/genie:plan the implementation",
-      "/genie:review my changes",
-      "/genie:commit"
+      "/genie:review my changes"
     ],
     "screenshots": []
   }
