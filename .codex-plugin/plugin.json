@@ -1,0 +1,11 @@
+{
+  "name": "genie",
+  "version": "1.7.0",
+  "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
+  "author": {
+    "name": "John"
+  },
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "agents": "./agents/"
+}
