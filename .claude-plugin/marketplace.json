@@ -8,15 +8,18 @@
   },
   "plugins": [
     {
-      "name": "genie-plugin",
-      "source": "./",
+      "name": "genie",
+      "source": {
+        "source": "local",
+        "path": "./plugins/genie"
+      },
       "description": "Custom Engineering OS: Compound Engineering Workflow + Everything Claude Code Tools",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "author": {
         "name": "John"
       },
       "repository": "https://github.com/juyohan/genie-plugin",
-      "category": "workflow",
+      "category": "Coding",
       "tags": [
         "agents",
         "skills",
