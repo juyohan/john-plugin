@@ -1,6 +1,6 @@
 {
   "name": "genie",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
   "author": {
     "name": "John"
@@ -16,7 +16,6 @@
     "planning"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks.json",
   "interface": {
     "displayName": "Genie",
     "shortDescription": "Compound Engineering workflow — brainstorm, plan, TDD, review, commit.",
