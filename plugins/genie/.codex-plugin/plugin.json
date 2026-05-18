@@ -15,7 +15,7 @@
     "brainstorm",
     "planning"
   ],
-  "skills": "./skills/",
+  "skills": "../../skills/",
   "interface": {
     "displayName": "Genie",
     "shortDescription": "Compound Engineering workflow — brainstorm, plan, TDD, review, commit.",

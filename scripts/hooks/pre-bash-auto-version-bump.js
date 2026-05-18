@@ -82,7 +82,7 @@ function run(rawInput) {
     }
 
     const pluginJsonPath  = path.join(repoRoot, '.claude-plugin', 'plugin.json');
-    const codexPluginPath = path.join(repoRoot, '.codex-plugin', 'plugin.json');
+    const codexPluginPath = path.join(repoRoot, 'plugins', 'genie', '.codex-plugin', 'plugin.json');
     const changelogPath   = path.join(repoRoot, 'CHANGELOG.md');
 
     if (!fs.existsSync(pluginJsonPath)) {
