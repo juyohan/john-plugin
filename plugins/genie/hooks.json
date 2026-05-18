@@ -8,9 +8,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/pre-bash-dispatcher.js"
           }
-        ],
-        "description": "Consolidated Bash preflight dispatcher for quality, tmux, push, and GateGuard checks",
-        "id": "pre:bash:dispatcher"
+        ]
       },
       {
         "matcher": "Write",
@@ -19,9 +17,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js pre:write:doc-file-warning scripts/hooks/doc-file-warning.js standard,strict"
           }
-        ],
-        "description": "Doc file warning: warn about non-standard documentation files (exit code 0; warns only)",
-        "id": "pre:write:doc-file-warning"
+        ]
       },
       {
         "matcher": "Edit|Write",
@@ -30,9 +26,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js pre:edit-write:suggest-compact scripts/hooks/suggest-compact.js standard,strict"
           }
-        ],
-        "description": "Suggest manual compaction at logical intervals",
-        "id": "pre:edit-write:suggest-compact"
+        ]
       },
       {
         "matcher": "Write|Edit|MultiEdit",
@@ -42,9 +36,7 @@
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js pre:config-protection scripts/hooks/config-protection.js standard,strict",
             "timeout": 5
           }
-        ],
-        "description": "Block modifications to linter/formatter config files. Steers agent to fix code instead of weakening configs.",
-        "id": "pre:config-protection"
+        ]
       },
       {
         "matcher": "Edit|Write|MultiEdit",
@@ -54,9 +46,7 @@
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js pre:edit-write:gateguard-fact-force scripts/hooks/gateguard-fact-force.js standard,strict",
             "timeout": 5
           }
-        ],
-        "description": "Fact-forcing gate: block first Edit/Write/MultiEdit per file and demand investigation (importers, data schemas, user instruction) before allowing",
-        "id": "pre:edit-write:gateguard-fact-force"
+        ]
       }
     ],
     "PreCompact": [
@@ -67,9 +57,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js pre:compact scripts/hooks/pre-compact.js standard,strict"
           }
-        ],
-        "description": "Save state before context compaction",
-        "id": "pre:compact"
+        ]
       }
     ],
     "SessionStart": [
@@ -80,9 +68,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/stop-hook-runner.js session:start scripts/hooks/session-start.js minimal,standard,strict 30000"
           }
-        ],
-        "description": "Load previous context and detect package manager on new session",
-        "id": "session:start"
+        ]
       }
     ],
     "PostToolUse": [
@@ -95,9 +81,7 @@
             "async": true,
             "timeout": 30
           }
-        ],
-        "description": "Consolidated Bash postflight dispatcher for logging, PR, and build notifications",
-        "id": "post:bash:dispatcher"
+        ]
       },
       {
         "matcher": "Edit|Write|MultiEdit",
@@ -108,9 +92,7 @@
             "async": true,
             "timeout": 30
           }
-        ],
-        "description": "Run quality gate checks after file edits",
-        "id": "post:quality-gate"
+        ]
       },
       {
         "matcher": "Edit|Write|MultiEdit",
@@ -120,9 +102,7 @@
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js post:edit:design-quality-check scripts/hooks/design-quality-check.js strict",
             "timeout": 10
           }
-        ],
-        "description": "Warn when frontend edits drift toward generic template-looking UI",
-        "id": "post:edit:design-quality-check"
+        ]
       },
       {
         "matcher": "Edit|Write|MultiEdit",
@@ -131,9 +111,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js post:edit:accumulate scripts/hooks/post-edit-accumulator.js standard,strict"
           }
-        ],
-        "description": "Record edited JS/TS file paths for batch format+typecheck at Stop time",
-        "id": "post:edit:accumulator"
+        ]
       }
     ],
     "Stop": [
@@ -145,9 +123,7 @@
             "command": "node $PLUGIN_ROOT/scripts/hooks/stop-hook-runner.js stop:format-typecheck scripts/hooks/stop-format-typecheck.js standard,strict 300000",
             "timeout": 300
           }
-        ],
-        "description": "Batch format (Biome/Prettier) and typecheck (tsc) all JS/TS files edited this response — runs once at Stop instead of after every Edit",
-        "id": "stop:format-typecheck"
+        ]
       },
       {
         "matcher": "*",
@@ -156,9 +132,7 @@
             "type": "command",
             "command": "node $PLUGIN_ROOT/scripts/hooks/stop-hook-runner.js stop:check-console-log scripts/hooks/check-console-log.js standard,strict 30000"
           }
-        ],
-        "description": "Check for console.log in modified files after each response",
-        "id": "stop:check-console-log"
+        ]
       },
       {
         "matcher": "*",
@@ -169,9 +143,7 @@
             "async": true,
             "timeout": 10
           }
-        ],
-        "description": "Persist session state after each response (Stop carries transcript_path)",
-        "id": "stop:session-end"
+        ]
       },
       {
         "matcher": "*",
@@ -182,9 +154,7 @@
             "async": true,
             "timeout": 10
           }
-        ],
-        "description": "Track token and cost metrics per session",
-        "id": "stop:cost-tracker"
+        ]
       },
       {
         "matcher": "*",
@@ -195,9 +165,7 @@
             "async": true,
             "timeout": 10
           }
-        ],
-        "description": "Send desktop notification (macOS/WSL) with task summary when Claude responds",
-        "id": "stop:desktop-notify"
+        ]
       }
     ]
   }
