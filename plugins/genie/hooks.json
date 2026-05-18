@@ -199,6 +199,6 @@
         "description": "Send desktop notification (macOS/WSL) with task summary when Claude responds",
         "id": "stop:desktop-notify"
       }
-    ],
+    ]
   }
 }
