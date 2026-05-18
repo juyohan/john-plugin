@@ -12,7 +12,7 @@ function getRepoRoot() {
 }
 
 function getCommitsSinceLastBump(repoRoot) {
-  const raw = execSync('git log --no-merges --format=%s', {
+  const raw = execSync('git log --no-merges --format=---GENIE_COMMIT---%n%s%n%b', {
     encoding: 'utf8',
     cwd: repoRoot,
   }).trim();
@@ -20,21 +20,23 @@ function getCommitsSinceLastBump(repoRoot) {
   if (!raw) return [];
 
   const commits = [];
-  for (const line of raw.split('\n')) {
-    if (/^chore: bump version to\s+\d/.test(line)) break;
-    if (line.trim()) commits.push(line.trim());
+  for (const block of raw.split(/^---GENIE_COMMIT---$/m)) {
+    const lines = block.split('\n').filter(l => l.trim());
+    if (!lines.length) continue;
+    const subject = lines[0].trim();
+    if (/^chore: bump version to\s+\d/.test(subject)) break;
+    const body = lines.slice(1).join('\n');
+    commits.push({ subject, hasBreakingChange: /^BREAKING[ -]CHANGE:/m.test(body) });
   }
   return commits;
 }
 
 function determineBumpType(commits) {
-  // Note: BREAKING CHANGE in commit body/footer is not detected (only subject line is read).
-  // Use feat!: or fix!: subject prefix for breaking changes.
-  for (const msg of commits) {
-    if (/^[a-z]+[^:]*!:/.test(msg)) return 'major';
+  for (const { subject, hasBreakingChange } of commits) {
+    if (/^[a-z]+[^:]*!:/.test(subject) || hasBreakingChange) return 'major';
   }
-  for (const msg of commits) {
-    if (/^feat[^:]*:/.test(msg)) return 'minor';
+  for (const { subject } of commits) {
+    if (/^feat[^:]*:/.test(subject)) return 'minor';
   }
   return 'patch';
 }
@@ -47,16 +49,16 @@ function bumpVersion(version, type) {
 }
 
 function buildChangelogEntry(version, date, commits) {
-  const breaking = commits.filter(c => /^[a-z]+[^:]*!:/.test(c));
-  const added    = commits.filter(c => /^feat[^:]*:/.test(c) && !breaking.includes(c));
-  const fixed    = commits.filter(c => /^fix[^:]*:/.test(c));
+  const breaking = commits.filter(c => /^[a-z]+[^:]*!:/.test(c.subject) || c.hasBreakingChange);
+  const added    = commits.filter(c => /^feat[^:]*:/.test(c.subject) && !breaking.includes(c));
+  const fixed    = commits.filter(c => /^fix[^:]*:/.test(c.subject));
   const changed  = commits.filter(c => !breaking.includes(c) && !added.includes(c) && !fixed.includes(c));
 
   let entry = `## [${version}] - ${date}\n`;
-  if (breaking.length) entry += `\n### Breaking Changes\n${breaking.map(c => `- ${c}`).join('\n')}\n`;
-  if (added.length)    entry += `\n### Added\n${added.map(c => `- ${c}`).join('\n')}\n`;
-  if (fixed.length)    entry += `\n### Fixed\n${fixed.map(c => `- ${c}`).join('\n')}\n`;
-  if (changed.length)  entry += `\n### Changed\n${changed.map(c => `- ${c}`).join('\n')}\n`;
+  if (breaking.length) entry += `\n### Breaking Changes\n${breaking.map(c => `- ${c.subject}`).join('\n')}\n`;
+  if (added.length)    entry += `\n### Added\n${added.map(c => `- ${c.subject}`).join('\n')}\n`;
+  if (fixed.length)    entry += `\n### Fixed\n${fixed.map(c => `- ${c.subject}`).join('\n')}\n`;
+  if (changed.length)  entry += `\n### Changed\n${changed.map(c => `- ${c.subject}`).join('\n')}\n`;
   return entry;
 }
 
