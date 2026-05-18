@@ -10,5 +10,12 @@
   ],
   "skills": [
     "./plugins/genie/skills/"
+  ],
+  "agents": [
+    "./plugins/genie/agents/"
+  ],
+  "hooks": "./plugins/genie/hooks/hooks.json",
+  "rules": [
+    "./rules/"
   ]
 }
