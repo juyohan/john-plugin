@@ -24,7 +24,7 @@ echo ""
 mkdir -p "${AGENTS_DST}"
 echo "Linking agents → ${AGENTS_DST}"
 
-for src in "${PLUGIN_DIR}/agents/"*.md; do
+for src in "${PLUGIN_DIR}/plugins/genie/agents/"*.md; do
   [ -f "${src}" ] || continue
   name="$(basename "${src}")"
   dst="${AGENTS_DST}/${name}"
@@ -62,10 +62,10 @@ echo ""
 
 # ── hooks ─────────────────────────────────────────────────────────────────────
 echo "Hooks setup"
-echo -e "  Merge ${CYAN}${PLUGIN_DIR}/hooks/hooks.json${RESET} into ${CYAN}${CLAUDE_DIR}/settings.json${RESET}"
+echo -e "  Merge ${CYAN}${PLUGIN_DIR}/plugins/genie/hooks/hooks.json${RESET} into ${CYAN}${CLAUDE_DIR}/settings.json${RESET}"
 echo "  To apply hooks automatically, run:"
 echo ""
-echo -e "    ${CYAN}node ${PLUGIN_DIR}/scripts/install-hooks.js${RESET}"
+echo -e "    ${CYAN}node ${PLUGIN_DIR}/plugins/genie/scripts/install-hooks.js${RESET}"
 echo ""
 echo "  Or merge manually following the Claude Code hooks documentation."
 echo ""

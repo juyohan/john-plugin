@@ -16,7 +16,7 @@
 
 ## 프로젝트 훅 인프라
 
-이 프로젝트(`genie-plugin`)는 `scripts/hooks/bash-hook-dispatcher.js`를 통해 훅을 중앙 관리합니다.
+이 프로젝트(`genie-plugin`)는 `plugins/genie/plugins/genie/scripts/hooks/bash-hook-dispatcher.js`를 통해 훅을 중앙 관리합니다.
 
 ### 훅 ID 체계
 
@@ -61,7 +61,7 @@ post:bash:dispatcher         — PostToolUse: bash-hook-dispatcher.js 진입점
 
 ### 새 훅 추가 절차
 
-1. `scripts/hooks/` 아래에 훅 파일 생성
+1. `plugins/genie/scripts/hooks/` 아래에 훅 파일 생성
 2. `bash-hook-dispatcher.js`에 훅 ID 등록
 3. 해당 프로필에 훅 추가
 4. `scripts/install-hooks.js`로 설치 확인
