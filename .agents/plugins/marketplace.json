@@ -7,11 +7,14 @@
     {
       "name": "genie-plugin",
       "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
-      "source": "./plugins/genie",
+      "source": {
+        "source": "local",
+        "path": "./plugins/genie"
+      },
       "policy": {
         "installation": "AVAILABLE"
       },
-      "category": "workflow"
+      "category": "Coding"
     }
   ]
 }
