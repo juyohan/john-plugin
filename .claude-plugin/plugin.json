@@ -14,7 +14,7 @@
   "agents": [
     "./plugins/genie/agents/"
   ],
-  "hooks": "./plugins/genie/hooks.json",
+  "hooks": "./plugins/genie/hooks/hooks.json",
   "rules": [
     "./rules/"
   ]
