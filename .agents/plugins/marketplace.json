@@ -5,7 +5,7 @@
   },
   "plugins": [
     {
-      "name": "genie-plugin",
+      "name": "genie",
       "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
       "source": {
         "source": "local",
