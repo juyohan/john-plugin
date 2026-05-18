@@ -1,6 +1,6 @@
 {
   "name": "genie",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
   "author": {
     "name": "John"
@@ -14,7 +14,7 @@
   "agents": [
     "./plugins/genie/agents/"
   ],
-  "hooks": "./plugins/genie/hooks/hooks.json",
+  "hooks": "./plugins/genie/hooks.json",
   "rules": [
     "./rules/"
   ]
