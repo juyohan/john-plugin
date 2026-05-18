@@ -112,6 +112,17 @@
             "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/run-with-flags.js post:edit:accumulate scripts/hooks/post-edit-accumulator.js standard,strict"
           }
         ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node $PLUGIN_ROOT/scripts/hooks/pre-hook-runner.js node scripts/hooks/doc-frontmatter.js",
+            "async": true,
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [
