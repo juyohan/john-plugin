@@ -2,6 +2,15 @@
 
 All notable changes to the `genie-plugin` project will be documented in this file.
 
+## [2.4.0] - 2026-05-18
+
+### Added
+- feat: auto loop back to plan when P0/P1 findings remain after review
+
+### Fixed
+- fix: detect BREAKING CHANGE in commit body for major version bump
+- fix: register auto-version-bump hook in bash-hook-dispatcher
+
 ## [2.3.0] - 2026-05-18
 
 ### Added
