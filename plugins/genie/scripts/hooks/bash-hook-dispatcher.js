@@ -9,6 +9,7 @@ const { run: runTmuxReminder } = require('./pre-bash-tmux-reminder');
 const { run: runGitPushReminder } = require('./pre-bash-git-push-reminder');
 const { run: runCommitQuality } = require('./pre-bash-commit-quality');
 const { run: runGateGuard } = require('./gateguard-fact-force');
+const { run: runAutoVersionBump } = require('./pre-bash-auto-version-bump');
 const { run: runCommandLog } = require('./post-bash-command-log');
 const { run: runPrCreated } = require('./post-bash-pr-created');
 const { run: runBuildComplete } = require('./post-bash-build-complete');
@@ -45,6 +46,11 @@ const PRE_BASH_HOOKS = [
     id: 'pre:bash:gateguard-fact-force',
     profiles: 'standard,strict',
     run: rawInput => runGateGuard(rawInput),
+  },
+  {
+    id: 'pre:bash:auto-version-bump',
+    profiles: 'minimal,standard,strict',
+    run: rawInput => runAutoVersionBump(rawInput),
   },
 ];
 
