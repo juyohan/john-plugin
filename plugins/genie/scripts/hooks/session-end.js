@@ -26,8 +26,8 @@ const {
   log
 } = require('../lib/utils');
 
-const SUMMARY_START_MARKER = '<!-- ECC:SUMMARY:START -->';
-const SUMMARY_END_MARKER = '<!-- ECC:SUMMARY:END -->';
+const SUMMARY_START_MARKER = '<!-- GENIE:SUMMARY:START -->';
+const SUMMARY_END_MARKER = '<!-- GENIE:SUMMARY:END -->';
 const SESSION_SEPARATOR = '\n---\n';
 
 /**

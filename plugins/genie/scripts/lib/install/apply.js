@@ -117,7 +117,7 @@ function buildResolvedClaudeHooks(plan) {
 
 function applyInstallPlan(plan) {
   const resolvedClaudeHooksPlan = buildResolvedClaudeHooks(plan);
-  const disabledServers = parseDisabledMcpServers(process.env.ECC_DISABLED_MCPS);
+  const disabledServers = parseDisabledMcpServers(process.env.GENIE_DISABLED_MCPS);
 
   for (const operation of plan.operations) {
     fs.mkdirSync(path.dirname(operation.destinationPath), { recursive: true });

@@ -69,7 +69,7 @@ function run(rawInput) {
     if (content.startsWith('---\n')) return rawInput;
 
     const agent     = inferAgent(filePath);
-    const sessionId = process.env.ECC_SESSION_ID || process.env.CLAUDE_SESSION_ID || '';
+    const sessionId = process.env.CLAUDE_SESSION_ID || '';
     const tokens    = readSessionTokens(sessionId);
 
     fs.writeFileSync(filePath, buildFrontmatter(agent, tokens) + content, 'utf8');

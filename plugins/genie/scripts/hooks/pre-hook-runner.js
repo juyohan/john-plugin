@@ -18,7 +18,6 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '../..');
 process.env.CLAUDE_PLUGIN_ROOT = root;
-process.env.ECC_PLUGIN_ROOT = root;
 
 const bootstrap = path.join(root, 'scripts/hooks/plugin-hook-bootstrap.js');
 process.argv[1] = bootstrap;

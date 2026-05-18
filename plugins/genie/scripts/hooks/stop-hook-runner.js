@@ -19,7 +19,6 @@ const timeout = parseInt(process.argv[5] || '30000', 10);
 
 const root = path.resolve(__dirname, '../..');
 process.env.CLAUDE_PLUGIN_ROOT = root;
-process.env.ECC_PLUGIN_ROOT = root;
 
 const raw = fs.readFileSync(0, 'utf8');
 const runnerScript = path.join(root, 'scripts/hooks/run-with-flags.js');

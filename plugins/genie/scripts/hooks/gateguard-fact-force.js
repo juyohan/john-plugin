@@ -40,7 +40,7 @@ const MAX_SESSION_KEYS = 50;
 const ROUTINE_BASH_SESSION_KEY = '__bash_session__';
 const EDIT_WRITE_HOOK_ID = 'pre:edit-write:gateguard-fact-force';
 const BASH_HOOK_ID = 'pre:bash:gateguard-fact-force';
-const ECC_DISABLE_VALUES = new Set(['0', 'false', 'off', 'disabled', 'disable']);
+const GENIE_DISABLE_VALUES = new Set(['0', 'false', 'off', 'disabled', 'disable']);
 
 const DESTRUCTIVE_BASH = /\b(rm\s+-rf|git\s+reset\s+--hard|git\s+checkout\s+--|git\s+clean\s+-f|drop\s+table|delete\s+from|truncate|git\s+push\s+--force(?!-with-lease)|git\s+commit\s+--amend|dd\s+if=)\b/i;
 
@@ -55,7 +55,7 @@ function isGateGuardDisabled() {
     return true;
   }
 
-  return ECC_DISABLE_VALUES.has(normalizeEnvValue(process.env.ECC_GATEGUARD));
+  return GENIE_DISABLE_VALUES.has(normalizeEnvValue(process.env.GENIE_GATEGUARD));
 }
 
 function sanitizeSessionKey(value) {
@@ -77,7 +77,7 @@ function hashSessionKey(prefix, value) {
 }
 
 function resolveSessionKey(data) {
-  const directCandidates = [data && data.session_id, data && data.sessionId, data && data.session && data.session.id, process.env.CLAUDE_SESSION_ID, process.env.ECC_SESSION_ID];
+  const directCandidates = [data && data.session_id, data && data.sessionId, data && data.session && data.session.id, process.env.CLAUDE_SESSION_ID];
 
   for (const candidate of directCandidates) {
     const sanitized = sanitizeSessionKey(candidate);
@@ -372,7 +372,7 @@ function withRecoveryHint(message, hookIds = [EDIT_WRITE_HOOK_ID]) {
   return [
     message,
     '',
-    `Recovery: if GateGuard is blocking setup or repair work, run this session with \`ECC_GATEGUARD=off\` or add ${disableTargets} to \`ECC_DISABLED_HOOKS\`.`
+    `Recovery: if GateGuard is blocking setup or repair work, run this session with \`GENIE_GATEGUARD=off\` or add ${disableTargets} to \`GENIE_DISABLED_HOOKS\`.`
   ].join('\n');
 }
 

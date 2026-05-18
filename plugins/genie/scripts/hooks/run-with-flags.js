@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Executes a hook script only when enabled by ECC hook profile flags.
+ * Executes a hook script only when enabled by Genie hook profile flags.
  *
  * Usage:
  *   node run-with-flags.js <hookId> <scriptRelativePath> [profilesCsv]
@@ -159,10 +159,9 @@ async function main() {
     env: {
       ...process.env,
       CLAUDE_PLUGIN_ROOT: pluginRoot,
-      ECC_PLUGIN_ROOT: pluginRoot,
-      ECC_HOOK_ID: hookId,
-      ECC_HOOK_INPUT_TRUNCATED: truncated ? '1' : '0',
-      ECC_HOOK_INPUT_MAX_BYTES: String(MAX_STDIN)
+      GENIE_HOOK_ID: hookId,
+      GENIE_HOOK_INPUT_TRUNCATED: truncated ? '1' : '0',
+      GENIE_HOOK_INPUT_MAX_BYTES: String(MAX_STDIN)
     },
     cwd: process.cwd(),
     timeout: 30000
