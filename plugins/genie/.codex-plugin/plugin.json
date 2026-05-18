@@ -16,7 +16,7 @@
     "planning"
   ],
   "skills": "./skills/",
-  "hooks": "./hooks/hooks.json",
+  "hooks": "./hooks.json",
   "interface": {
     "displayName": "Genie",
     "shortDescription": "Compound Engineering workflow — brainstorm, plan, TDD, review, commit.",
