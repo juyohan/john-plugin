@@ -8,8 +8,8 @@
       "name": "genie-plugin",
       "description": "Genie — Compound Engineering Workflow + Everything Claude Code Tools",
       "source": {
-        "source": "github",
-        "repo": "juyohan/genie-plugin"
+        "source": "local",
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE"
