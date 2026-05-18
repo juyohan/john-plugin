@@ -2,6 +2,25 @@
 
 All notable changes to the `genie-plugin` project will be documented in this file.
 
+## [2.3.0] - 2026-05-18
+
+### Added
+- feat: add doc-frontmatter hook to prepend agent/token metadata to docs/*.md
+
+### Fixed
+- fix: remove explicit hooks path from plugin.json for Codex auto-discovery
+- fix: remove description/id fields from hook entries for Codex compatibility
+- fix: resolve invalid JSON in hooks.json (trailing comma after Stop array)
+- fix: make hooks.json Codex-compatible
+- fix: correct .claude-plugin/marketplace.json source format and sync to 1.8.0
+- fix: remove $schema from hooks.json so Codex can parse plugin hooks
+- fix: sync .claude-plugin/plugin.json version to 1.8.0 and fix hooks path
+
+### Changed
+- refactor: move hooks.json into hooks/ directory
+- refactor: replace ECC_ env vars and branding with GENIE_ in hook scripts
+- chore: sync .claude-plugin version to 2.1.0 (align with .codex-plugin)
+
 ## [1.7.0] - 2026-05-15
 
 ### Added
