@@ -6,9 +6,9 @@
     "name": "John"
   },
   "commands": [
-    "./commands/"
+    "./plugins/genie/commands/"
   ],
   "skills": [
-    "./skills/"
+    "./plugins/genie/skills/"
   ]
 }
